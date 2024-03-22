@@ -1,5 +1,6 @@
 <?php
 
+
 return [
 
     /*
@@ -192,7 +193,7 @@ return [
     'classes_content_wrapper' => '',
     'classes_content_header' => '',
     'classes_content' => '',
-    'classes_sidebar' => 'sidebar-dark-primary elevation-4',
+    'classes_sidebar' => 'sidebar-dark-success elevation-4',
     'classes_sidebar_nav' => '',
     'classes_topnav' => 'navbar-white navbar-light',
     'classes_topnav_nav' => 'navbar-expand',
@@ -307,10 +308,48 @@ return [
             'text' => 'search',
         ],
         [
-            'text' => 'blog',
-            'url'  => 'admin/blog',
-            'can'  => 'manage-blog',
+            'text' => 'Dashboard',
+            'route'  => 'home',  
         ],
+        [
+            'text'    => 'Settings',
+            'url'     => '#',
+            'submenu' => [
+                [
+                    'text' => 'Area',
+                    'route'  => 'area.index',
+                ],
+                [
+                    'text' => 'Categoria',
+                    'route'  => 'category.index',
+                ],
+                [
+                    'text' => 'Departamento',
+                    'route'  => 'department.index',
+                ],
+                [
+                    'text' => 'Estatus',
+                    'route'  => 'status.index',
+                ],
+                [
+                    'text' => 'Usuarios',
+                    'url'  => '#',
+                ],
+            ],
+        ],
+        [
+            'text' => 'Ticket',
+            'route'  => 'ticket.index',  
+        ],
+        [
+            'text' => 'Inventario',
+            'route'  => 'inventory.index',  
+        ],
+        // [
+        //     'text' => 'blog',
+        //     'url'  => 'admin/blog',
+        //     'can'  => 'manage-blog',
+        // ],
         [
             'text'        => 'pages',
             'url'         => 'admin/pages',
@@ -329,6 +368,8 @@ return [
             'url'  => 'admin/settings',
             'icon' => 'fas fa-fw fa-lock',
         ],
+
+       
         [
             'text'    => 'multilevel',
             'icon'    => 'fas fa-fw fa-share',
