@@ -9,6 +9,8 @@ use App\Models\Department;
 use App\Models\Status;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\Storage;
+
 class TicketController extends Controller
 {
     /**
@@ -74,7 +76,12 @@ class TicketController extends Controller
      */
     public function edit(Ticket $ticket)
     {
-        //
+        return view('ticket.edit', [
+            'areas' => Area::pluck('name','id'),
+            'category' => Category::pluck('name','id'),
+            'department' => Department::pluck('name','id'),
+            'status' => Status::pluck('name','id'),
+            'ticket' => $ticket]);
     }
 
     /**
@@ -82,7 +89,29 @@ class TicketController extends Controller
      */
     public function update(Request $request, Ticket $ticket)
     {
-        //
+        return $request->all();
+
+        $ticket->fill($request->validate([
+                'title' => 'required',
+                'description' => 'required',
+                'area_id' => 'required',
+                'department_id' => 'required',
+                'category_id' => 'required',
+                'status_id' => 'required',
+                'user_id' => 'required',
+        ]));
+        // inicio de procesado de imagenes
+        $image= [];
+
+        if($request->hasfile('image')){
+            if($ticket->image){ // se verifica si existe imagen anterior, si existe entonces se elimina, si no hay solo se agrega
+            Storage::delete($ticket->image);
+            }
+            $ticket->image = $request->file('image')->store('images');
+        }
+        // fin de seccion de lamacenamiento y procesado de imagenes
+        $ticket->save();
+        return redirect()->route('ticket.index', $ticket)->with('success','El ticket fue actualizado con exito');
     }
 
     /**
@@ -90,6 +119,8 @@ class TicketController extends Controller
      */
     public function destroy(Ticket $ticket)
     {
-        //
+        $ticket->delete();
+        return redirect()->route('ticket.index')->with('success', 'Ticket Eliminado exitosamente');
     }
+    
 }

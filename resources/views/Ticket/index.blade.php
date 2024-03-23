@@ -2,17 +2,24 @@
 @section('content')
 <div class="container">
     <div class="col-12 mt-4">
-       
-        <div>
-            <a href="ticket/create" class="btn btn-primary">Crear Ticket</a>
-        </div>
+    @isset($status)
+			<div>
+				<h1 class="display-4 mb-0">Tickets {{$status->name}}</h1>
+			 	<a href="{{route('ticket.index')}}"> Regresar a Tickets</a>
+			</div>
+	@else
+			<h1 class="display-4 mb-0">@lang('Ticket')</h1>
+	@endisset
+    <a class="btn btn-primary"
+			href="{{ route('ticket.create') }}"
+			>Crear Ticket</a>
     </div>
     @if(Session::get('success'))
         <div class="alert alert-success mt-2">
         <strong>{{Session::get('success')}} </strong><br>
         </div>
-
-        @endif
+    @endif
+    @include('partials.validation-errors')
 
     
     @isset($ticket)    
@@ -20,7 +27,7 @@
         <table class="table table-bordered text-black">
             <tr class="text-secondary">
                 <th>ID</th>
-                <th>Imagen</th>
+                <!-- <th>Imagen</th> -->
                 <th>Ticket</th>
                 <th>Departamento</th>
                 <th>categoria</th>
@@ -32,21 +39,25 @@
             <tr>
                 <td>{{$ticketItem->id}}</td>
                 <!-- <td><img src="{{ $ticketItem->image }}" alt="{{ $ticketItem->id }}" class="img-thumbnail"/></td> -->
-                <td>
+                <!-- <td>
                 @if($ticketItem->image)
                 <img class="card-img-top mb-2"
                 style="height:150px; object-fit: cover;"
                 src="/storage/{{ $ticketItem->image}}"
                 alt="{{$ticketItem->title}}">
                 @endif
-                </td>
+                </td> -->
 
-                <td class="fw-bold"><a href="{{route('ticket.show',$ticketItem)}}">{{$ticketItem->title}}</a></td>
+                <td>
+                    <a href="{{route('ticket.show',$ticketItem)}}">{{$ticketItem->title}}</a>                    
+                    <h6 class="text-secondary">{{$ticketItem->created_at->diffForHumans(null, false, false, 2)}}</h6>
+                </td>
                 
                 <td>{{$ticketItem->department->name}}</td>
                 <td>{{$ticketItem->category->name}}</td>
                 <td>{{$ticketItem->area->name}}</td>
-                <td>{{$ticketItem->status->name}}</td>
+                <td><a href="{{route('status.show',$ticketItem->status)}}">{{$ticketItem->status->name}}</a></td>
+                
                 <td>
                     <a href="{{route('ticket.edit',$ticketItem)}}" class="btn btn-warning">Editar</a>
 

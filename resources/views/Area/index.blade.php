@@ -1,6 +1,5 @@
 @extends('adminlte::page')
 @section('content')
-<h1>index del area</h1>
 
 <div class="container">
     <div class="col-12 mt-4">
@@ -13,8 +12,7 @@
         <div class="alert alert-success mt-2">
         <strong>{{Session::get('success')}} </strong><br>
         </div>
-
-        @endif
+    @endif
 
     
       @isset($areas)  

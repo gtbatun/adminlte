@@ -12,18 +12,7 @@
     </div>
     
 
-    @if ($errors->any())
-    <div class="alert alert-danger">
-        <strong>Alerta </strong> Algo fue mal..<br><br>
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-    @endif
-
- 
+    @include('partials.validation-errors') 
 
     <form action="{{route('ticket.store')}}" method="POST" enctype="multipart/form-data" >
         @csrf

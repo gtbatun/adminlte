@@ -44,7 +44,10 @@ class StatusController extends Controller
      */
     public function show(Status $status)
     {
-        //
+        return view('ticket.index',[
+            'status' => $status,
+            'ticket' => $status->ticket()->with('status')->latest()->paginate(5)
+        ]);
     }
 
     /**
