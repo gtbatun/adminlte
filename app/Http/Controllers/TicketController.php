@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\Department;
 use App\Models\Status;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 use Illuminate\Support\Facades\Storage;
 
@@ -17,9 +18,15 @@ class TicketController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
-        $ticket = Ticket::with('area','category','status','department')->latest()->paginate(5);
-        return view('ticket.index',['ticket' => $ticket]);
+    { 
+        
+        // $ticket = Ticket::with('area','category','status','department')->latest()->paginate(5);
+        // return view('ticket.index',['ticket' => $ticket]);
+
+        return view('ticket.index',[
+            'newTicket'=> new Ticket,
+            'ticket' => Ticket::with('area','category','status','department')->latest()->paginate(5)
+        ]);
     }
 
     /**
@@ -43,32 +50,45 @@ class TicketController extends Controller
      */
     public function store(Request $request)
     {
-        $add_ticket = new Ticket(
-            $request->validate([
-                'title' => 'required',
-                'description' => 'required',
-                'area_id' => 'required',
-                'department_id' => 'required',
-                'category_id' => 'required',
-                'status_id' => 'required',
-                'user_id' => 'required',
-            ]));
-        if($request->hasfile('image')){
-            $add_ticket->image = $request->file('image')->store('images');
+        // dd ($request->all());
+        // return $request->all();
+        $validatedData = $request->validate([
+            'title' => 'required',
+            'description' => 'required',
+            'area_id' => 'required',
+            'department_id' => 'required',
+            'category_id' => 'required',
+            'status_id' => 'required',
+            'user_id' => 'required',
+            'image.*' => 'image|mimes:jpeg,png,jpg,gif' 
+            //'image|mimes:jpeg,png,jpg,gif|max:2048' // Validar que cada archivo sea una imagen
+        ]);
+        $add_ticket = new Ticket($request->all());
+    
+        if ($request->hasFile('image')) {
+            $imageNames = [];    
+            foreach ($request->file('image') as $image) {
+                // if (!$image->isValid()) {
+                //     return response()->json(['error' => 'Invalid image file.'], 400); 
+                // }
+                $imageName = time() . '_' . Str::random(10) . '.' . $image->getClientOriginalExtension();
+                $image->storeAs('images', $imageName);
+                $imageNames[] = $imageName;
+            }
+            $concatenatedNames = implode(', ', $imageNames);
+            $add_ticket->image = $concatenatedNames;
         }
-
         $add_ticket->save();
-
-        // Ticket::create($request->all());
-         return redirect()->route('ticket.index')->with('status','El ticket fue creado exitosamente');
-    }
+        return response()->json(['message' => 'Ticket created successfully','redirect_to' => route('ticket.index')], 200); 
+        
+   }
 
     /**
      * Display the specified resource.
      */
     public function show(Ticket $ticket)
     {
-        //
+        return "hola desde el show de";
     }
 
     /**
@@ -89,7 +109,7 @@ class TicketController extends Controller
      */
     public function update(Request $request, Ticket $ticket)
     {
-        return $request->all();
+        dd( $request->all());
 
         $ticket->fill($request->validate([
                 'title' => 'required',
@@ -101,13 +121,20 @@ class TicketController extends Controller
                 'user_id' => 'required',
         ]));
         // inicio de procesado de imagenes
-        $image= [];
-
-        if($request->hasfile('image')){
-            if($ticket->image){ // se verifica si existe imagen anterior, si existe entonces se elimina, si no hay solo se agrega
-            Storage::delete($ticket->image);
-            }
-            $ticket->image = $request->file('image')->store('images');
+        
+        if($request->file('image')){
+            $images = $request->file('image');
+            $imageNames = [];
+            $errors = [];
+            foreach($images as $image){                
+                $imageName = time() . ' - ' . $image->getClientOriginalName();
+                    if($image->isValid()){
+                        $image->storeAs('images',$imageName);
+                        $imageNames[] = $imageName;  
+                    }
+                }            
+            $concatenatedNames = implode(', ', $imageNames);
+            $ticket->image = $concatenatedNames;
         }
         // fin de seccion de lamacenamiento y procesado de imagenes
         $ticket->save();

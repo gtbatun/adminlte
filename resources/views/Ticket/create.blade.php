@@ -1,4 +1,34 @@
 <!-- optimizar las consultas de las select options, se esta realizando 3 consultas una por cada opcion -->
+<style>
+        #preview {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .thumbnail {
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .thumbnail img {
+            width: 300px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .thumbnail button {
+            margin-top: 5px;
+            border: none;
+            background-color: red;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+    </style>
+
 @extends('adminlte::page')
 @section('content')
 <div class="container">
@@ -13,25 +43,29 @@
     
 
     @include('partials.validation-errors') 
+    
+    
+    
 
-    <form action="{{route('ticket.store')}}" method="POST" enctype="multipart/form-data" >
+    <form id="ticketForm" action="{{route('ticket.store')}}" method="POST" enctype="multipart/form-data" >
         @csrf
         <input type="hidden" name="user_id" class="form-control" value="{{auth()->user()->id}}" >
         <input type="hidden" name="status_id" class="form-control" value="1" >
         <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12 mt-2">
+        <div class="col-xs-12 col-sm-12 col-md-12 mt-2">
                 <div class="form-group">
                     <strong>Ticket:</strong>
                     <input type="text" name="title" class="form-control" placeholder="Titulo" value="{{old ('title')}}" >
+                    
                 </div>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12 mt-2">
                 <div class="form-group">
                     <strong>Descripción:</strong>
                     <textarea class="form-control" style="height:150px" name="description" placeholder="Descripción...">{{old ('description')}}</textarea>
-                </div>
+                    </div>
             </div>
-            <div class="col-xs-12 col-sm-12 col-md-6 mt-2">
+            <div class="col-xs-12 col-sm-12 col-md-4 mt-2">
                 <div class="form-group">
                     <strong>Asignar a:</strong>
                     <!--  -->
@@ -44,7 +78,7 @@
                     </select>
                 </div>
             </div>
-            <div class="col-xs-12 col-sm-12 col-md-6 mt-2">
+            <div class="col-xs-12 col-sm-12 col-md-4 mt-2">
                 <div class="form-group">
                     <strong>Asignar a:</strong>
                     <!--  -->
@@ -57,7 +91,7 @@
                     </select>
                 </div>
             </div>
-            <div class="col-xs-12 col-sm-12 col-md-6 mt-2">
+            <div class="col-xs-12 col-sm-12 col-md-4 mt-2">
                 <div class="form-group">
                     <strong>Asignar a:</strong>
                     <!--  -->
@@ -70,38 +104,170 @@
                     </select>
                 </div>
             </div>
+
+            
             <!--  seccion para insertar imagenes y visualizarlos-->
-            <div class="col-xs-12 col-sm-12 col-md-6 mt-2">
-                    <strong>Adjuntos</strong>
-                    <input type="file" name="image" class="form-control border-0 bg-light shadow-sm" id="seleccionArchivos" accept="image/*" >
-                    <img id="imagenPrevisualizacion" class="container">                    
-                    <script>
-                        // Obtener referencia al input y a la imagen
-                            const $seleccionArchivos = document.querySelector("#seleccionArchivos"),
-                            $imagenPrevisualizacion = document.querySelector("#imagenPrevisualizacion");
-
-                            // Escuchar cuando cambie
-                            $seleccionArchivos.addEventListener("change", () => {
-                            // Los archivos seleccionados, pueden ser muchos o uno
-                            const archivos = $seleccionArchivos.files;
-                            // Si no hay archivos salimos de la función y quitamos la imagen
-                            if (!archivos || !archivos.length) {
-                                $imagenPrevisualizacion.src = "";
-                                return;
-                            }
-                            // Ahora tomamos el primer archivo, el cual vamos a previsualizar
-                            const primerArchivo = archivos[0];
-                            // Lo convertimos a un objeto de tipo objectURL
-                            const objectURL = URL.createObjectURL(primerArchivo);
-                            // Y a la fuente de la imagen le ponemos el objectURL
-                            $imagenPrevisualizacion.src = objectURL;
-                            });
-                    </script>
-                </div>
-
-            <div class="col-xs-12 col-sm-12 col-md-12 text-center mt-2">
-                <button type="submit" class="btn btn-primary">Crear</button>
+            <div class="col-xs-12 col-sm-12 col-md-12 mt-2">
+                <strong>Adjuntos</strong>
+                <div class="form-control border-0 bg-light shadow-sm">
+                <input type="file" id="fileInput" name="image[]" multiple accept="image/*">
+                                                
             </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 text-center mt-2">
+                <button type="submit"  class="btn btn-primary">Crear</button>
+            </div>
+            <div id="responseMessage"></div>
+            <div id="imagePreview"></div>
+            <div id="error-container"></div>
+            <script>
+    //  
+            let files = []; // Array para almacenar los archivos seleccionados
+
+            document.getElementById('fileInput').addEventListener('change', function(event) {
+                const preview = document.getElementById('imagePreview');
+                // Limpiar la vista previa antes de agregar las nuevas imágenes
+                // preview.innerHTML = '';
+
+                for (let i = 0; i < this.files.length; i++) {
+                    const file = this.files[i];
+                    files.push(file); // Agregar archivo al array de archivos seleccionados
+                    const reader = new FileReader();
+
+                    reader.onload = function(e) {
+                        const thumbnail = document.createElement('div');
+                        thumbnail.classList.add('thumbnail');
+                        thumbnail.innerHTML = `
+                            <img src="${e.target.result}" alt="${file.name}">
+                            <button type="button" class="btn-remove" data-index="${i}">X</button>
+                        `;
+                        preview.appendChild(thumbnail);
+
+                        // Agregar un evento click al botón de eliminar
+                        thumbnail.querySelector('.btn-remove').addEventListener('click', function() {
+                            const index = parseInt(this.getAttribute('data-index')); // Obtener el índice de la imagen                    
+                            // Eliminar la imagen del DOM y del array de archivos seleccionados
+                            preview.removeChild(thumbnail);
+                            files.splice(index, 1);
+                            // Actualizar los índices en los botones de eliminar
+                            const thumbnails = preview.querySelectorAll('.thumbnail');
+                            thumbnails.forEach((thumb, i) => {
+                            thumb.querySelector('.btn-remove').setAttribute('data-index', i);
+                        });
+                        });
+                    };
+
+                    reader.readAsDataURL(file);
+                }
+                // Restablecer el valor del input tipo file
+                this.value = '';
+            });
+
+    // 
+
+//---------------------- Agregar un evento submit al formulario para enviar los archivos   ----------------------------------
+            document.getElementById('ticketForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            let formData = new FormData(this);
+                
+                // let files = document.getElementById('fileInput').files;
+                let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                let title = formData.get('title').trim();
+                let description = this.querySelector('textarea[name="description"]').value.trim();
+                let area_id = this.querySelector('select[name="area_id"]').value;
+                let department_id = this.querySelector('select[name="department_id"]').value;
+                let category_id = this.querySelector('select[name="category_id"]').value;
+                // let files = formData.getAll('image[]'); // Obtener todos los archivos del input de tipo file
+                // seccion para validar los input y que contegan valores
+                // console.log('array de imagenes:',files);
+                let errors = {};
+
+                if (!title) {
+                    errors.title = ['El título es requerido'];
+                }
+                if (!description) {
+                    errors.description = ['La descripción es requerida'];
+                }
+                if (!area_id) {
+                    errors.area_id = ['El área es requerida'];
+                }
+                if (!department_id) {
+                    errors.department_id = ['El departamento es requerido'];
+                }
+                if (!category_id) {
+                    errors.category_id = ['La categoría es requerida'];
+                } 
+                // Validar que solo se hayan seleccionado imágenes
+                // for (let i = 0; i < files.length; i++) {
+                //     let file = files[i];
+                    // formData.append('image[]',files[i]);
+                    // let file = formData.append('image[]',files[i]);
+                //     if (!isImage(file)) {
+                //         if (!errors.image) {
+                //             errors.image = [];
+                //         }
+                //         console.log('valor dentro del for ',file);
+                //         errors.image.push('El archivo ' + file.name + ' no es una imagen válida');
+                //     }
+                //     console.log('valor despues del for ',files);
+                //     formData.append('image[]',files[i]);
+                // }              
+
+                for (let i = 0; i < files.length; i++){
+                    formData.append('image[]',files[i]);
+                }
+
+                formData.append('_token', csrfToken);
+
+                if (Object.keys(errors).length > 0) {
+                    mostrarErrores(errors);
+                } else {
+                    // si todo esta bien, entonces se envian los datos al controlador en la base de datos
+                fetch("{{route('ticket.store') }}",{
+                    method: 'POST',
+                    body:formData
+                })
+            
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                     // Mostrar mensaje JSON en algún lugar de tu página
+                    // por ejemplo, en un div con id "responseMessage"
+                    document.getElementById('responseMessage').innerText = JSON.stringify(data);
+                    if (data.redirect_to) {
+                        window.location.href = data.redirect_to;
+                    }
+                })
+                .catch(error => {
+                    console.error('Esto es lo que manda cuando hay un error:',error);
+                    
+                    mostrarErrores(error);
+                });
+            }
+            });
+
+            function isImage(file) {
+                return file.type.startsWith('image/');
+            }
+
+            function mostrarErrores(errors) {
+                let errorContainer = document.getElementById('error-container');
+                errorContainer.innerHTML = ''; // Limpiar errores anteriores
+
+                for (let campo in errors) {
+                    let errorMessages = errors[campo];
+                    errorMessages.forEach(message => {
+                        let errorElement = document.createElement('div');
+                        errorElement.classList.add('alert', 'alert-danger');
+                        errorElement.innerText = message;
+                        errorContainer.appendChild(errorElement);
+                    });
+                }
+            }
+            
+         </script>
+
+
+            
         </div>
     </form>
 </div>

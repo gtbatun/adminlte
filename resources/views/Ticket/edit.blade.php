@@ -78,7 +78,7 @@
                     <!-- <img src="/storage/{{ $ticket->image}}" alt="{{ $ticket->id }}" id="imagenPrevisualizacion" class="img-thumbnail"/> -->
                     
                     <!-- -------------------------------------------- -->
-                    <input type="file" class="form-control border-0 bg-light shadow-sm" name="images[]" multiple id="fileInput">
+                    <input type="file" class="form-control border-0 bg-light shadow-sm" name="image[]" multiple id="fileInput">
                     <ul id="preview"></ul>
                     <script>
                     document.getElementById('fileInput').addEventListener('change', function(event) {
