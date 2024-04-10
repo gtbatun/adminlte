@@ -23,8 +23,8 @@
 
     
     @isset($ticket)    
-       <div class="col-16 mt-4">
-        <table class="table table-bordered text-black">
+       <div class="table-responsive">
+        <table class="table table-bordered table-striped text-black">
             <tr class="text-secondary">
                 <th>ID</th>
                 <!-- <th>Imagen</th> -->
@@ -37,22 +37,14 @@
             </tr>
             @foreach($ticket as $ticketItem)
             <tr>
-                <td>{{$ticketItem->id}}</td>
-                <!-- <td><img src="{{ $ticketItem->image }}" alt="{{ $ticketItem->id }}" class="img-thumbnail"/></td> -->
-                <!-- <td>
-                @if($ticketItem->image)
-                <img class="card-img-top mb-2"
-                style="height:150px; object-fit: cover;"
-                src="/storage/{{ $ticketItem->image}}"
-                alt="{{$ticketItem->title}}">
-                @endif
-                </td> -->
-
-                <td>
-                    <a href="{{route('ticket.show',$ticketItem)}}">{{$ticketItem->title}}</a>                    
-                    <h6 class="text-secondary">{{$ticketItem->created_at->diffForHumans(null, false, false, 2)}}</h6>
-                </td>
-                
+                <td>{{$ticketItem->id}}</td>   
+                <td >
+                    <div >
+                    <a href="{{ route('ticket.show', $ticketItem) }}" title="Gestionar">{{ $ticketItem->title }}</a>
+                    <!-- <span class="text-secondary text-sm ">@lang($ticketItem->created_at->diffForHumans(null, false, false, 1))</span> -->
+                    <span class="position-absolute top-10 start-100 translate-middle badge rounded-pill bg-secondary">@lang($ticketItem->created_at->diffForHumans(null, false, false, 1))</span>
+                    </div>
+                </td>             
                 <td>{{$ticketItem->department->name}}</td>
                 <td>{{$ticketItem->category->name}}</td>
                 <td>{{$ticketItem->area->name}}</td>

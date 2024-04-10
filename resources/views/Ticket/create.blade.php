@@ -232,7 +232,7 @@
                     console.log(data);
                      // Mostrar mensaje JSON en algún lugar de tu página
                     // por ejemplo, en un div con id "responseMessage"
-                    document.getElementById('responseMessage').innerText = JSON.stringify(data);
+                    // document.getElementById('responseMessage').innerText = JSON.stringify(data);
                     if (data.redirect_to) {
                         window.location.href = data.redirect_to;
                     }
@@ -244,7 +244,7 @@
                 });
             }
             });
-
+//seccion no se esta utilizando por el momneto
             function isImage(file) {
                 return file.type.startsWith('image/');
             }

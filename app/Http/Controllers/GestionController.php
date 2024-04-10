@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Gestion;
+use App\Models\Ticket; //se agrega para poder actualizar el status del ticket
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+
 
 class GestionController extends Controller
 {
@@ -26,9 +29,47 @@ class GestionController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request)    
     {
-        //
+        // dd( $request->all());
+        
+        $validatedData = $request->validate([
+            'ticket_id' => 'required', 
+            'coment' => 'required', 
+            'user_id' => 'required',
+            // 'status_id' => 'required',             
+            'image.*' => 'image|mimes:jpeg,png,jpg,gif' 
+            //'image|mimes:jpeg,png,jpg,gif|max:2048' // Validar que cada archivo sea una imagen
+        ]);
+        $add_gestion = new Gestion($validatedData);
+        if ($request->hasFile('image')) {
+            $imageNames = [];    
+            foreach ($request->file('image') as $image) {
+                $imageName = time() . '_' . Str::random(10) . '.' . $image->getClientOriginalExtension();
+                $image->storeAs('images', $imageName);
+                $imageNames[] = $imageName;
+            }
+            $concatenatedNames = implode(',', $imageNames);
+            $add_gestion->image = $concatenatedNames;
+        }
+        
+        if(!isset($request->cerrar) && !isset($request->reopen)){
+            $add_gestion->status_id = 2; // 2 es el id del status en proceso
+        }elseif(isset($request->cerrar)){
+            $add_gestion->status_id = 4; //4 es el id del status Finalizado
+        }elseif(isset($request->reopen)){
+            $add_gestion->status_id = 5; //4 es el id del status Finalizado
+        }        
+        $add_gestion->save();
+
+        if (isset($add_gestion->status_id)) {
+            $update_ticket = Ticket::find($request->ticket_id);
+            $update_ticket->status_id = $add_gestion->status_id;
+            $update_ticket->category_id = $request->category_id;
+            $update_ticket->update();
+        }
+        
+        return redirect()->route('ticket.index')->with('success','El ticket fue Gestionado con exito');
     }
 
     /**

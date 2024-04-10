@@ -1,4 +1,5 @@
 <!-- optimizar las consultas de las select options, se esta realizando 3 consultas una por cada opcion -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 @extends('adminlte::page')
 @section('content')
 <div class="container">
@@ -74,10 +75,15 @@
             <!--  seccion para insertar imagenes y visualizarlos-->
             <div class="col-xs-12 col-sm-12 col-md-6 mt-2">
                     <strong>Adjuntos</strong>
-                    <!-- <input type="file" name="image" class="form-control border-0 bg-light shadow-sm" id="seleccionArchivos" accept="image/*">                     -->
-                    <!-- <img src="/storage/{{ $ticket->image}}" alt="{{ $ticket->id }}" id="imagenPrevisualizacion" class="img-thumbnail"/> -->
-                    
+                   
+                    @if(!empty($ticket->image))
+                        @foreach(explode(',', $ticket->image) as $imageItem )
+                        <img src="{{asset('storage/images/'. $imageItem)}}" alt="{{ $ticket->id }}" class="img-thumbnail">
+                        <a href="#" class="btn btn-sm btn-danger delete-image" data-image="{{ $imageItem }}">X</a>
+                        @endforeach
+                    @endif
                     <!-- -------------------------------------------- -->
+                    <!-- <input type="file" class="form-control border-0 bg-light shadow-sm" name="image[]" multiple id="fileInput"> -->
                     <input type="file" class="form-control border-0 bg-light shadow-sm" name="image[]" multiple id="fileInput">
                     <ul id="preview"></ul>
                     <script>
@@ -109,6 +115,34 @@
                             preview.appendChild(listItem);
                         }
                     });
+                     
+
+                        // Script para eliminar la imagen
+                        $('.delete-image').click(function(e) {
+                            e.preventDefault();
+                            var imageUrlToDelete = $(this).data('image');
+
+                            // Confirmar antes de eliminar
+                            if (confirm("¿Estás seguro de que quieres eliminar esta imagen?")) {
+                                // Realizar una solicitud AJAX para eliminar la imagen
+                                $.ajax({
+                                    url: '/eliminar-imagen', // Ruta de la solicitud
+                                    method: 'POST', // Método de la solicitud
+                                    data: {
+                                        _token: '{{ csrf_token() }}', // Token CSRF para protección
+                                        image_url: imageUrlToDelete // URL de la imagen a eliminar
+                                    },
+                                    success: function(response) {
+                                        // Actualizar la vista después de eliminar la imagen
+                                        // Por ejemplo, puedes recargar la página o actualizar la lista de imágenes sin recargar la página
+                                    },
+                                    error: function(xhr, status, error) {
+                                        // Manejar errores si la solicitud falla
+                                        console.error(error);
+                                    }
+                                });
+                            }
+                        });
                 </script>
 
                     <!-- -------------------------------------------  -->

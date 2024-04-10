@@ -6,6 +6,7 @@ use App\Models\Ticket;
 use App\Models\Area;
 use App\Models\Category;
 use App\Models\Department;
+use App\Models\Gestion;
 use App\Models\Status;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -25,7 +26,7 @@ class TicketController extends Controller
 
         return view('ticket.index',[
             'newTicket'=> new Ticket,
-            'ticket' => Ticket::with('area','category','status','department')->latest()->paginate(5)
+            'ticket' => Ticket::with('area','category','status','department')->latest()->paginate()
         ]);
     }
 
@@ -68,14 +69,11 @@ class TicketController extends Controller
         if ($request->hasFile('image')) {
             $imageNames = [];    
             foreach ($request->file('image') as $image) {
-                // if (!$image->isValid()) {
-                //     return response()->json(['error' => 'Invalid image file.'], 400); 
-                // }
                 $imageName = time() . '_' . Str::random(10) . '.' . $image->getClientOriginalExtension();
                 $image->storeAs('images', $imageName);
                 $imageNames[] = $imageName;
             }
-            $concatenatedNames = implode(', ', $imageNames);
+            $concatenatedNames = implode(',', $imageNames);
             $add_ticket->image = $concatenatedNames;
         }
         $add_ticket->save();
@@ -88,7 +86,16 @@ class TicketController extends Controller
      */
     public function show(Ticket $ticket)
     {
-        return "hola desde el show de";
+        //se agra la funcion o lo findorfail para que falle  en la busqueda de un ticket que no existe
+        $h_gestiones = Gestion::where('ticket_id',$ticket->id )->get();
+        //show para mostar el formulario de insert de gestiones de cada ticket
+        return view('gestion.create',[
+            'areas' => Area::pluck('name','id'),
+            'category' => Category::pluck('name','id'),
+            'department' => Department::pluck('name','id'),
+            'status' => Status::pluck('name','id'),
+            'h_gestiones' => $h_gestiones,
+            'ticket' => $ticket]);
     }
 
     /**
@@ -109,7 +116,7 @@ class TicketController extends Controller
      */
     public function update(Request $request, Ticket $ticket)
     {
-        dd( $request->all());
+        // dd( $request->all());
 
         $ticket->fill($request->validate([
                 'title' => 'required',

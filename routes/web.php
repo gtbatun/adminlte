@@ -10,6 +10,8 @@ use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\StatusController;
 use App\Http\Controllers\TicketController;
 
+use App\Http\Controllers\ChartJSController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -41,3 +43,5 @@ Route::resource('gestion',GestionController::class);
 Route::resource('inventory',InventoryController::class);
 Route::resource('status',StatusController::class);
 Route::resource('ticket',TicketController::class);
+
+// Route::get('chart', [ChartJSController::class, 'index']);
