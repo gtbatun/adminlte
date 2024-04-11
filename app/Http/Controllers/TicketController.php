@@ -10,6 +10,12 @@ use App\Models\Gestion;
 use App\Models\Status;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
+// se agregan para que funcione la opcion exportar
+use App\Exports\TicketExport;
+use Maatwebsite\Excel\Facades\Excel;
+// 
+
 
 use Illuminate\Support\Facades\Storage;
 
@@ -18,15 +24,34 @@ class TicketController extends Controller
     /**
      * Display a listing of the resource.
      */
+    public function export(){
+        return Excel::download(new TicketExport, 'Tickets.xlsx');
+        
+    }
+
+
+
     public function index()
     { 
         
-        // $ticket = Ticket::with('area','category','status','department')->latest()->paginate(5);
-        // return view('ticket.index',['ticket' => $ticket]);
+        $user = Auth::user();
+
+        if($user->isAdmin()){
+            $ticket = Ticket::with('area','category','status','department')
+                ->latest()
+                ->paginate();
+        }else{
+            $ticket = Ticket::with('area','category','status','department')
+                ->where('user_id', $user->id) // Filtrar por el ID del usuario actual
+                ->where('status_id', '!=', 4 )
+                ->latest()
+                ->paginate();
+        }
 
         return view('ticket.index',[
             'newTicket'=> new Ticket,
-            'ticket' => Ticket::with('area','category','status','department')->latest()->paginate()
+            'ticket' => $ticket
+            
         ]);
     }
 

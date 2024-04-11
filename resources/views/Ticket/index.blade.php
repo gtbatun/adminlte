@@ -70,4 +70,5 @@
     <p>No hay tickets creados</p>
    @endisset
 </div>
+
 @endsection

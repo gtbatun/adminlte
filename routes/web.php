@@ -10,6 +10,8 @@ use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\StatusController;
 use App\Http\Controllers\TicketController;
 
+use Illuminate\Support\Facades\Auth;
+
 use App\Http\Controllers\ChartJSController;
 
 /*
@@ -33,10 +35,10 @@ Route::get('/', function () {
 
 Auth::routes();
 
+Route::middleware('auth')->group(function () {
+
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
 Route::resource('area',AreaController::class);
-
 Route::resource('category',CategoryController::class);
 Route::resource('department',DepartmentController::class);
 Route::resource('gestion',GestionController::class);
@@ -44,4 +46,11 @@ Route::resource('inventory',InventoryController::class);
 Route::resource('status',StatusController::class);
 Route::resource('ticket',TicketController::class);
 
-// Route::get('chart', [ChartJSController::class, 'index']);
+Route::get('ticket-export/', [TicketController::class, 'export']);
+
+// Route::get('graf', [ChartJSController::class, 'index']);
+// Route::get('/graf',[ ChartJSController::class, 'ticketsChart'])->name('tickets.chart');
+// Route::get('/tickets-data', [ChartJSController::class, 'ticketsData'])->name('tickets.data');
+
+});
+
