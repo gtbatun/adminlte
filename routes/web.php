@@ -30,7 +30,7 @@ use App\Http\Controllers\ChartJSController;
 
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 Auth::routes();

@@ -43,11 +43,10 @@
     
 
     @include('partials.validation-errors') 
-    
-    
+        
     
 
-    <form id="ticketForm" action="{{route('ticket.store')}}" method="POST" enctype="multipart/form-data" >
+    <form class="bg-white py-3 px-4 shadow rounded " id="ticketForm" action="{{route('ticket.store')}}" method="POST" enctype="multipart/form-data" >
         @csrf
         <input type="hidden" name="user_id" class="form-control" value="{{auth()->user()->id}}" >
         <input type="hidden" name="status_id" class="form-control" value="1" >
@@ -110,14 +109,13 @@
             <div class="col-xs-12 col-sm-12 col-md-12 mt-2">
                 <strong>Adjuntos</strong>
                 <div class="form-control border-0 bg-light shadow-sm">
-                <input type="file" id="fileInput" name="image[]" multiple accept="image/*">
-                                                
-            </div>
+                    <input type="file" id="fileInput" name="image[]" multiple accept="image/*">                                               
+                </div>
             <div class="col-xs-12 col-sm-12 col-md-12 text-center mt-2">
                 <button type="submit"  class="btn btn-primary">Crear</button>
             </div>
-            <div id="responseMessage"></div>
-            <div id="imagePreview"></div>
+            <div id="responseMessage"></div>                         
+            <div class="row" id="imagePreview"></div>            
             <div id="error-container"></div>
             <script>
     //  
@@ -137,7 +135,7 @@
                         const thumbnail = document.createElement('div');
                         thumbnail.classList.add('thumbnail');
                         thumbnail.innerHTML = `
-                            <img src="${e.target.result}" alt="${file.name}">
+                            <img src="${e.target.result}" class="card-img-top" alt="${file.name}">
                             <button type="button" class="btn-remove" data-index="${i}">X</button>
                         `;
                         preview.appendChild(thumbnail);
@@ -196,21 +194,7 @@
                 if (!category_id) {
                     errors.category_id = ['La categoría es requerida'];
                 } 
-                // Validar que solo se hayan seleccionado imágenes
-                // for (let i = 0; i < files.length; i++) {
-                //     let file = files[i];
-                    // formData.append('image[]',files[i]);
-                    // let file = formData.append('image[]',files[i]);
-                //     if (!isImage(file)) {
-                //         if (!errors.image) {
-                //             errors.image = [];
-                //         }
-                //         console.log('valor dentro del for ',file);
-                //         errors.image.push('El archivo ' + file.name + ' no es una imagen válida');
-                //     }
-                //     console.log('valor despues del for ',files);
-                //     formData.append('image[]',files[i]);
-                // }              
+                          
 
                 for (let i = 0; i < files.length; i++){
                     formData.append('image[]',files[i]);

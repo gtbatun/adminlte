@@ -94,7 +94,8 @@ class TicketController extends Controller
         if ($request->hasFile('image')) {
             $imageNames = [];    
             foreach ($request->file('image') as $image) {
-                $imageName = time() . '_' . Str::random(10) . '.' . $image->getClientOriginalExtension();
+                // $imageName = time() . '_' . Str::random(10) . '.' . $image->getClientOriginalExtension();
+                $imageName = time() . '_' . $image->getClientOriginalName() . '.' . $image->getClientOriginalExtension();
                 $image->storeAs('images', $imageName);
                 $imageNames[] = $imageName;
             }

@@ -11,7 +11,7 @@
         @else
             <h3 >@lang('Tickets')</h3>
         @endisset
-        <a class="btn btn-primary" href="{{ route('ticket.create') }}">Crear Ticket</a>        
+        <a class="btn btn-primary" href="{{ route('ticket.create') }}">Crear Ticket<i class='far fa-file'></i></a>        
     </div>
     @if(Session::get('success'))
         <div class="alert alert-success mt-2">
@@ -35,7 +35,7 @@
         <div class="col-12">
             <div class="card fluid">
                 <!-- <div class="card-header d-flex justify-content-between"> -->
-                    <!-- <h3 class="card-title">Listado de Tickets</h3>                     -->
+                    <!-- <h3 class="card-title">Listado de Tickets</h3> -->
                 <!-- </div> -->
             <!-- /.card-header -->
             <div class="card-body ">
@@ -58,7 +58,7 @@
                 <td>{{$ticketItem->id}}</td>   
                 <td class=" text-truncate" style="max-width: 200px;" >
                     <div >
-                    <a href="{{ route('ticket.show', $ticketItem) }}" title="Gestionar">{{ $ticketItem->title }}</a>
+                    <a href="{{ route('ticket.show', $ticketItem) }}" title="{{$ticketItem->title}}">{{ $ticketItem->title }}</a>
                     <!-- <span class="text-secondary text-sm ">@lang($ticketItem->created_at->diffForHumans(null, false, false, 1))</span> -->
                     <!-- <span class="position-absolute top-10 start-100 translate-middle badge rounded-pill bg-secondary">@lang($ticketItem->created_at->diffForHumans(null, false, false, 1))</span> -->
                     </div>
@@ -70,12 +70,12 @@
                 <td><a href="{{route('status.show',$ticketItem->status)}}">{{$ticketItem->status->name}}</a></td>
                 
                 <td>
-                    <a href="{{route('ticket.edit',$ticketItem)}}" class="btn btn-warning">Editar</a>
+                    <a href="{{route('ticket.edit',$ticketItem)}}" class="btn btn-warning">Editar <i class='fas fa-edit'></i></a>
 
                     <form action="{{route('ticket.destroy',$ticketItem)}}" method="post" class="d-inline">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                        <button type="submit" class="btn btn-danger">Eliminar <i class='fas fa-eraser'></i></button>
                     </form>
                 </td>
                 
