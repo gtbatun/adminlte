@@ -10,6 +10,8 @@ use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\StatusController;
 use App\Http\Controllers\TicketController;
 
+use App\Http\Controllers\UserController;
+
 use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\ChartJSController;
@@ -47,6 +49,13 @@ Route::resource('status',StatusController::class);
 Route::resource('ticket',TicketController::class);
 
 Route::get('ticket-export/', [TicketController::class, 'export']);
+
+Route::resource('user', UserController::class);
+
+// Route::get('user', [UserController::class, 'index'])->name('user.index');
+// Route::get('profile/{user}', [UserController::class, 'show'])->name('user.profile');
+// Route::get('user/{user}/edit', [UserController::class, 'edit'])->name('user.edit');
+// Route::put('user/{user}/edit', [UserController::class, 'update'])->name('user.update');
 
 // Route::get('graf', [ChartJSController::class, 'index']);
 // Route::get('/graf',[ ChartJSController::class, 'ticketsChart'])->name('tickets.chart');
