@@ -135,7 +135,7 @@ return [
     'usermenu_header_class' => 'bg-primary',
     'usermenu_image' => false,
     'usermenu_desc' => false,
-    'usermenu_profile_url' => false,
+    'usermenu_profile_url' => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -290,7 +290,7 @@ return [
     |
     */
 
-    'menu' => [
+    'menu' => [     
         // Navbar items:
         // [
         //     'type'         => 'navbar-search',
@@ -335,7 +335,7 @@ return [
                 ],
                 [
                     'text' => 'Usuarios',
-                    'url'  => '#',
+                    'route'  => 'user.index',
                     'icon'   => 'fas fa-fw fa-user-tie', 
                     // 'icon_color' => 'red', 
 
@@ -358,19 +358,14 @@ return [
             'url'  => 'ticket-export',
             // 'can'  => 'manage-blog',
         ],
-        [
-            'text'        => 'Usuarios',
-            'route'         => 'user.index',
-            'icon'        => 'far fa-fw fa-file',
-            // 'label'       => 4,
-            'label_color' => 'success',
-        ],
+        // [
+        //     'text'        => 'Usuarios',
+        //     'route'         => 'user.index',
+        //     'icon'        => 'far fa-fw fa-file',
+        //     // 'label'       => 4,
+        //     'label_color' => 'success',
+        // ],
         // ['header' => 'account_settings'],
-        [
-            'text' => 'profile',
-            'url'  => 'profile',
-            'icon' => 'fas fa-fw fa-user',
-        ],
         // [
         //     'text' => 'change_password',
         //     'url'  => 'admin/settings',

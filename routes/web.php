@@ -52,10 +52,10 @@ Route::get('ticket-export/', [TicketController::class, 'export']);
 
 Route::resource('user', UserController::class);
 
-// Route::get('user', [UserController::class, 'index'])->name('user.index');
-// Route::get('profile/{user}', [UserController::class, 'show'])->name('user.profile');
-// Route::get('user/{user}/edit', [UserController::class, 'edit'])->name('user.edit');
-// Route::put('user/{user}/edit', [UserController::class, 'update'])->name('user.update');
+// Route::get('usejr', [UserController::class, 'index'])->name('user.index');
+// Route::get('profile/{ujser}', [UserController::class, 'show'])->name('user.profile');
+// Route::get('user/{usejr}/edit', [UserController::class, 'edit'])->name('user.edit');
+// Route::put('user/{usejr}/edit', [UserController::class, 'update'])->name('user.update');
 
 // Route::get('graf', [ChartJSController::class, 'index']);
 // Route::get('/graf',[ ChartJSController::class, 'ticketsChart'])->name('tickets.chart');

@@ -2,7 +2,7 @@
 @section('content')
 <!--  -->
 <div class="pagetitle">
-    <h1>Perfil</h1>
+    <!-- <h1>Perfil</h1> -->
     <nav>
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
@@ -20,7 +20,7 @@
           <div class="card">
             <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
 
-              <img src="assets/img/profile-img.jpg" alt="Profile" class="rounded-circle">
+              <img src="{{asset('storage/images/user/'. $user->image)}}" alt="Profile" class="rounded-circle sm ">
               <h2>{{$user->name}}</h2>
               <h3>Web Designer</h3>
               <div class="social-links mt-2">
@@ -43,7 +43,7 @@
               <ul class="nav nav-tabs nav-tabs-bordered">
 
                 <li class="nav-item">
-                  <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-overview">Overview</button>
+                  <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-overview">Informaacion del Usuario</button>
                 </li>
 
                 </ul>
@@ -52,22 +52,21 @@
                 <div class="tab-pane fade show  active profile-overview" id="profile-overview">
                  
                   <!-- Profile Edit Form -->
-                  <form action="{{route('user.update',$user)}}" method="POST">
+                  <form action="{{route('user.update',$user)}}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     <div class="row mb-3">
-                      <label for="profileImage" class="col-md-4 col-lg-3 col-form-label">Profile Image</label>
+                      <label for="profileImage" class="col-md-4 col-lg-3 col-form-label">Perfil</label>
                       <div class="col-md-8 col-lg-9">
-                        <img src="assets/img/profile-img.jpg" alt="Profile">
+                        <!-- <img class="sm" src="{{asset('storage/images/user/'. $user->image)}}" alt="Profile"> -->
                         <div class="pt-2">
-                          <a href="#" class="btn btn-primary btn-sm" title="Upload new profile image"><i class="bi bi-upload"></i></a>
-                          <a href="#" class="btn btn-danger btn-sm" title="Remove my profile image"><i class="bi bi-trash"></i></a>
+                          <input name="image[]" type="file" accept="image/*" >
                         </div>
                       </div>
                     </div>
 
                     <div class="row mb-3">
-                      <label for="fullName" class="col-md-4 col-lg-3 col-form-label">Full Name</label>
+                      <label for="fullName" class="col-md-4 col-lg-3 col-form-label">Nombre completo</label>
                       <div class="col-md-8 col-lg-9">
                         <input name="name" type="text" class="form-control" id="fullName" value="{{$user->name}}">
                       </div>
@@ -76,14 +75,22 @@
                     <div class="row mb-3">
                       <label for="Job" class="col-md-4 col-lg-3 col-form-label">Departamento</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="job" type="text" class="form-control" id="Job" value="Web Designer">
+                        <!-- <input name="job" type="text" class="form-control" id="Job" value="Web Designer"> -->
+                        <select name="department_id" class="form-control border-0 bg-light shadow-sm " id="">
+                          <option value="">-- Departamento --</option>
+                          @foreach($department as  $id => $name)
+                          <option value="{{$id}}"
+                          @if($id == old('department_id' , $user->department_id)) selected @endif >{{$name}}</option>
+                          @endforeach                    
+                          </select>
                       </div>
                     </div>
+                    
 
                     <div class="row mb-3">
-                      <label for="Phone" class="col-md-4 col-lg-3 col-form-label">Phone</label>
+                      <label for="Phone" class="col-md-4 col-lg-3 col-form-label">Extension</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="phone" type="text" class="form-control" id="Phone" value="(436) 486-3538 x29071">
+                        <input name="extension" type="text" class="form-control" id="Phone" value="{{$user->extension}}">
                       </div>
                     </div>
 
@@ -93,23 +100,20 @@
                         <input name="email" type="email" class="form-control" id="Email" value="{{$user->email}}">
                       </div>
                     </div>
+                    @if($user->isAdmin())
                     <div class="row mb-3">
-                      <label for="Phone" class="col-md-4 col-lg-3 col-form-label">IsAdmin</label>
+                      <label for="Phone" class="col-md-4 col-lg-3 col-form-label">Role</label>
                       <div class="col-md-8 col-lg-9">
                         <input name="is_admin" type="text" class="form-control" id="Phone" value="{{$user->is_admin}}">
                       </div>
                     </div>
 
+                    @endif
                     <div class="text-center">
-                      <button type="submit" class="btn btn-primary">Save Changes</button>
+                      <button type="submit" class="btn btn-primary">Guardar</button>
                     </div>
                   </form><!-- End Profile Edit Form -->
-
-               
-
-                
-
-            </div>
+                 </div>
           </div>
 
         </div>

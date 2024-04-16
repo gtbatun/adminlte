@@ -22,6 +22,9 @@ class User extends Authenticatable
         'email',
         'password',
         'is_admin',
+        'department_id',
+        'extension',
+        'image',
     ];
 
     /**
@@ -48,4 +51,9 @@ class User extends Authenticatable
     {
         return $this->is_admin === 1 ; // Suponiendo que tengas un campo 'role' que indica el rol del usuario
     }
+    public function adminlte_profile_url(){
+        // return route('admin.profile.show', $this->id);
+        return route('user.edit', $this->id);
+    }
+   
 }
