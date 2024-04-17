@@ -39,7 +39,7 @@
                 <!-- </div> -->
             <!-- /.card-header -->
             <div class="card-body ">
-                <table id="categories" class="table table-bordered shadow-lg mt-4 
+                <table id="tickets" class="table table-bordered shadow-lg mt-4 
                 table-striped  ">
                     <thead  class="table-dark ">
                         <tr>
@@ -130,8 +130,8 @@
 <script>
     
 $(document).ready(function() {
-    $('#categories').DataTable( {
-        "order": [[ 3, "desc" ]],
+    $('#tickets').DataTable( {
+        "order": [[ 0,"desc" ]],
         "language": {
             "search": "Buscar",
             "lengthMenu": "Mostrar _MENU_ ticket por pagina",

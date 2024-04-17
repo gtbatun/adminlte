@@ -1,6 +1,5 @@
 @extends('adminlte::page')
 @section('content')
-<h1>index department</h1>
 
 <div class="container">
     <div class="col-12 mt-4">
@@ -18,8 +17,10 @@
 
     
       @isset($departments)  
-       <div class="col-16 mt-4">
-        <table class="table table-bordered text-black">
+       <div class="col-12 mt-4">
+        <div class="card fluid">
+            <div class="card-body">
+        <table class="table table-bordered text-black shadow-lg mt-2">
             <tr class="text-secondary">
                 <!-- <th>ID</th> -->
                 <th>Departamento</th>
@@ -47,6 +48,8 @@
             @endforeach            
         </table>
         {{$departments->links()}}
+    </div>
+    </div>
     </div>
     @else
     <p>No hay areas creadas</p>

@@ -19,6 +19,8 @@
     
       @isset($status)  
        <div class="col-16 mt-4">
+       <div class="card fluid">
+            <div class="card-body">
         <table class="table table-bordered text-black">
             <tr class="text-secondary">
                 <!-- <th>ID</th> -->
@@ -47,6 +49,8 @@
             @endforeach            
         </table>
         {{$status->links()}}
+    </div>
+    </div>
     </div>
     @else
     <p>No hay areas creadas</p>

@@ -88,7 +88,7 @@ return [
         'enabled' => false,
         'img' => [
             'path' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
-            'alt' => 'Auth Logosssss',
+            'alt' => 'Auth Logo',
             'class' => '',
             'width' => 50,
             'height' => 50,
@@ -133,7 +133,7 @@ return [
     'usermenu_enabled' => true,
     'usermenu_header' => false,
     'usermenu_header_class' => 'bg-primary',
-    'usermenu_image' => false,
+    'usermenu_image' => true,
     'usermenu_desc' => false,
     'usermenu_profile_url' => true,
 
@@ -294,19 +294,19 @@ return [
         // Navbar items:
         // [
         //     'type'         => 'navbar-search',
-        //     'text'         => 'search',
+        //     'text'         => 'Buscar',
         //     'topnav_right' => true,
         // ],
-        [
-            'type'         => 'fullscreen-widget',
-            'topnav_right' => true,
-        ],
+        // [
+        //     'type'         => 'fullscreen-widget',
+        //     'topnav_right' => true,
+        // ],
 
         // Sidebar items:
-        // [
-        //     'type' => 'sidebar-menu-search',
-        //     'text' => 'search',
-        // ],
+        [
+            'type' => 'sidebar-menu-search',
+            'text' => 'Buscar',
+        ],
         [
             'text' => ' Dashboard',
             'route'  => 'home',

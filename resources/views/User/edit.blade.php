@@ -15,14 +15,22 @@
 
     <section class="section profile">
       <div class="row">
+      
         <div class="col-xl-4">
+
 
           <div class="card">
             <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
-
-              <img src="{{asset('storage/images/user/'. $user->image)}}" alt="Profile" class="rounded-circle sm ">
+              @if($user->image != NULL)
+                <img src="{{asset('storage/images/user/'. $user->image)}}" alt="Profile" class="rounded-circle sm ">              
+              @endif              
               <h2>{{$user->name}}</h2>
-              <h3>Web Designer</h3>
+              @if($user->department_id != NULL)
+                <h3>{{$user->department->name}}</h3>              
+              @endif
+              
+              
+              
               <div class="social-links mt-2">
                 <a href="#" class="twitter"><i class="fa fa-twitter"></i></a>
                 <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>

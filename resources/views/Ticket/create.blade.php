@@ -49,6 +49,7 @@
     <form class="bg-white py-3 px-4 shadow rounded " id="ticketForm" action="{{route('ticket.store')}}" method="POST" enctype="multipart/form-data" >
         @csrf
         <input type="hidden" name="user_id" class="form-control" value="{{auth()->user()->id}}" >
+        <input type="hidden" name="department_id" class="form-control" value="{{auth()->user()->department_id}}" >
         <input type="hidden" name="status_id" class="form-control" value="1" >
         <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12 mt-2">
@@ -77,10 +78,10 @@
                     </select>
                 </div>
             </div>
-            <div class="col-xs-12 col-sm-12 col-md-4 mt-2">
+            <!-- <div class="col-xs-12 col-sm-12 col-md-4 mt-2">
                 <div class="form-group">
                     <strong>Asignar a:</strong>
-                    <!--  -->
+                    
                     <select name="department_id" class="form-control border-0 bg-light shadow-sm " id="">
                     <option value="">-- Departamento --</option>
                     @foreach($department as  $id => $name)
@@ -89,7 +90,7 @@
                     @endforeach                    
                     </select>
                 </div>
-            </div>
+            </div> -->
             <div class="col-xs-12 col-sm-12 col-md-4 mt-2">
                 <div class="form-group">
                     <strong>Asignar a:</strong>
@@ -172,7 +173,7 @@
                 let title = formData.get('title').trim();
                 let description = this.querySelector('textarea[name="description"]').value.trim();
                 let area_id = this.querySelector('select[name="area_id"]').value;
-                let department_id = this.querySelector('select[name="department_id"]').value;
+                // let department_id = this.querySelector('select[name="department_id"]').value;
                 let category_id = this.querySelector('select[name="category_id"]').value;
                 // let files = formData.getAll('image[]'); // Obtener todos los archivos del input de tipo file
                 // seccion para validar los input y que contegan valores
@@ -188,9 +189,9 @@
                 if (!area_id) {
                     errors.area_id = ['El área es requerida'];
                 }
-                if (!department_id) {
-                    errors.department_id = ['El departamento es requerido'];
-                }
+                // if (!department_id) {
+                //     errors.department_id = ['El departamento es requerido'];
+                // }
                 if (!category_id) {
                     errors.category_id = ['La categoría es requerida'];
                 } 

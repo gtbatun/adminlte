@@ -55,5 +55,11 @@ class User extends Authenticatable
         // return route('admin.profile.show', $this->id);
         return route('user.edit', $this->id);
     }
+    public function adminlte_image(){
+        return asset('storage/images/user/' . $this->image);
+    }
+    public function department(){
+        return  $this->belongsTo(Department::class,'department_id');
+    }
    
 }
