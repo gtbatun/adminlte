@@ -60,6 +60,7 @@ Route::resource('user', UserController::class);
 // Route::get('graf', [ChartJSController::class, 'index']);
 // Route::get('/graf',[ ChartJSController::class, 'ticketsChart'])->name('tickets.chart');
 // Route::get('/tickets-data', [ChartJSController::class, 'ticketsData'])->name('tickets.data');
+Route::post('/user/update/password', [UserController::class, 'updatePassword'])->name('user.update.password');
 
 });
 

@@ -78,6 +78,9 @@ class UserController extends Controller
         // return view('User.profile');
         return "sdsdsdsdsdsdsdsdsdsdsds";
     }
+    public function updatepassword(Request $request, User $user){
+        return $request;
+    }
 
     public function update(Request $request, User $user)
     {

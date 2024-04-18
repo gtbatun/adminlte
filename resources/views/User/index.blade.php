@@ -1,3 +1,5 @@
+<!-- optimizar las consultas de las select options, se esta realizando 3 consultas una por cada opcion -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 @extends('adminlte::page')
 @section('content')
 <div >
@@ -50,8 +52,10 @@
                 <a href="{{route('user.edit',$userItem)}}" class="btn btn-info">Editar <i class='fas fa-edit'></i></a>
                 <!-- <a href="" class="btn btn-warning" data-target="#modal-create-category">Contraseña <i class='fas fa-edit'></i></a> -->
                 <!-- <a type="button" class="btn btn-warning" data-toggle="modal" data-target="#modal-update-password" data-user-id="{{$userItem->id}}" href="">Contraseña</a> -->
-                <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modal-update-password" data-user-id="{{ $userItem->id }}">Contraseña</button>
+                <!-- <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modal-update-password" data-id="{{ $userItem->id }}">Contraseña</button> -->
                 <!-- <button type="button" class="btn btn-warning" onclick="mostrarId({{ $userItem->id }})">Modificar Contraseña</button> -->
+                <button type="button" class="btn btn-warning edit-password-btn" data-toggle="modal" data-target="#modal-update-password" data-user-id="{{ $userItem->id }}">Modificar Contraseña</button>
+    
                     <form action="{{route('user.destroy',$userItem)}}" method="post" class="d-inline">
                         @csrf
                         @method('DELETE')
@@ -77,86 +81,46 @@
     <p>No hay Usuarios creados</p>
    @endisset
 </div>
- <!-- <h1>
-    Tickets
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-create-category">
-        Crear
-    </button>
-    </h1> -->
-<!-- modal -->
-<div class="modal fade" id="modal-create-category">
-    <div class="modal-dialog">
-        <div class="modal-content bg-default">
-            <div class="modal-header">
-                <h4 class="modal-title">Cambiar contraseña</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span></button>
-                </div>
-            <div class="modal-body">
-                <!-- <p>Proximamente, Formulario....</p> -->
-                <p>Usuario ID: <span id="user-id"></span></p>
-                <div class="row mb-3">
-                <label for="password" class="col-md-4 col-lg-3 col-form-label ">Nueva Contraseña</label>
-                <div class="col-md-8 col-lg-9">
-                <input name="password" type="password" class="form-control @error('password') is-invalid @enderror" >
-                </div>
-            </div>
-            <div class="row mb-3">
-                <label for="password_confirmation" class="col-md-4 col-lg-3 col-form-label ">Repetir Contraseña</label>
-                <div class="col-md-8 col-lg-9">
-                <input name="password_confirmation" type="password" class="form-control @error('password_confirmation') is-invalid @enderror">
-                </div>
-            </div>
-            </div>
-            <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-outline-light">Save changes</button>
-            </div>
-        </div>
-      <!-- /.modal-content -->
-    </div>
-    <!-- /.modal-dialog -->
-</div>
-<!-- /.modal -->
 
+<!-- Modal de cambio de contraseña  -->
 <div class="modal" id="modal-update-password">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Modificar contraseña</h5>
+                <h5 class="modal-title">Modificar Contraseña</h5>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
-                <form action="" method="post">
+                <form action="{{ route('user.update.password') }}" method="post">
                     @csrf
-                    <input type="text" name="user_id" id="user-id">
+                    <input type="hidden" name="user_id" id="user-id">
                     <div class="form-group">
-                        <label for="new-password">Nueva contraseña</label>
-                        <input type="password" class="form-control" id="new-password" name="new_password" required>
+                        <label for="password">Nueva Contraseña</label>
+                        <input type="password" name="password" id="password" class="form-control">
                     </div>
-                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
-
+<!--  -->
 <script>
-    $('#modal-update-password').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget); // Botón que activó el modal
-        var userId = button.data('user-id'); // Extraer el ID de usuario de los datos del botón
-
-        // Actualizar el campo oculto con el ID de usuario
-        var modal = $(this);
-        modal.find('.modal-body #user-id').val(userId);
+    $(document).ready(function() {
+        $('.edit-password-btn').click(function() {
+            var userId = $(this).data('user-id');
+            $('#modal-update-password').find('#user-id').val(userId);
+        });
     });
 </script>
 
-<script>
-    function mostrarId(userId) {
-        console.log('ID de usuario:', userId);
-    }
-</script>
+
+
+
+
+
+
+
 
 @endsection
 

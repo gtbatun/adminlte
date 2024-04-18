@@ -51,7 +51,7 @@
               <ul class="nav nav-tabs nav-tabs-bordered">
 
                 <li class="nav-item">
-                  <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-overview">Informaacion del Usuario</button>
+                  <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-overview">Informacion del Usuario</button>
                 </li>
 
                 </ul>
