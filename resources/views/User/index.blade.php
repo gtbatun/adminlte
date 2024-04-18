@@ -50,11 +50,7 @@
                 <td>{{$userItem->created_at->diffForHumans(null, false, false, 1)}}</td>             
                 <td>
                 <a href="{{route('user.edit',$userItem)}}" class="btn btn-info">Editar <i class='fas fa-edit'></i></a>
-                <!-- <a href="" class="btn btn-warning" data-target="#modal-create-category">Contraseña <i class='fas fa-edit'></i></a> -->
-                <!-- <a type="button" class="btn btn-warning" data-toggle="modal" data-target="#modal-update-password" data-user-id="{{$userItem->id}}" href="">Contraseña</a> -->
-                <!-- <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modal-update-password" data-id="{{ $userItem->id }}">Contraseña</button> -->
-                <!-- <button type="button" class="btn btn-warning" onclick="mostrarId({{ $userItem->id }})">Modificar Contraseña</button> -->
-                <button type="button" class="btn btn-warning edit-password-btn" data-toggle="modal" data-target="#modal-update-password" data-user-id="{{ $userItem->id }}">Modificar Contraseña</button>
+                <button type="button" class="btn btn-warning edit-password-btn" data-toggle="modal" data-target="#modal-update-password" data-user-id="{{ $userItem->id }}" data-user-name="{{ $userItem->name }}">Modificar Contraseña</button>
     
                     <form action="{{route('user.destroy',$userItem)}}" method="post" class="d-inline">
                         @csrf
@@ -87,7 +83,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Modificar Contraseña</h5>
+                <h5 class="modal-title" id="modal-titulo">Usuario: <strong class="text-danger"><span id="user-name-title"></span></strong></h5>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
@@ -109,9 +105,13 @@
     $(document).ready(function() {
         $('.edit-password-btn').click(function() {
             var userId = $(this).data('user-id');
+            var userName = $(this).data('user-name');
             $('#modal-update-password').find('#user-id').val(userId);
-        });
-    });
+
+            $('#modal-update-password').find('#user-name-title').text(userName);
+
+        });  
+     });
 </script>
 
 

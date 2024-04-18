@@ -17,4 +17,6 @@ class Department extends Model
         public function ticket(){
             return $this->hasMany(Ticket::class,'department_id');
         }
+
+        
 }

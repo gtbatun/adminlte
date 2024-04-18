@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Department;
-
+use Illuminate\Support\Facades\Hash;
 
 
 use Illuminate\Support\Facades\Storage;
@@ -78,8 +78,19 @@ class UserController extends Controller
         // return view('User.profile');
         return "sdsdsdsdsdsdsdsdsdsdsds";
     }
-    public function updatepassword(Request $request, User $user){
-        return $request;
+    public function updatepassword(Request $request){
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'password' => ['required','string','min:8'],
+        ]);
+
+        $user = User::findOrFail($request->user_id);
+
+        // Actualizar la contraseña
+        $user->password = Hash::make($request->password);
+        $user->update();
+    
+        return redirect()->route('user.index')->with('success','Contraseña actualizada con exito');
     }
 
     public function update(Request $request, User $user)
