@@ -28,6 +28,13 @@ class TicketController extends Controller
         return Excel::download(new TicketExport, 'Tickets.xlsx');
         
     }
+    
+    public function showReport(Request $request){
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+        return view('ticket.report', compact('startDate', 'endDate', 'ticket'));
+        // return view('ticket.report');
+    }
 
     public function index()
     { 

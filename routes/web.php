@@ -11,6 +11,7 @@ use App\Http\Controllers\StatusController;
 use App\Http\Controllers\TicketController;
 
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ReportController;
 
 use Illuminate\Support\Facades\Auth;
 
@@ -48,7 +49,7 @@ Route::resource('inventory',InventoryController::class);
 Route::resource('status',StatusController::class);
 Route::resource('ticket',TicketController::class);
 
-Route::get('ticket-export/', [TicketController::class, 'export']);
+
 
 Route::resource('user', UserController::class);
 
@@ -61,6 +62,16 @@ Route::resource('user', UserController::class);
 // Route::get('/graf',[ ChartJSController::class, 'ticketsChart'])->name('tickets.chart');
 // Route::get('/tickets-data', [ChartJSController::class, 'ticketsData'])->name('tickets.data');
 Route::post('/user/update/password', [UserController::class, 'updatePassword'])->name('user.update.password');
+
+// Route::get('ticket-report',[TicketController::class,'showReport'])->name('ticket.report');
+
+Route::get('/reportes', [ReportController::class,'index'])->name('report.index');
+
+Route::post('/reportes/generar', [ReportController::class,'generar'])->name('reportes.generar');
+
+// Route::get('ticket-export/', [TicketController::class, 'export']);
+
+Route::get('ticket-export/{fechaInicio}/{fechaFin}', [TicketController::class, 'export'])->name('ticket-export');
 
 });
 

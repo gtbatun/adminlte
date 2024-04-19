@@ -6,11 +6,6 @@ use App\Models\Ticket;
 
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
-// 
-
-
-
-// 
 
 class TicketExport implements FromCollection , WithHeadings
 {

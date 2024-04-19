@@ -355,7 +355,7 @@ return [
         ],
         [
             'text' => 'Reportes',
-            'url'  => 'ticket-export',
+            'route'  => 'report.index',
             // 'can'  => 'manage-blog',
         ],
         // [

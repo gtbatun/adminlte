@@ -1,4 +1,5 @@
 <!-- optimizar las consultas de las select options, se esta realizando 3 consultas una por cada opcion -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <style>
         #preview {
             display: flex;
