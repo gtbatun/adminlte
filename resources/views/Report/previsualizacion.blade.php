@@ -3,7 +3,9 @@
     <p class="text-danger">No hay tickets para mostrar.</p>
 @else
 
-<a class="btn btn-outline-primary mt-4" href="{{ url('ticket-export')}}" class="btn btn-success">Descargar <i class="fas fa-download" style="font-size:24px"></i></a>
+<a class="btn btn-outline-primary mt-4" href="{{ url('ticket-export1')}}" class="btn btn-success">Descargar <i class="fas fa-download" style="font-size:24px"></i></a>
+
+
 <table class="table table-bordered shadow-lg mt-4 table-striped"><thead>
         <tr>
             <th>ID</th>

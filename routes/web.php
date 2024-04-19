@@ -69,9 +69,10 @@ Route::get('/reportes', [ReportController::class,'index'])->name('report.index')
 
 Route::post('/reportes/generar', [ReportController::class,'generar'])->name('reportes.generar');
 
-// Route::get('ticket-export/', [TicketController::class, 'export']);
+Route::get('ticket-export1/', [TicketController::class, 'export'])->name('ticket-export1');
 
-Route::get('ticket-export/{fechaInicio}/{fechaFin}', [TicketController::class, 'export'])->name('ticket-export');
+// Route::get('ticket-export/', [TicketController::class, 'export']);
+// Route::get('ticket-export/{fechaInicio}/{fechaFin}', [TicketController::class, 'export'])->name('ticket-export');
 
 });
 

@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 // se agregan para que funcione la opcion exportar
 use App\Exports\TicketExport;
 use Maatwebsite\Excel\Facades\Excel;
+
 // 
 
 
@@ -24,11 +25,15 @@ class TicketController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function export(){
-        return Excel::download(new TicketExport, 'Tickets.xlsx');
+    // public function export($fechaInicio, $fechaFin){
+        public function export(){
+        // return Excel::download(new TicketExport($fechaInicio, $fechaFin), 'Tickets.xlsx');        
+        // return Excel::download(new TicketExport($fechaInicio, $fechaFin), 'tickets.xlsx');
+        return Excel::download(new TicketExport('2024-04-15', '2024-04-19'), 'Tickets.xlsx');
         
     }
     
+
     public function showReport(Request $request){
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');

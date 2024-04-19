@@ -4,6 +4,7 @@ namespace App\Exports;
 
 use App\Models\Ticket;
 
+
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
@@ -12,9 +13,21 @@ class TicketExport implements FromCollection , WithHeadings
     /**
     * @return \Illuminate\Support\Collection
     */
+    protected $fechaInicio;
+    protected $fechaFin;
+
+    public function __construct($fechaInicio, $fechaFin)
+    {
+        $this->fechaInicio = $fechaInicio;
+        $this->fechaFin = $fechaFin;
+        
+    }
+   
     public function collection()
     {
-        return Ticket::with('department')->get()->map(function ($ticket) {
+        return Ticket::with('department')
+        ->whereBetween('created_at', [$this->fechaInicio, $this->fechaFin])
+        ->get()->map(function ($ticket) {
             return [
                 'ID' => $ticket->id,
                 'Nombre' => $ticket->title,
