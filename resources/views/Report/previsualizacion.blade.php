@@ -2,9 +2,10 @@
 @if($tickets->isEmpty())
     <p class="text-danger">No hay tickets para mostrar.</p>
 @else
-
-<a class="btn btn-outline-primary mt-4" href="{{ url('ticket-export1')}}" class="btn btn-success">Descargar <i class="fas fa-download" style="font-size:24px"></i></a>
-
+<div class="d-grid gap-2 d-md-flex justify-content-md-end m-2">
+<a  href="{{ url('report-export', ['fechaInicio' => $fechaInicio, 'fechaFin' => $fechaFin]) }}" 
+class="btn btn-success">Descargar  <i class="fas fa-download" style="font-size:24px"></i></a>
+</div>
 
 <table class="table table-bordered shadow-lg mt-4 table-striped"><thead>
         <tr>

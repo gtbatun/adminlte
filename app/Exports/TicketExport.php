@@ -7,20 +7,59 @@ use App\Models\Ticket;
 
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithStyles;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
+use Maatwebsite\Excel\Concerns\WithDrawings;
 
-class TicketExport implements FromCollection , WithHeadings
+
+
+class TicketExport implements FromCollection , WithHeadings, WithStyles
 {
     /**
     * @return \Illuminate\Support\Collection
     */
     protected $fechaInicio;
     protected $fechaFin;
+    // 
+ 
 
     public function __construct($fechaInicio, $fechaFin)
     {
         $this->fechaInicio = $fechaInicio;
         $this->fechaFin = $fechaFin;
         
+    }
+    
+    public function styles(Worksheet $sheet){
+        $sheet->getStyle('A1:I1')->applyFromArray([
+            'font' => [
+                'bold' => true,
+                'color' => ['argb' => 'FFFFFF'],
+               'size'  => 14,
+            ],
+            'fill' => [
+                'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+               'startColor' => ['argb' => '4285F4'],
+            ],
+            'alignment' => [
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+            ],
+        ]);
+
+        $sheet->getStyle('A2:I2' . $sheet->getHighestRow())->applyFromArray([
+            'font' => [
+                'size' => 12,
+                'color' => ['rgb' => '000000'], // Color negro
+            ],
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                    'color' => ['rgb' => '000000'], // Color negro
+                ],
+            ],
+        ]);
+
     }
    
     public function collection()
@@ -31,13 +70,12 @@ class TicketExport implements FromCollection , WithHeadings
             return [
                 'ID' => $ticket->id,
                 'Nombre' => $ticket->title,
-                // 'Email' => $ticket->email,
                 'Usuario' => $ticket->usuario->name, // Accede al nombre del departamento
                 'Area' => $ticket->area->name,
                 'Departamento' => $ticket->department->name,
-                // 'Fecha de Creación' => $ticket->created_at,
-                // Agrega más campos si es necesario
-                'Encargado' => $ticket->department->name,
+                'Categoria' => $ticket->category->name,
+                'Estatus' => $ticket->status->name,
+                'Fecha de Creación' => $ticket->created_at->format('Y-m-d'),
             ];
         });
     }
@@ -45,17 +83,13 @@ class TicketExport implements FromCollection , WithHeadings
     {
         return [
             'ID',
-            'Titulo',
-            // 'Descripcion',
-            // 'Fecha finalizacion',
-            // 'Imagen',
-            // 'Creacion',
-            // 'Actualizacion',
+            'Titulo',            
             'usuario',
             'Area',
             'Departamento',
-            'Encargado',
-            // 'Categoria',
+            'Categoria',
+            'Estatus',
+            'Fecha de Creación',
         ];
     }
     

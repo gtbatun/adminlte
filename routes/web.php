@@ -40,7 +40,8 @@ Auth::routes();
 
 Route::middleware('auth')->group(function () {
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
 Route::resource('area',AreaController::class);
 Route::resource('category',CategoryController::class);
 Route::resource('department',DepartmentController::class);
@@ -50,26 +51,30 @@ Route::resource('status',StatusController::class);
 Route::resource('ticket',TicketController::class);
 
 
-
+//Ruta GRUD para los usuarios
 Route::resource('user', UserController::class);
-
-// Route::get('usejr', [UserController::class, 'index'])->name('user.index');
-// Route::get('profile/{ujser}', [UserController::class, 'show'])->name('user.profile');
-// Route::get('user/{usejr}/edit', [UserController::class, 'edit'])->name('user.edit');
-// Route::put('user/{usejr}/edit', [UserController::class, 'update'])->name('user.update');
-
-// Route::get('graf', [ChartJSController::class, 'index']);
-// Route::get('/graf',[ ChartJSController::class, 'ticketsChart'])->name('tickets.chart');
-// Route::get('/tickets-data', [ChartJSController::class, 'ticketsData'])->name('tickets.data');
+//Ruta para el reset de contraseña de los usuarios
 Route::post('/user/update/password', [UserController::class, 'updatePassword'])->name('user.update.password');
+//Ruta para crear vista index de reporte de tickets 
+Route::get('/reportes', [ReportController::class,'index'])->name('report.index');
+//Genera la previsualizacion de tickets a exportar segun las fechas 
+Route::post('/reportes/generar', [ReportController::class,'generar'])->name('reportes.generar');
+//Exporta a un documento excel los tickets seleccionados
+Route::get('report-export/{fechaInicio}/{fechaFin}', [ReportController::class, 'reportexport'])->name('report-export');
+
+
+Route::get('graf', [ChartJSController::class, 'index']); 
+
+Route::post('graf/store',[ ChartJSController::class, 'store'])->name('reportessssss.store');
+// Route::get('/tickets-data', [ChartJSController::class, 'ticketsData'])->name('tickets.data');
 
 // Route::get('ticket-report',[TicketController::class,'showReport'])->name('ticket.report');
 
-Route::get('/reportes', [ReportController::class,'index'])->name('report.index');
 
-Route::post('/reportes/generar', [ReportController::class,'generar'])->name('reportes.generar');
 
-Route::get('ticket-export1/', [TicketController::class, 'export'])->name('ticket-export1');
+Route::get('ticket-export/', [TicketController::class, 'export'])->name('ticket-export');
+
+// Route::get('report-export/', [ReportController::class, 'reportexport'])->name('report-export');
 
 // Route::get('ticket-export/', [TicketController::class, 'export']);
 // Route::get('ticket-export/{fechaInicio}/{fechaFin}', [TicketController::class, 'export'])->name('ticket-export');

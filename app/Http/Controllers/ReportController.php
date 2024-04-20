@@ -21,29 +21,21 @@ class ReportController extends Controller
         // return $request;
         $fechaInicio = $request->fecha_inicio;
         $fechaFin = $request->fecha_fin;
-
-        // if ($request->accion == 'exportar') {
-        //     return redirect()->route('export', ['fecha_inicio' => $fechaInicio, 'fecha_fin' => $fechaFin]);
-        // }
-    
-        $tickets = Ticket::whereBetween('created_at', [$fechaInicio, $fechaFin])->get();
+         $tickets = Ticket::whereBetween('created_at', [$fechaInicio, $fechaFin])->get();
 
         // return $tickets;
         // return response()->json(compact('tickets'));
+        $fechaInicio = $request->fecha_inicio;
+        $fechaFin = $request->fecha_fin;
         
-        return view('report.previsualizacion', compact('tickets'));
+        return view('report.previsualizacion', compact('tickets','fechaInicio','fechaFin'));
     
         
     }
 
 
-    public function export10(Request $request){
-        $fechaInicio = $request->fecha_inicio;
-        $fechaFin = $request->fecha_fin;
-        // public function export(){
-        // return Excel::download(new TicketExport($fechaInicio, $fechaFin), 'Tickets.xlsx');        
-        return Excel::download(new TicketExport($fechaInicio, $fechaFin), 'tickets.xlsx');
-        // return Excel::download(new TicketExport('2024-04-15', '2024-04-19'), 'Tickets.xlsx');
+    public function reportexport($fechaInicio, $fechaFin){       
+        return Excel::download(new TicketExport($fechaInicio, $fechaFin), 'Reporte de tickets_'.$fechaInicio.'.xlsx', \Maatwebsite\Excel\Excel::XLSX);
         
     }
 

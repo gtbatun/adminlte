@@ -75,6 +75,8 @@ class HomeController extends Controller
         //
 
    
+        // return view('home', compact('a_labels', 'a_data','d_labels', 'd_data','labels1', 'data1'));
         return view('chart', compact('a_labels', 'a_data','d_labels', 'd_data','labels1', 'data1'));
+        // return view('home');
     }
 }

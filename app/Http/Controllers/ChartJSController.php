@@ -8,6 +8,14 @@ use Illuminate\Http\Request;
 
 class ChartJSController extends Controller
 {
+    public function index(){
+        return view('Report.generar');
+    }
+
+    public function store(Request $request){
+        return $request;
+        return "desde store";
+    }
     
 
     public function ticketsChart()

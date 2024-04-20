@@ -1,9 +1,8 @@
-<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 @extends('adminlte::page')
 @section('content')
 
-<form class="bg-white py-3 px-4 shadow rounded" action="{{route('ticket-export1') }}" method="post" id="form-generar-reporte" >
-<!-- <form class="bg-white py-3 px-4 shadow rounded" action="{{ route('reportes.generar') }}" method="post" id="form-generar-reporte" > -->
+<form class="bg-white py-3 px-4 shadow rounded"  method="post" id="form-generar-reporte" >
 
     @csrf
     <div class="container d-flex justify-content-between">
@@ -17,15 +16,9 @@
         </div>
         <div class="col-4 mt-4">    
         <button class="btn btn-outline-primary " type="submit"><i class="fa fa-search" style="font-size:24px"></i></button>
-        <!-- <button class="btn btn-outline-primary " name="action" value="exportar" type="submit"><i class="fas fa-download" style="font-size:24px"></i></button> -->
-            
-        <!-- <button class="btn btn-outline-primary " type="submit"><i class="fa fa-search" style="font-size:24px">exportar</i></button> -->
-        
+                
         </div>
-        <!-- <div class="col-md-6 text-right"> -->
-        <!-- Botón de exportar reporte -->
         
-    <!-- </div> -->
     </div> 
 </form>
 
