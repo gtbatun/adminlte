@@ -53,7 +53,7 @@
                             <th>ACCION</th>
                         </tr>
                     </thead>
-                    @foreach($ticket as $ticketItem)                    
+                    @foreach($ticket as $ticketItem) 
                     <tr>
                 <td>{{$ticketItem->id}}</td>   
                 <td class=" text-truncate" style="max-width: 200px;" >
@@ -70,17 +70,19 @@
                 <td><a href="{{route('status.show',$ticketItem->status)}}">{{$ticketItem->status->name}}</a></td>
                 
                 <td>
+                    @can('update',$ticketItem)
                     <a href="{{route('ticket.edit',$ticketItem)}}" class="btn btn-warning">Editar <i class='fas fa-edit'></i></a>
-
+                    @endcan
+                    @can('delete',$ticketItem)
                     <form action="{{route('ticket.destroy',$ticketItem)}}" method="post" class="d-inline">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn btn-danger">Eliminar <i class='fas fa-eraser'></i></button>
                     </form>
+                    @endcan
                 </td>
                 
-            </tr>          
-                   
+            </tr>
                     @endforeach
                 </table>
             </div>
@@ -130,7 +132,7 @@
 <script>
     
 $(document).ready(function() {
-    $('#tickets').DataTable( {
+    $('#tickets').DataTable({
         "order": [[ 0,"desc" ]],
         "language": {
             "search": "Buscar",

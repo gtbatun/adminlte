@@ -16,6 +16,7 @@ use App\Exports\TicketExport;
 use Maatwebsite\Excel\Facades\Excel;
 
 // 
+use Illuminate\Support\Facades\Gate;
 
 
 use Illuminate\Support\Facades\Storage;
@@ -43,8 +44,8 @@ class TicketController extends Controller
 
     public function index()
     { 
-        
         $user = Auth::user();
+        
 
         if($user->isAdmin()){
             $ticket = Ticket::with('area','category','status','department')
@@ -57,6 +58,7 @@ class TicketController extends Controller
                 ->latest()
                 ->paginate();
         }
+        
 
         return view('ticket.index',[
             'newTicket'=> new Ticket,
@@ -139,6 +141,7 @@ class TicketController extends Controller
      */
     public function edit(Ticket $ticket)
     {
+       
         return view('ticket.edit', [
             'areas' => Area::pluck('name','id'),
             'category' => Category::pluck('name','id'),
@@ -153,6 +156,7 @@ class TicketController extends Controller
     public function update(Request $request, Ticket $ticket)
     {
         // dd( $request->all());
+        $this->authorize('update',$ticket); // para autorizar o restringir la actualizacion del tixcket
 
         $ticket->fill($request->validate([
                 'title' => 'required',
@@ -189,6 +193,7 @@ class TicketController extends Controller
      */
     public function destroy(Ticket $ticket)
     {
+        $this->authorize('destroy',$ticket);
         $ticket->delete();
         return redirect()->route('ticket.index')->with('success', 'Ticket Eliminado exitosamente');
     }

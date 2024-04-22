@@ -63,7 +63,9 @@ Route::post('/reportes/generar', [ReportController::class,'generar'])->name('rep
 Route::get('report-export/{fechaInicio}/{fechaFin}', [ReportController::class, 'reportexport'])->name('report-export');
 
 
-Route::get('graf', [ChartJSController::class, 'index']); 
+Route::get('graf/', [ChartJSController::class, 'index']); 
+
+// Route::get('graf1', [ChartJSController::class, 'index']); 
 
 Route::post('graf/store',[ ChartJSController::class, 'store'])->name('reportessssss.store');
 // Route::get('/tickets-data', [ChartJSController::class, 'ticketsData'])->name('tickets.data');

@@ -4,8 +4,11 @@
 @else
 <div class="d-grid gap-2 d-md-flex justify-content-md-end m-2">
 <a  href="{{ url('report-export', ['fechaInicio' => $fechaInicio, 'fechaFin' => $fechaFin]) }}" 
-class="btn btn-success">Descargar  <i class="fas fa-download" style="font-size:24px"></i></a>
+class="btn btn-success">Descargar<i class="fas fa-download" style="font-size:24px"></i></a>
+<a  href="{{ url('graf') }}" 
+class="btn btn-success">Descargar 2<i class="fas fa-download" style="font-size:24px"></i></a>
 </div>
+
 
 <table class="table table-bordered shadow-lg mt-4 table-striped"><thead>
         <tr>

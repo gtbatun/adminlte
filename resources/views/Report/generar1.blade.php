@@ -7,9 +7,6 @@
     use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
     use PhpOffice\PhpSpreadsheet\Style\Border;
     use PhpOffice\PhpSpreadsheet\Style\Alignment;
-
-    use App\Models\Ticket;
-    
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
 
@@ -25,10 +22,6 @@
             $row++;
         
         } 
-        echo $tickets;
-
-       
-
         
         $writer = new Xlsx($spreadsheet);
         $fileName = "Your First Excel Exported From Laravel.xlsx";

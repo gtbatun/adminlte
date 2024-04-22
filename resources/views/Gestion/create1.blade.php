@@ -1,11 +1,18 @@
 @extends('adminlte::page')
 
 @section('content')
+
 <!--  -->
-<div class="container rounded" style="padding: 1%; border: 1px solid #adb5bd47;">
+<div class="container bg-white shadow rounded" style="padding: 1%; border: 1px solid #adb5bd47;">
     <div class="row">
         <div class="col-md-12 mt-2">
-            <h3 class="text-left">Ticket # {{$ticket->id}}</h3>
+            <h3 class="text-leftb">Ticket # {{$ticket->id}}
+                @if($ticket->status_id == 4)
+            <span class="position-relative top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                {{$ticket->status->name}}
+                @endif
+            </span>
+            </h3>
         </div>
 
         <div class="col-xs-12 col-sm-6 col-md-3 mt-2">
@@ -39,7 +46,7 @@
                 <span>{{$ticket->title}}</span>
             </div>
         </div>
-        <div class="col-xs-12 col-sm-12 col-md-9 mt-2 rounded">
+        <div class="col-xs-12 col-sm-12 col-md-9  rounded">
             <div class="form-group">
                 <h6><strong>Descripcion:</strong></h6>
                 <p class="rounded" style="background-color: #e9ecef3b;">{{$ticket->description}}</p>
@@ -47,12 +54,13 @@
         </div>
 
         @if(!empty($ticket->image))
-            <div class="col-xs-12 col-sm-12 col-md-12 mt-2">
+            <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="form-group">
-                    <label for=""><strong>Imágenes:</strong></label>
-                    <ul>
+                    <label for="image"><strong>Imágenes:</strong></label>
+                    <br>
+                    <ul class="row " style="padding-right:40px ;">
                         @foreach(explode(',', $ticket->image) as $imageItem )
-                            <li><a href="{{asset('storage/images/'. $imageItem)}}" target="_blank" alt="{{ $ticket->id }}">{{$imageItem}}</a></li>
+                            <li class="list-group-item   border border-3 col-lg-3 col-md-6 col-sm-12 rounded"><a href="{{asset('storage/images/'. $imageItem)}}" target="_blank" alt="{{ $ticket->id }}">{{$imageItem}}</a></li>
                         @endforeach
                     </ul>
                 </div>
@@ -65,11 +73,12 @@
 <!--  -->
 
 <!-- seccion para ver el historial de gestiones -->
+
 @if (!empty($h_gestiones))
-<div class="container rounded " style=" padding: 1%; border: 1px solid #adb5bd47;">
+<div class="container bg-white shadow rounded  " style=" padding: 1%; border: 1px solid #adb5bd47;">
     <h4>Historial  <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-secondary">{{'+ '.count($h_gestiones)}}</span></h4>
-    <div  style="max-height: 300px; overflow-y:auto;">
-    
+
+    <div class="overflow-auto p-3" style="max-width: 100%; max-height: 300px;">
         <!-- {{$h_gestiones}} -->
         @foreach ($h_gestiones as $gestion)
         <div class="row rounded"  style=" padding: 1%; border: 1px solid #adb5bd47;  ">
@@ -93,7 +102,6 @@
                     <ul>
                     <li>{{$imageItem}}</li>
                     </ul>
-                <!-- <img src="{{asset('storage/images/'. $imageItem)}}" alt="{{ $ticket->id }}" class="img-thumbnail" style="width:200px"> -->
                 </a>
                 @endforeach
             @endif
@@ -104,11 +112,11 @@
         @endforeach
    
 </div>
+</div>
 @endif
 
 <!-- fin de la seccion del historico de gestiones -->
 <!--  -->
-
 
 <!--  -->
 
@@ -125,7 +133,7 @@
 
 
 
-<form action="{{route('gestion.store')}}" method="POST" enctype="multipart/form-data" style=" padding: 1%; border: 1px solid #adb5bd47;"class="rounded" >
+<form action="{{route('gestion.store')}}" method="POST" enctype="multipart/form-data" style=" padding: 1%; border: 1px solid #adb5bd47;"class=" container bg-white shadow rounded rounded" >
     <h4>Gestionar</h4> 
         @csrf
         <input type="hidden" name="ticket_id" class="form-control" value="{{$ticket->id}}" >
@@ -156,13 +164,13 @@
                 @if($ticket->status_id != 4)            
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" value="1" name="cerrar" {{ $ticket->status_id == 4 ? 'checked' : '' }}>
-                    <label class="form-check-label" for="status_id">Cerrar Ticket</label>            
+                    <label class="form-check-label text-danger" for="status_id"><strong>Cerrar Ticket</strong></label>            
                 </div>
                 @endif
                 @if($ticket->status_id == 4)            
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" value="2" name="reopen" >
-                    <label class="form-check-label" for="status_id">Reabrir Ticket</label>            
+                    <label class="form-check-label text-success" for="status_id"><strong>Reabrir Ticket</strong></label>            
                 </div>
                 @endif
                 
@@ -197,8 +205,6 @@
                     }
                 });
             </script>
-
-
             <!--  -->
             <div class="col-xs-12 col-sm-12 col-md-12 text-center mt-2">
                 <a  class="btn btn-primary" href="{{route('ticket.index')}}" >Cancelar</a>
@@ -207,5 +213,7 @@
         </div>
     </form>
     </div>
+
+
     
 @endsection
