@@ -42,25 +42,32 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::resource('area',AreaController::class);
-Route::resource('category',CategoryController::class);
-Route::resource('department',DepartmentController::class);
+
+    Route::middleware('can:admin-access')->group(function(){
+        Route::resource('area',AreaController::class);
+        Route::resource('category',CategoryController::class);
+        Route::resource('department',DepartmentController::class);
+        Route::resource('inventory',InventoryController::class);
+        Route::resource('status',StatusController::class); 
+        
+        
+        //Ruta para el reset de contraseña de los usuarios
+        Route::post('/user/update/password', [UserController::class, 'updatePassword'])->name('user.update.password');
+        //Ruta para crear vista index de reporte de tickets 
+        Route::get('/reportes', [ReportController::class,'index'])->name('report.index');
+        //Genera la previsualizacion de tickets a exportar segun las fechas 
+        Route::post('/reportes/generar', [ReportController::class,'generar'])->name('reportes.generar');
+        //Exporta a un documento excel los tickets seleccionados
+        Route::get('report-export/{fechaInicio}/{fechaFin}', [ReportController::class, 'reportexport'])->name('report-export');
+    });
+//Ruta GRUD para los usuarios
+Route::resource('user', UserController::class);
+
 Route::resource('gestion',GestionController::class);
-Route::resource('inventory',InventoryController::class);
-Route::resource('status',StatusController::class);
 Route::resource('ticket',TicketController::class);
 
 
-//Ruta GRUD para los usuarios
-Route::resource('user', UserController::class);
-//Ruta para el reset de contraseña de los usuarios
-Route::post('/user/update/password', [UserController::class, 'updatePassword'])->name('user.update.password');
-//Ruta para crear vista index de reporte de tickets 
-Route::get('/reportes', [ReportController::class,'index'])->name('report.index');
-//Genera la previsualizacion de tickets a exportar segun las fechas 
-Route::post('/reportes/generar', [ReportController::class,'generar'])->name('reportes.generar');
-//Exporta a un documento excel los tickets seleccionados
-Route::get('report-export/{fechaInicio}/{fechaFin}', [ReportController::class, 'reportexport'])->name('report-export');
+
 
 
 Route::get('graf/', [ChartJSController::class, 'index']); 

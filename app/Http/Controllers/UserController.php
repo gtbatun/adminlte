@@ -7,6 +7,8 @@ use App\Models\User;
 use App\Models\Department;
 use Illuminate\Support\Facades\Hash;
 
+use Illuminate\Support\Facades\Auth;
+
 
 use Illuminate\Support\Facades\Storage;
 
@@ -65,6 +67,7 @@ class UserController extends Controller
     } 
 
     public function edit(User $user){
+        $this->authorize('update', $user);
         return view('User.edit',
         [
             'user' => $user, 
@@ -95,6 +98,8 @@ class UserController extends Controller
 
     public function update(Request $request, User $user)
     {
+        $this->authorize('update', $user);
+        
         $user->fill($request->validate([
             'name' => 'required',
             'email' => 'required',
@@ -118,7 +123,13 @@ class UserController extends Controller
         }
        
         $user->save();
-        return redirect()->route('user.index', $user)->with('success','El Usuario fue actualizado con exito');
+        $user_log = Auth::user();
+        if($user_log->isAdmin()){
+            return redirect()->route('user.index')->with('success','El Usuario fue actualizado con exito');
+        }else{
+            return redirect()->route('user.edit',$user )->with('success','El Usuario fue actualizado con exitodfgssssssssss fdgssssssss gfdgdfgfd');
+        }
+       
     
     }
 

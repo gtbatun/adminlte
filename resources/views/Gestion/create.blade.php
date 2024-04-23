@@ -1,7 +1,7 @@
 @extends('adminlte::page')
 
 @section('content')
-
+@can('view',$ticket)
 <!--  -->
 <div class="container bg-white shadow rounded" style="padding: 1%; border: 1px solid #adb5bd47;">
     <div class="row">
@@ -74,7 +74,8 @@
 
 <!-- seccion para ver el historial de gestiones -->
 
-@if (!empty($h_gestiones))
+@if (count($h_gestiones))
+<!-- Hay {{ count($h_gestiones) }} gestiones en curso. -->
 <div class="container bg-white shadow rounded  " style=" padding: 1%; border: 1px solid #adb5bd47;">
     <h4>Historial  <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-secondary">{{'+ '.count($h_gestiones)}}</span></h4>
 
@@ -215,5 +216,5 @@
     </div>
 
 
-    
+@endcan    
 @endsection

@@ -2,6 +2,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 @extends('adminlte::page')
 @section('content')
+@can('update', $ticket)
 <div class="container">
     <div class="col-12">
         <div>
@@ -154,5 +155,6 @@
         </div>
     </form>
 </div>
+@endcan
 @endsection
 

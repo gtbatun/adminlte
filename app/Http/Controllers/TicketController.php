@@ -106,8 +106,9 @@ class TicketController extends Controller
         if ($request->hasFile('image')) {
             $imageNames = [];    
             foreach ($request->file('image') as $image) {
-                // $imageName = time() . '_' . Str::random(10) . '.' . $image->getClientOriginalExtension();
-                $imageName = time() . '_' . $image->getClientOriginalName() . '.' . $image->getClientOriginalExtension();
+                // $imageName = time() . '_' . Str::random(10) . '.' . $image->getClientOriginalExtension();                
+                // $imageName = time() . '_' . $image->getClientOriginalName() . '.' . $image->getClientOriginalExtension();
+                $imageName = time() . '_' . $image->getClientOriginalName();
                 $image->storeAs('images', $imageName);
                 $imageNames[] = $imageName;
             }
@@ -141,6 +142,7 @@ class TicketController extends Controller
      */
     public function edit(Ticket $ticket)
     {
+        // $this->authorize('edit',$ticket);
        
         return view('ticket.edit', [
             'areas' => Area::pluck('name','id'),

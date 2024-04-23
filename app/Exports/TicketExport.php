@@ -31,23 +31,28 @@ class TicketExport implements FromCollection , WithHeadings, WithStyles
         
     }
     
-    public function styles(Worksheet $sheet){
-        $sheet->getStyle('A1:I1')->applyFromArray([
+
+    public function styles(Worksheet $sheet)
+    {
+        $highestColumn = $sheet->getHighestColumn();
+        $highestRow = $sheet->getHighestRow();
+    
+        $sheet->getStyle('A1:' . $highestColumn . '1')->applyFromArray([
             'font' => [
                 'bold' => true,
                 'color' => ['argb' => 'FFFFFF'],
-               'size'  => 14,
+                'size'  => 14,
             ],
             'fill' => [
                 'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
-               'startColor' => ['argb' => '4285F4'],
+                'startColor' => ['argb' => '4285F4'],
             ],
             'alignment' => [
                 'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
             ],
         ]);
-
-        $sheet->getStyle('A2:I2' . $sheet->getHighestRow())->applyFromArray([
+    
+        $sheet->getStyle('A2:' . $highestColumn . $highestRow)->applyFromArray([
             'font' => [
                 'size' => 12,
                 'color' => ['rgb' => '000000'], // Color negro
@@ -59,7 +64,6 @@ class TicketExport implements FromCollection , WithHeadings, WithStyles
                 ],
             ],
         ]);
-
     }
    
     public function collection()

@@ -11,7 +11,7 @@
         @else
             <h3 >@lang('Tickets')</h3>
         @endisset
-        <a class="btn btn-primary" href="{{ route('ticket.create') }}">Crear Ticket<i class='far fa-file'></i></a>        
+        <a class="btn btn-primary" href="{{ route('ticket.create') }}">Crear Ticket <i class='far fa-file'></i></a>        
     </div>
     @if(Session::get('success'))
         <div class="alert alert-success mt-2">
@@ -28,8 +28,8 @@
     </h1> -->
     
 
-    
-    @isset($ticket)  
+    <!-- {{count($ticket)}} -->
+    @if(count($ticket))  
     <div class="container-fluid">
     <div class="row">
         <div class="col-12">
@@ -54,6 +54,7 @@
                         </tr>
                     </thead>
                     @foreach($ticket as $ticketItem) 
+                    @can('view',$ticketItem)
                     <tr>
                 <td>{{$ticketItem->id}}</td>   
                 <td class=" text-truncate" style="max-width: 200px;" >
@@ -70,6 +71,7 @@
                 <td><a href="{{route('status.show',$ticketItem->status)}}">{{$ticketItem->status->name}}</a></td>
                 
                 <td>
+                <a href="{{route('ticket.show',$ticketItem)}}" title="Gestionar" class="btn btn-success"> <i class='fas fa-eye'></i></a>
                     @can('update',$ticketItem)
                     <a href="{{route('ticket.edit',$ticketItem)}}" class="btn btn-warning">Editar <i class='fas fa-edit'></i></a>
                     @endcan
@@ -83,6 +85,7 @@
                 </td>
                 
             </tr>
+            @endcan
                     @endforeach
                 </table>
             </div>
@@ -93,12 +96,10 @@
         <!-- /.col -->
     </div>
     <!-- /.row -->
-</div>
-  
-       
+</div>  
     @else
-    <p>No hay tickets creados</p>
-   @endisset
+    <h3 class="text-center">No hay tickets creados, seleccioné el boton crear nuevo ticket para crear</h3>
+    @endisset
 </div>
 
 

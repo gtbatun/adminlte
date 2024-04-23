@@ -1,6 +1,7 @@
 @extends('adminlte::page')
 @section('content')
 <!--  -->
+@can('update', $user)
 <div class="pagetitle">
     <!-- <h1>Perfil</h1> -->
     <nav>
@@ -130,4 +131,5 @@
 
 
 <!--  -->
+@endcan
 @endsection
