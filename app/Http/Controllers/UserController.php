@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Department;
 use Illuminate\Support\Facades\Hash;
-
 use Illuminate\Support\Facades\Auth;
 
 
@@ -37,18 +36,9 @@ class UserController extends Controller
         ]);
         $user = new User();
         if($request->file('image')){
-            $images = $request->file('image');
-            $imageNames = [];
-            $errors = [];
-            foreach($images as $image){                
-                $imageName = time() . ' - ' . $image->getClientOriginalName();
-                    if($image->isValid()){
-                        $image->storeAs('images/user',$imageName);
-                        $imageNames[] = $imageName;  
-                    }
-                }            
-            $concatenatedNames = implode(', ', $imageNames);
-            $user->image = $concatenatedNames;
+            $imageName = time() . ' - ' . $request->image->getClientOriginalName();
+            $request->file('image')->storeAs('images/user', $imageName);
+            $user->image = $imageName;
         }
 
         
@@ -98,39 +88,41 @@ class UserController extends Controller
 
     public function update(Request $request, User $user)
     {
+        $oldImage = $user->image;
         $this->authorize('update', $user);
-        
-        $user->fill($request->validate([
+
+        $validatedData = $request->validate([
             'name' => 'required',
             'email' => 'required',
             'department_id' => 'required',
             'extension' => 'min:2',
-        ]));
+            'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Asegúrate de validar también la imagen
+        ]);
 
-        if($request->file('image')){
-            $images = $request->file('image');
-            $imageNames = [];
-            $errors = [];
-            foreach($images as $image){                
-                $imageName = time() . ' - ' . $image->getClientOriginalName();
-                    if($image->isValid()){
-                        $image->storeAs('images/user',$imageName);
-                        $imageNames[] = $imageName;  
-                    }
-                }            
-            $concatenatedNames = implode(', ', $imageNames);
-            $user->image = $concatenatedNames;
+        $user->fill($validatedData);       
+
+        if ($request->file('image')) {
+            if ($oldImage) {
+                Storage::delete('images/user/'. $oldImage);
+            }
+            $imageName = time() . '-' . $request->image->getClientOriginalName();
+            $request->file('image')->storeAs('images/user', $imageName);
+            
+            $user->image = $imageName;
         }
-       
+
+        
+        // $user->save();
+
+        // return redirect()->route('user.index')->with('success', 'El Usuario fue actualizado con éxito');
+
         $user->save();
         $user_log = Auth::user();
         if($user_log->isAdmin()){
             return redirect()->route('user.index')->with('success','El Usuario fue actualizado con exito');
         }else{
-            return redirect()->route('user.edit',$user )->with('success','El Usuario fue actualizado con exitodfgssssssssss fdgssssssss gfdgdfgfd');
+            return redirect()->route('user.edit',$user )->with('success','Datos actualizado con exito');
         }
-       
-    
     }
 
 

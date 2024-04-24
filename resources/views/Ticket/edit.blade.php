@@ -1,5 +1,6 @@
 <!-- optimizar las consultas de las select options, se esta realizando 3 consultas una por cada opcion -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.122.1/jquery.min.js"></script>
+<script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
 @extends('adminlte::page')
 @section('content')
 @can('update', $ticket)
@@ -12,7 +13,6 @@
             <a href="{{route('ticket.index')}}" class="btn btn-primary">Volver</a>
         </div>
     </div>
-    <!-- {{$ticket}} -->
     
     @include('partials.validation-errors')
 
@@ -79,8 +79,10 @@
                    
                     @if(!empty($ticket->image))
                         @foreach(explode(',', $ticket->image) as $imageItem )
+                        <div class="row">
                         <img src="{{asset('storage/images/'. $imageItem)}}" alt="{{ $ticket->id }}" class="img-thumbnail">
-                        <a href="#" class="btn btn-sm btn-danger delete-image" data-image="{{ $imageItem }}">X</a>
+                        <!-- <a href="#" class="btn btn-sm btn-danger delete-image" data-image="{{ $imageItem }}">X</a> -->                        
+                        </div>
                         @endforeach
                     @endif
                     <!-- -------------------------------------------- -->
@@ -105,7 +107,7 @@
                             img.height = 200;
 
                             const removeButton = document.createElement('button');
-                            removeButton.textContent = 'Remove';
+                            removeButton.textContent = 'X';
                             removeButton.addEventListener('click', () => {
                                 event.target.value = null;
                                 preview.removeChild(listItem);

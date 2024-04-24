@@ -36,7 +36,7 @@ class UserPolicy
      */
     public function update(User $user, User $profileUser): bool
     {
-        return $user->id === $profileUser->id;
+        return $user->id === $profileUser->id || $user->is_admin === 1;
     }
 
     /**

@@ -14,7 +14,7 @@
                 <label for="profileImage" class="col-md-4 col-lg-3 col-form-label">Perfil</label>
                 <div class="col-md-8 col-lg-9">
                 <div class="pt-2">
-                    <input name="image[]" type="file" accept="image/*" >
+                    <input name="image" type="file" accept="image/*" >
                 </div>
                 </div>
             </div>
@@ -76,12 +76,10 @@
                 <option value="">-- Role --</option>
                 <option value="0">Usuario Standar</option>
                 <option value="1">Administrador</option>
+                <!-- <option value="2">Encargado</option> -->
                 </select>
                 </div>
             </div>
-
-
-        
             <div class="text-center">
                 <button type="submit" class="btn btn-primary">Guardar</button>
             </div>

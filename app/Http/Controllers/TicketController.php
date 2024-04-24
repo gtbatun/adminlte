@@ -182,7 +182,7 @@ class TicketController extends Controller
                         $imageNames[] = $imageName;  
                     }
                 }            
-            $concatenatedNames = implode(', ', $imageNames);
+            $concatenatedNames = implode(',', $imageNames);
             $ticket->image = $concatenatedNames;
         }
         // fin de seccion de lamacenamiento y procesado de imagenes

@@ -12,8 +12,12 @@
     </ol>
     </nav>
 </div>
+    @if(Session::get('success'))
+            <div class="alert alert-success mt-2">
+            <strong>{{Session::get('success')}} </strong><br>
+            </div>
+    @endif
 <!-- End Page Title -->
-
     <section class="section profile">
       <div class="row">
       
@@ -28,16 +32,7 @@
               <h2>{{$user->name}}</h2>
               @if($user->department_id != NULL)
                 <h3>{{$user->department->name}}</h3>              
-              @endif
-              
-              
-              
-              <div class="social-links mt-2">
-                <a href="#" class="twitter"><i class="fa fa-twitter"></i></a>
-                <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
-                <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
-                <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
-              </div>
+              @endif              
             </div>
           </div>
 
@@ -69,7 +64,7 @@
                       <div class="col-md-8 col-lg-9">
                         <!-- <img class="sm" src="{{asset('storage/images/user/'. $user->image)}}" alt="Profile"> -->
                         <div class="pt-2">
-                          <input name="image[]" type="file" accept="image/*" >
+                          <input name="image" type="file" accept="image/*" >
                         </div>
                       </div>
                     </div>
@@ -111,11 +106,15 @@
                     </div>
                     @if($user->isAdmin())
                     <div class="row mb-3">
-                      <label for="Phone" class="col-md-4 col-lg-3 col-form-label">Role</label>
-                      <div class="col-md-8 col-lg-9">
-                        <input name="is_admin" type="text" class="form-control" id="Phone" value="{{$user->is_admin}}">
-                      </div>
+                    <label for="Role" class="col-md-4 col-lg-3 col-form-label">Role</label>
+                    <div class="col-md-8 col-lg-9">
+                        <select name="is_admin" class="form-control" id="Role">
+                            <option value="0" {{ $user->is_admin == 0 ? 'selected' : '' }}>Usuario estándar</option>
+                            <option value="1" {{ $user->is_admin == 1 ? 'selected' : '' }}>Administrador</option>
+                            <!-- <option value="2" {{ $user->is_admin == 2 ? 'selected' : '' }}>Encargado</option> -->
+                        </select>
                     </div>
+                </div>
 
                     @endif
                     <div class="text-center">

@@ -79,19 +79,6 @@
                     </select>
                 </div>
             </div>
-            <!-- <div class="col-xs-12 col-sm-12 col-md-4 mt-2">
-                <div class="form-group">
-                    <strong>Asignar a:</strong>
-                    
-                    <select name="department_id" class="form-control border-0 bg-light shadow-sm " id="">
-                    <option value="">-- Departamento --</option>
-                    @foreach($department as  $id => $name)
-                    <option value="{{$id}}"
-                    @if($id == old('department_id' , $ticket->department_id)) selected @endif >{{$name}}</option>
-                    @endforeach                    
-                    </select>
-                </div>
-            </div> -->
             <div class="col-xs-12 col-sm-12 col-md-4 mt-2">
                 <div class="form-group">
                     <strong>Asignar a:</strong>
