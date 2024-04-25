@@ -60,7 +60,18 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
         Route::post('/reportes/generar', [ReportController::class,'generar'])->name('reportes.generar');
         //Exporta a un documento excel los tickets seleccionados
         Route::get('report-export/{fechaInicio}/{fechaFin}', [ReportController::class, 'reportexport'])->name('report-export');
-    });
+        // ruta agregad para visualizar las imagenes sin el link en cpanel
+        Route::get('storage/{archivo}', function ($archivo) {
+            $rutaArchivo = storage_path('app/public/' . $archivo);
+            if (!file_exists($rutaArchivo)) {
+                abort(404);
+            }
+            $archivoMimeType = mime_content_type($rutaArchivo);
+            return response()->file($rutaArchivo, ['Content-Type' => $archivoMimeType]);
+        })->where('archivo', '.*')->name('archivo');
+
+        });
+
 //Ruta GRUD para los usuarios
 Route::resource('user', UserController::class);
 

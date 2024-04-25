@@ -57,7 +57,7 @@ class UserController extends Controller
     } 
 
     public function edit(User $user){
-        $this->authorize('update', $user);
+        // $this->authorize('update', $user);
         return view('User.edit',
         [
             'user' => $user, 
@@ -89,7 +89,7 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         $oldImage = $user->image;
-        $this->authorize('update', $user);
+        // $this->authorize('update', $user);
 
         $validatedData = $request->validate([
             'name' => 'required',
@@ -112,17 +112,17 @@ class UserController extends Controller
         }
 
         
-        // $user->save();
-
-        // return redirect()->route('user.index')->with('success', 'El Usuario fue actualizado con éxito');
-
         $user->save();
-        $user_log = Auth::user();
-        if($user_log->isAdmin()){
-            return redirect()->route('user.index')->with('success','El Usuario fue actualizado con exito');
-        }else{
-            return redirect()->route('user.edit',$user )->with('success','Datos actualizado con exito');
-        }
+
+        return redirect()->route('user.index')->with('success', 'El Usuario fue actualizado con éxito');
+
+        // $user->save();
+        // $user_log = Auth::user();
+        // if($user_log->isAdmin()){
+        //     return redirect()->route('user.index')->with('success','El Usuario fue actualizado con exito');
+        // }else{
+        //     return redirect()->route('user.edit',$user )->with('success','Datos actualizado con exito');
+        // }
     }
 
 

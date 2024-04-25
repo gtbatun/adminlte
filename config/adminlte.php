@@ -316,7 +316,7 @@ return [
             'text'    => 'Settings',
             'url'     => 'settings',            
             'icon'   => 'far fa-fw fa-folder', 
-            'can' =>'admin-access',
+            // 'can' =>'admin-access',
             'submenu' => [
                 [
                     'text' => 'Area',
@@ -352,13 +352,13 @@ return [
             'text'   => 'Inventario',
             'route'  => 'inventory.index',            
             'icon'   => 'far fa-fw fa-hdd',            
-            'can' => 'inventory.index',
+            // 'can' => 'inventory.index',
             // 'icon_color' => 'red',  
         ],
         [
             'text' => 'Reportes',
             'route'  => 'report.index',
-            'can' => 'admin-access',
+            // 'can' => 'admin-access',
             // 'can'  => 'manage-blog',
         ],
         // [

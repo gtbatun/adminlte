@@ -142,7 +142,7 @@ class TicketController extends Controller
      */
     public function edit(Ticket $ticket)
     {
-        // $this->authorize('edit',$ticket);
+        // $this->authorize('update',$ticket);
        
         return view('Ticket.edit', [
             'areas' => Area::pluck('name','id'),
@@ -158,7 +158,7 @@ class TicketController extends Controller
     public function update(Request $request, Ticket $ticket)
     {
         // dd( $request->all());
-        $this->authorize('update',$ticket); // para autorizar o restringir la actualizacion del tixcket
+        // $this->authorize('update',$ticket); // para autorizar o restringir la actualizacion del tixcket
 
         $ticket->fill($request->validate([
                 'title' => 'required',
@@ -195,7 +195,7 @@ class TicketController extends Controller
      */
     public function destroy(Ticket $ticket)
     {
-        $this->authorize('destroy',$ticket);
+        // $this->authorize('destroy',$ticket);
         $ticket->delete();
         return redirect()->route('ticket.index')->with('success', 'Ticket Eliminado exitosamente');
     }

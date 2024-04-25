@@ -18,8 +18,8 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        Ticket::class => TicketPolicy::class,
-        User::class => UserPolicy::class
+        // Ticket::class => TicketPolicy::class,
+        // User::class => UserPolicy::class
     ];
 
     
@@ -28,13 +28,13 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->registerPolicies();
-        Gate::define('ticket.update', [TicketPolicy::class, 'update']);
-        Gate::define('ticket.delete', [TicketPolicy::class, 'delete']);
+        // $this->registerPolicies();
+        // Gate::define('ticket.update', [TicketPolicy::class, 'update']);
+        // Gate::define('ticket.delete', [TicketPolicy::class, 'delete']);
         // Gate::define('ticket.view', [TicketPolicy::class, 'view']);
 
-        Gate::define('admin-access', function ($user) {
-            return $user->isAdmin();
-        });
+        // Gate::define('admin-access', function ($user) {
+        //     return $user->isAdmin();
+        // });
     }
 }

@@ -14,7 +14,7 @@ class TicketPolicy
     public function viewAny(User $user): bool
     {
         
-        return false;
+        // return false;
     }
 
     /**
@@ -23,7 +23,8 @@ class TicketPolicy
     public function view(User $user, Ticket $ticket): bool
     {
         // return $user->is_admin = 1;
-        return $user->id === $ticket->user_id || $user->department_id === $ticket->department_id || $user->is_admin === 1;  // todos solo pueden ver los tickets que ellos mismos crearon
+        // $user->department_id === $ticket->department_id || 
+        return $user->id === $ticket->user_id || $user->is_admin = 1;  // todos solo pueden ver los tickets que ellos mismos crearon
     }
 
     /**
@@ -40,8 +41,9 @@ class TicketPolicy
     public function update(User $user, Ticket $ticket): bool
     {
         
-        // return $user->id === $ticket->user_id || $user->department_id === $ticket->department_id;
-        return $user->is_admin === 1;
+        return $user->id === $ticket->user_id || $user->department_id === $ticket->department_id;
+        // return $user->is_admin === 1;
+        // return $user->is($ticket->user);
     }
 
     /**
