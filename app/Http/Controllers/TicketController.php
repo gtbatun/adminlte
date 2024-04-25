@@ -38,7 +38,7 @@ class TicketController extends Controller
     public function showReport(Request $request){
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
-        return view('ticket.report', compact('startDate', 'endDate', 'ticket'));
+        return view('Ticket.report', compact('startDate', 'endDate', 'ticket'));
         // return view('ticket.report');
     }
 
@@ -60,7 +60,7 @@ class TicketController extends Controller
         }
         
 
-        return view('ticket.index',[
+        return view('Ticket.index',[
             'newTicket'=> new Ticket,
             'ticket' => $ticket
             
@@ -73,7 +73,7 @@ class TicketController extends Controller
     public function create()
     {
         $ticket = new Ticket;
-        return view('ticket.create',
+        return view('Ticket.create',
         [
             'areas' => Area::pluck('name','id'),
             'category' => Category::pluck('name','id'),
@@ -128,7 +128,7 @@ class TicketController extends Controller
         //se agra la funcion o lo findorfail para que falle  en la busqueda de un ticket que no existe
         $h_gestiones = Gestion::where('ticket_id',$ticket->id )->get();
         //show para mostar el formulario de insert de gestiones de cada ticket
-        return view('gestion.create',[
+        return view('Gestion.create',[
             'areas' => Area::pluck('name','id'),
             'category' => Category::pluck('name','id'),
             'department' => Department::pluck('name','id'),
@@ -144,7 +144,7 @@ class TicketController extends Controller
     {
         // $this->authorize('edit',$ticket);
        
-        return view('ticket.edit', [
+        return view('Ticket.edit', [
             'areas' => Area::pluck('name','id'),
             'category' => Category::pluck('name','id'),
             'department' => Department::pluck('name','id'),

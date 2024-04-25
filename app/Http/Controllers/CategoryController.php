@@ -22,7 +22,7 @@ class CategoryController extends Controller
     public function create()
     {
         $category = new Category;
-        return view('category.create',['category' => $category]);
+        return view('Category.create',['category' => $category]);
     }
 
     /**
@@ -44,7 +44,7 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        return view('ticket.index',[
+        return view('Ticket.index',[
             'category' => $category,
             'ticket' => $category->ticket()->with('category')->latest()->paginate()
         ]);
@@ -55,7 +55,7 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        return view('category.edit',['category' => $category]);
+        return view('Category.edit',['category' => $category]);
     }
 
     /**

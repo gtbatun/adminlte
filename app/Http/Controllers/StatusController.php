@@ -13,7 +13,7 @@ class StatusController extends Controller
     public function index()
     {
         $status = Status::latest()->paginate();
-        return view('status.index',['status' => $status]);
+        return view('Status.index',['status' => $status]);
     }
 
     /**
@@ -22,7 +22,7 @@ class StatusController extends Controller
     public function create()
     {
         $status = new Status;
-        return view('status.create',['status' => $status]);
+        return view('Status.create',['status' => $status]);
     }
 
     /**
@@ -44,7 +44,7 @@ class StatusController extends Controller
      */
     public function show(Status $status)
     {
-        return view('ticket.index',[
+        return view('Ticket.index',[
             'status' => $status,
             'ticket' => $status->ticket()->with('status')->latest()->paginate(5)
         ]);

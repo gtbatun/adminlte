@@ -20,7 +20,7 @@ class UserController extends Controller
     }
     public function create(){
         $user = new User();
-        return view('user.create',['department' => Department::pluck('name','id'),'user' => $user]);
+        return view('User.create',['department' => Department::pluck('name','id'),'user' => $user]);
     }
     
     public function store(Request $request){

@@ -22,7 +22,7 @@ class AreaController extends Controller
     public function create()
     {
         $area = new Area;
-        return view('area.create',['area' => $area]);
+        return view('Area.create',['area' => $area]);
     }
 
     /**
@@ -44,7 +44,7 @@ class AreaController extends Controller
      */
     public function show(Area $area)
     {
-        return view('ticket.index',[
+        return view('Ticket.index',[
             'area' => $area,
             'ticket' => $area->ticket()->with('area')->latest()->paginate()
         ]);

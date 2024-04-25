@@ -13,7 +13,7 @@ class DepartmentController extends Controller
     public function index()
     {
         $departments = Department::latest()->paginate(5);
-        return view('department.index',['departments' => $departments]);
+        return view('Department.index',['departments' => $departments]);
     }
 
     /**
@@ -22,7 +22,7 @@ class DepartmentController extends Controller
     public function create()
     {
         $department = new Department;
-        return view('department.create',['department' => $department]);
+        return view('Department.create',['department' => $department]);
     }
 
     /**
@@ -45,7 +45,7 @@ class DepartmentController extends Controller
      */
     public function show(Department $department)
     {
-        return view('ticket.index',[
+        return view('Ticket.index',[
             'department' => $department,
             'ticket' => $department->ticket()->with('department')->latest()->paginate()
         ]);
@@ -56,7 +56,7 @@ class DepartmentController extends Controller
      */
     public function edit(Department $department)
     {
-        return view('department.edit',['department' => $department]);
+        return view('Department.edit',['department' => $department]);
     }
 
     /**

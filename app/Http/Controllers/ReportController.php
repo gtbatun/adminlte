@@ -28,7 +28,7 @@ class ReportController extends Controller
         $fechaInicio = $request->fecha_inicio;
         $fechaFin = $request->fecha_fin;
         
-        return view('report.previsualizacion', compact('tickets','fechaInicio','fechaFin')); 
+        return view('Report.previsualizacion', compact('tickets','fechaInicio','fechaFin')); 
         
     }
 
