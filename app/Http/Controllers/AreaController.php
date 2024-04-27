@@ -13,7 +13,7 @@ class AreaController extends Controller
     public function index()
     {
         $areas = Area::latest()->paginate();
-        return view('area.index',['areas' => $areas]);
+        return view('Area.index',['areas' => $areas]);
     }
 
     /**

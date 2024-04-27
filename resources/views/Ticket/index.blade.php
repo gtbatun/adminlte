@@ -38,7 +38,7 @@
                     <!-- <h3 class="card-title">Listado de Tickets</h3> -->
                 <!-- </div> -->
             <!-- /.card-header -->
-            <div class="card-body ">
+            <div class="table-responsive ">
                 <table id="tickets" class="table table-bordered shadow-lg mt-4 
                 table-striped  ">
                     <thead  class="table-dark ">
@@ -63,6 +63,13 @@
                     <!-- <span class="text-secondary text-sm ">@lang($ticketItem->created_at->diffForHumans(null, false, false, 1))</span> -->
                     <!-- <span class="position-absolute top-10 start-100 translate-middle badge rounded-pill bg-secondary">@lang($ticketItem->created_at->diffForHumans(null, false, false, 1))</span> -->
                     </div>
+                    <!-- <div class="d-flex align-items-center">
+                     <p class="text-center bg-success text-white rounded-circle shadow-lg  p-3">{{ $ticketItem->usuario->name }}</p>                     
+                    <div class="ms-3">
+                        <p class="fw-bold mb-1">{{ $ticketItem->title }}</p>
+                        <p class="text-muted mb-0">{{ $ticketItem->created_at->diffForHumans(null, false, false, 1) }}</p>
+                    </div>
+                    </div> -->
                 </td>
                 <td>{{$ticketItem->created_at->diffForHumans(null, false, false, 1)}}</td>             
                 <!-- <td>{{$ticketItem->department->name}}</td> -->
@@ -149,4 +156,5 @@ $(document).ready(function() {
     } );
 } );
 </script>
+
 @stop
