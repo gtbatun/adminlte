@@ -24,8 +24,7 @@ class="btn btn-success">Descargar<i class="fas fa-download" style="font-size:24p
 <div class="table-responsive">
 <table id="miTabla" class="table table-bordered shadow-lg mt-4 table-striped"><thead>
         <tr>
-            <!-- <th>ID</th> -->
-            <th onclick="toggleContent()">#</th>
+            <th>ID</th>
             <th>Estatus</th>            
             <th>Categoria</th>
             <th>Fecha</th>            
@@ -45,21 +44,4 @@ class="btn btn-success">Descargar<i class="fas fa-download" style="font-size:24p
     </tbody>
 </table>
 </div>
-
-
-<script>
-    // Función para cambiar la visibilidad del contenido
-    function toggleContent() {
-        var tabla = document.getElementById('miTabla');
-        var filas = tabla.rows;
-        var oculto = filas[0].cells[1].style.display === 'none';
-
-        for (var i = 0; i < filas.length; i++) {
-            filas[i].cells[1].style.display = oculto ? '' : 'none'; // Mostrar u ocultar Nombre
-            filas[i].cells[2].style.display = oculto ? '' : 'none'; // Mostrar u ocultar Descripción
-            filas[i].cells[3].style.display = oculto ? '' : 'none'; // Mostrar u ocultar Precio
-        }
-    }
-</script>
-
 @endif
