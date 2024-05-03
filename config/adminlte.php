@@ -356,6 +356,11 @@ return [
             // 'icon_color' => 'red',  
         ],
         [
+            'text'   => 'Settings',
+            'route'  => 'setting.index',
+            'icon'   => 'far fa-fw fa-file',  
+        ],
+        [
             'text' => 'Reportes',
             'route'  => 'report.index',
             // 'can' => 'admin-access',
