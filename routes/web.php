@@ -9,6 +9,7 @@ use App\Http\Controllers\GestionController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\StatusController;
 use App\Http\Controllers\TicketController;
+use App\Http\Controllers\SettingController;
 
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ReportController;
@@ -61,6 +62,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
         //Exporta a un documento excel los tickets seleccionados
         Route::get('report-export/{fechaInicio}/{fechaFin}', [ReportController::class, 'reportexport'])->name('report-export');
         
+        Route::get('setting', [SettingController::class,'index'])->name('setting.index');
 
         });
 // ruta agregad para visualizar las imagenes sin el link en cpanel

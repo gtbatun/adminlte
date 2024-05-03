@@ -28,9 +28,11 @@ class AuthServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->registerPolicies();
+
         Gate::define('ticket.update', [TicketPolicy::class, 'update']);
         Gate::define('ticket.delete', [TicketPolicy::class, 'delete']);
         Gate::define('ticket.view', [TicketPolicy::class, 'view']);
+
 
         Gate::define('admin-access', function ($user) {
             return $user->is_admin === 10;
