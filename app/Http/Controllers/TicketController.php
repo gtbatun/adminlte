@@ -50,17 +50,17 @@ class TicketController extends Controller
         if($user->isAdmin()){
             $ticket = Ticket::with('area','category','status','department')
                 ->latest()
-                ->paginate();
+                ->paginate(10);
         }else{
             $ticket = Ticket::with('area','category','status','department')
                 ->where('user_id', $user->id) // Filtrar por el ID del usuario actual
                 ->where('status_id', '!=', 4 )
                 ->latest()
-                ->paginate();
+                ->paginate(10);
         }
         
 
-        return view('Ticket.index',[
+        return view('ticket.index',[
             'newTicket'=> new Ticket,
             'ticket' => $ticket
             

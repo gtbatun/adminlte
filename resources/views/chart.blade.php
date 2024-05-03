@@ -1,47 +1,52 @@
-@extends('adminlte::page')
+@extends('layouts.app')
 @section('content')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<div class="row">
 
-<div class="col-md-4">
+<!--  -->
+<div class="container">
     <div class="row">
-        <div class="col-md-12">
-            <div class="card">                
-                <div class="card-body">
-                <h3 class="text-center">Tickets por agente</h3>
-                    <canvas id="agente" width="200" height="200"></canvas>
+        <div class="col-md-4 col-xs-12">
+            <div class="row">
+                <div class="col-md-11">
+                    <div class="card">                
+                        <div class="card-body">
+                            <h3 class="text-center">Tickets por agente</h3>
+                            <canvas id="agente" width="200" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 col-xs-12">
+            <div class="row">
+                <div class="col-md-11">
+                    <div class="card">
+                        <div class="card-body">
+                            <h3 class="text-center">Tickets por Departamento</h3>
+                            <canvas id="departamento" width="200" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 col-xs-12">
+            <div class="row">
+                <div class="col-md-11">
+                    <div class="card">
+                        <div class="card-body">
+                            <h3 class="text-center">Tickets por Dia</h3>
+                            <canvas id="dia" width="200" height="200"></canvas>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<div class="col-md-4">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-body">
-                <h3 class="text-center">Tickets por Departamento</h3>
-                    <canvas id="departamento" width="200" height="200"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="col-md-4">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-body">
-                    <h3 class="text-center">Tickets por Dia</h3>
-                    <canvas id="dia" width="200" height="200"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-</div>
+<!--  -->
 
 <script>
     var ctx = document.getElementById('agente').getContext('2d');
@@ -144,20 +149,7 @@
 </script>
 
 <!-- ------------------------ -->
-<div class="row d-flex  ">
-    <div class="col-md-4 col-sm-6">
-        <x-adminlte-small-box title="424" text="Views" icon="fas fa-eye text-dark"
-        theme="teal" url="#" url-text="View details"/>
-    </div>
-    <div class="col-md-4 col-sm-6">
-        <x-adminlte-small-box title="528" text="User Registrations" icon="fas fa-user-plus text-teal"
-        theme="primary" url="#" url-text="View all users"/>
-    </div>
-    <div class="col-md-4 col-sm-6">
-        <x-adminlte-small-box title="0" text="Reputation" icon="fas fa-medal text-dark"
-        theme="danger" url="#" url-text="Reputation history" id="sbUpdatable"/>
-    </div>
-    </div>
+
 @push('js')
 <script>
 

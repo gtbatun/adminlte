@@ -311,33 +311,38 @@ return [
             'text' => ' Dashboard',
             'route'  => 'home',
             'icon' => 'fas fa-chart-line',
-        ],
+        ],        
         [
             'text'    => 'Settings',
             'url'     => 'settings',            
-            'icon'   => 'far fa-fw fa-folder', 
-            // 'can' =>'admin-access',
+            'icon'   => 'far fa-fw fa-folder',
+            // 'can' => 'admin-access', 
             'submenu' => [
                 [
                     'text' => 'Area',
                     'route'  => 'area.index',
+                    'can' => 'admin-access',
                 ],
                 [
                     'text' => 'Categoria',
                     'route'  => 'category.index',
+                    'can' => 'admin-access',
                 ],
                 [
                     'text' => 'Departamento',
                     'route'  => 'department.index',
+                    'can' => 'admin-access',
                 ],
                 [
                     'text' => 'Estatus',
                     'route'  => 'status.index',
+                    'can' => 'admin-access',
                 ],
                 [
                     'text' => 'Usuarios',
                     'route'  => 'user.index',
                     'icon'   => 'fas fa-fw fa-user-tie', 
+                    'can' => 'admin-access',
                     // 'icon_color' => 'red', 
 
                 ],
@@ -358,10 +363,10 @@ return [
         [
             'text' => 'Reportes',
             'route'  => 'report.index',
-            // 'can' => 'admin-access',
+            'can' => 'admin-access',
             // 'can'  => 'manage-blog',
         ],
-        // [
+        // [/
         //     'text'        => 'Usuarios',
         //     'route'         => 'user.index',
         //     'icon'        => 'far fa-fw fa-file',

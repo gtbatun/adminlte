@@ -1,16 +1,18 @@
-@extends('adminlte::page')
+@extends('layouts.app')
 @section('content')
 <!--  -->
 @can('update', $user)
-<div class="pagetitle">
-    <!-- <h1>Perfil</h1> -->
-    <nav>
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
-        <li class="breadcrumb-item">Users</li>
-        <li class="breadcrumb-item active">Profile</li>
-    </ol>
-    </nav>
+<div class="container">
+  <div class="pagetitle">
+      <!-- <h1>Perfil</h1> -->
+      <nav>
+      <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
+          <li class="breadcrumb-item">Users</li>
+          <li class="breadcrumb-item active">Profile</li>
+      </ol>
+      </nav>
+  </div>
 </div>
     @if(Session::get('success'))
             <div class="alert alert-success mt-2">
@@ -19,6 +21,7 @@
     @endif
 <!-- End Page Title -->
     <section class="section profile">
+      <div class="container">
       <div class="row">
       
         <div class="col-xl-4">
@@ -113,7 +116,6 @@
                         <select name="is_admin" class="form-control" id="Role">
                             <option value="0" {{ $user->is_admin == 0 ? 'selected' : '' }}>Usuario estándar</option>
                             <option value="1" {{ $user->is_admin == 1 ? 'selected' : '' }}>Administrador</option>
-                            <!-- <option value="2" {{ $user->is_admin == 2 ? 'selected' : '' }}>Encargado</option> -->
                         </select>
                     </div>
                 </div>
@@ -127,6 +129,7 @@
           </div>
 
         </div>
+      </div>
       </div>
     </section>
 

@@ -1,5 +1,5 @@
 <?php
-
+//
 namespace App\Providers;
 
 use App\Models\Ticket;
@@ -18,23 +18,22 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        // Ticket::class => TicketPolicy::class,
-        // User::class => UserPolicy::class
+        Ticket::class => TicketPolicy::class,
+        User::class => UserPolicy::class
     ];
-
     
     /**
      * Register any authentication / authorization services.
      */
     public function boot(): void
     {
-        // $this->registerPolicies();
-        // Gate::define('ticket.update', [TicketPolicy::class, 'update']);
-        // Gate::define('ticket.delete', [TicketPolicy::class, 'delete']);
-        // Gate::define('ticket.view', [TicketPolicy::class, 'view']);
+        $this->registerPolicies();
+        Gate::define('ticket.update', [TicketPolicy::class, 'update']);
+        Gate::define('ticket.delete', [TicketPolicy::class, 'delete']);
+        Gate::define('ticket.view', [TicketPolicy::class, 'view']);
 
-        // Gate::define('admin-access', function ($user) {
-        //     return $user->isAdmin();
-        // });
+        Gate::define('admin-access', function ($user) {
+            return $user->is_admin === 10;
+        });
     }
 }

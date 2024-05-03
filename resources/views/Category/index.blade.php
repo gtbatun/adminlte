@@ -1,6 +1,5 @@
-@extends('adminlte::page')
+@extends('layouts.app')
 @section('content')
-<h1>index de categorias</h1>
 
 <div class="container">
     <div class="col-12 mt-4">

@@ -44,7 +44,7 @@ Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('ho
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 
-    // Route::middleware('can:admin-access')->group(function(){
+    Route::middleware('can:admin-access')->group(function(){
         Route::resource('area',AreaController::class);
         Route::resource('category',CategoryController::class);
         Route::resource('department',DepartmentController::class);
@@ -62,7 +62,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
         Route::get('report-export/{fechaInicio}/{fechaFin}', [ReportController::class, 'reportexport'])->name('report-export');
         
 
-        // });
+        });
 // ruta agregad para visualizar las imagenes sin el link en cpanel
 Route::get('storage/{archivo}', function ($archivo) {
     $rutaArchivo = storage_path('app/public/' . $archivo);

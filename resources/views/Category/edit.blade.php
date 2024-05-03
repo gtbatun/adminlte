@@ -1,4 +1,4 @@
-@extends('adminlte::page')
+@extends('layouts.app')
 @section('title','Editar Categoria')
 @section('content')
 <div class="container">

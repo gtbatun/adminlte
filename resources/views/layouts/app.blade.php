@@ -12,13 +12,16 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
-
-    <!-- Scripts -->
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <script src="{{ asset('js/app.js') }}"></script> 
+     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
 <body>
-    <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+
+
+    <div id="app" >
+        <nav class="navbar navbar-expand-md navbar-light bg-light shadow-sm"  >
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
                     {{ config('app.name', 'Laravel') }}
@@ -30,6 +33,37 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('home') }}"><i class="fas fa-chart-line"> </i> Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('ticket.index') }}"><i class="fas fa-chart-line"> </i> Ticket</a>
+                    </li>
+                    {{Auth::user()->is_admin}}
+                    @if(Auth::user()->is_admin === 10)
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('report.index') }}"><i class="fas fa-chart-line"> </i> Reporte</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('inventory.index') }}"><i class="fas fa-chart-line"> </i> Inventario</a>
+                    </li>
+                    
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Settings
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{route('area.index')}}">Areas</a></li>
+                            <li><a class="dropdown-item" href="{{ route('category.index') }}">Categorias</a></li>                            
+                            <li><a class="dropdown-item" href="{{ route('department.index') }}">Departamentos</a></li>
+                            <li><a class="dropdown-item" href="{{ route('status.index') }}">Estatus</a></li>
+                            <li><a class="dropdown-item" href="{{ route('user.index') }}">Usuarios</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#">Something else here</a></li>
+                        </ul>
+                    </li>
+                    @endif
+
 
                     </ul>
 
@@ -50,16 +84,20 @@
                             @endif
                         @else
                             <li class="nav-item dropdown">
+                                <!-- {{Auth::user()->image}} -->
+                                
+                                <img src="{{asset('storage/images/user/'. Auth::user()->image)}}" alt="{{Auth::user()->image }}" class="img-fluid rounded-circle" style="max-width: 50px;" >
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }}
                                 </a>
-
+                                
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
                                         {{ __('Logout') }}
                                     </a>
+                                    <a href="{{url('user/'.Auth::user()->id.'/edit')}}"  class="dropdown-item">Perfil</a>
 
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                         @csrf
@@ -70,9 +108,7 @@
                     </ul>
                 </div>
             </div>
-        </nav>
-
-    
+        </nav>   
 
         <main class="py-4">
             @yield('content')

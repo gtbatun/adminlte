@@ -30,7 +30,7 @@
         }
     </style>
 
-@extends('adminlte::page')
+@extends('layouts.app')
 @section('content')
 <div class="container">
     <div class="col-12">
