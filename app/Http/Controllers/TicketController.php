@@ -47,16 +47,16 @@ class TicketController extends Controller
         $user = Auth::user();
         
 
-        if($user->isAdmin()){
+        if($user->is_admin == 10){
             $ticket = Ticket::with('area','category','status','department')
                 ->latest()
-                ->paginate(10);
+                ->paginate();
         }else{
             $ticket = Ticket::with('area','category','status','department')
                 ->where('user_id', $user->id) // Filtrar por el ID del usuario actual
                 ->where('status_id', '!=', 4 )
                 ->latest()
-                ->paginate(10);
+                ->paginate();
         }
         
 

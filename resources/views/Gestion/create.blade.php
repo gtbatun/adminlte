@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('adminlte::page')
 
 @section('content')
 @can('view',$ticket)
@@ -182,7 +182,7 @@
 
 
 
-<form action="{{route('gestion.store')}}" method="POST" enctype="multipart/form-data" style=" padding: 1%; border: 1px solid #adb5bd47;"class=" container bg-white shadow rounded rounded" >
+<form action="{{route('gestion.store')}}" id="gestion" method="POST" enctype="multipart/form-data" style=" padding: 1%; border: 1px solid #adb5bd47;"class=" container bg-white shadow rounded rounded" >
     <h4>Gestionar</h4> 
         @csrf
         <input type="hidden" name="ticket_id" class="form-control" value="{{$ticket->id}}" >
@@ -257,12 +257,17 @@
             <!--  -->
             <div class="col-xs-12 col-sm-12 col-md-12 text-center mt-2">
                 <a  class="btn btn-primary" href="{{route('ticket.index')}}" >Cancelar</a>
-                <button type="submit" class="btn btn-primary">Guardar</button>
+                <button type="submit" id="submitGt" class="btn btn-primary">Guardar</button>
             </div>
         </div>
     </form>
     </div>
 
+    <script>
+    document.getElementById('gestion').addEventListener('submit', function() {
+        document.getElementById('submitGt').setAttribute('disabled', 'true');
+    });
+    </script>
 
 @endcan    
 @endsection

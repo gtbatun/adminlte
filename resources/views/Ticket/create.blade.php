@@ -30,7 +30,7 @@
         }
     </style>
 
-@extends('layouts.app')
+@extends('adminlte::page')
 @section('content')
 <div class="container">
     <div class="col-12">
@@ -101,7 +101,7 @@
                     <input type="file" id="fileInput" name="image[]" multiple accept="image/*">                                               
                 </div>
             <div class="col-xs-12 col-sm-12 col-md-12 text-center mt-2">
-                <button type="submit"  class="btn btn-primary">Crear</button>
+                <button type="submit" id="submitBtn" class="btn btn-primary">Crear</button>
             </div>
             <div id="responseMessage"></div>                         
             <div class="row" id="imagePreview"></div>            
@@ -153,6 +153,7 @@
 
 //---------------------- Agregar un evento submit al formulario para enviar los archivos   ----------------------------------
             document.getElementById('ticketForm').addEventListener('submit', function(event) {
+                document.getElementById('submitBtn').setAttribute('disabled', 'true');
             event.preventDefault();
             let formData = new FormData(this);
                 

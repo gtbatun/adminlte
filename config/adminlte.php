@@ -316,7 +316,7 @@ return [
             'text'    => 'Settings',
             'url'     => 'settings',            
             'icon'   => 'far fa-fw fa-folder',
-            // 'can' => 'admin-access', 
+            'can' => 'admin-access', 
             'submenu' => [
                 [
                     'text' => 'Area',
@@ -356,7 +356,8 @@ return [
         [
             'text'   => 'Inventario',
             'route'  => 'inventory.index',            
-            'icon'   => 'far fa-fw fa-hdd',            
+            'icon'   => 'far fa-fw fa-hdd',
+            'can' => 'admin-access',            
             // 'can' => 'inventory.index',
             // 'icon_color' => 'red',  
         ],
@@ -371,19 +372,7 @@ return [
             'can' => 'admin-access',
             // 'can'  => 'manage-blog',
         ],
-        // [/
-        //     'text'        => 'Usuarios',
-        //     'route'         => 'user.index',
-        //     'icon'        => 'far fa-fw fa-file',
-        //     // 'label'       => 4,
-        //     'label_color' => 'success',
-        // ],
-        // ['header' => 'account_settings'],
-        // [
-        //     'text' => 'change_password',
-        //     'url'  => 'admin/settings',
-        //     'icon' => 'fas fa-fw fa-lock',
-        // ],
+
 
        
         // [

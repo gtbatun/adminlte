@@ -22,9 +22,28 @@ class TicketPolicy
      */
     public function view(User $user, Ticket $ticket): bool
     {
-        // return $user->is_admin = 1;
-        // $user->department_id === $ticket->department_id || 
-        return $user->id === $ticket->user_id || $user->is_admin = 1;  // todos solo pueden ver los tickets que ellos mismos crearon
+       // todos solo pueden ver los tickets que ellos mismos crearon
+        //return $user->id == $ticket->user_id || $user->is_admin === 10; 
+        //
+        
+        if ($user->is_admin == 10) {
+            return true; // El administrador puede ver todos los tickets
+        }
+    
+        // Verificar si el ticket pertenece al usuario
+        if ($user->id === $ticket->user_id) {
+            return true;
+        }
+    
+        // Verificar si el ticket pertenece a un departamento del usuario
+        // Aquí deberás adaptar la lógica según cómo tengas implementado el sistema de departamentos
+        if ($user->department_id == $ticket->department_id) {
+            return true;
+        }
+    
+        return false; // Si no cumple ninguna de las condiciones anteriores, no puede ver el ticket
+    
+        //
     }
 
     /**
@@ -52,7 +71,7 @@ class TicketPolicy
     public function delete(User $user, Ticket $ticket): bool
     {
         // return $user->id === $ticket->user_id;
-        return $user->is_admin === 1;
+        return $user->is_admin === 10;
     }
 
     /**

@@ -1,6 +1,6 @@
-@extends('layouts.app')
+@extends('adminlte::page')
 @section('content')
-<div class="container" >
+<div class="row" >
     <div class="col-12 mt-4 d-flex justify-content-between ">
         @isset($status)			    
             <h3 class="card-title">Tickets {{$status->name}}</h3>
@@ -39,7 +39,7 @@
                 <!-- </div> -->
             <!-- /.card-header -->
             <div class="table-responsive ">
-                <table  class="table table-bordered shadow-lg mt-4 
+                <table id="tickets"  class="table table-bordered shadow-lg mt-4 
                 table-striped  ">
                     <thead  class="table-dark ">
                         <tr>
@@ -75,7 +75,10 @@
                 <!-- <td>{{$ticketItem->department->name}}</td> -->
                 <td>{{$ticketItem->category->name}}</td>
                 <td>{{$ticketItem->area->name}}</td>
-                <td><a href="{{route('status.show',$ticketItem->status)}}">{{$ticketItem->status->name}}</a></td>                
+                <td>
+                {{$ticketItem->status->name}}
+                    <!-- <a href="{{route('status.show',$ticketItem->status)}}"></a> -->
+                </td>                
                 <td>
                 <a href="{{route('ticket.show',$ticketItem)}}" title="Gestionar" class="btn btn-success"> Ver<i class='fas fa-eye'></i></a>
                     
@@ -104,7 +107,7 @@
     </div>
     <!-- /.row -->
 </div>  
-{{ $ticket->links() }}
+<!-- {{ $ticket->links() }} -->
     @else
     <h3 class="text-center">No hay tickets creados, seleccioné el boton crear nuevo ticket para crear</h3>
     @endisset
