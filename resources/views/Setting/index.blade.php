@@ -1,4 +1,4 @@
-@extends('adminlte::page')
+@extends('dashboard')
 @section('content')
 <div class="row justify-content-between" >
     
