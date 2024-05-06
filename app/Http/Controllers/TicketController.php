@@ -53,7 +53,7 @@ class TicketController extends Controller
                 ->paginate();
         }else{
             $ticket = Ticket::with('area','category','status','department')
-                ->where('user_id', $user->id) // Filtrar por el ID del usuario actual
+               // ->where('user_id', $user->id) // Filtrar por el ID del usuario actual
                 ->where('status_id', '!=', 4 )
                 ->latest()
                 ->paginate();

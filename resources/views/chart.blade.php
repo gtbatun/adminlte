@@ -8,21 +8,13 @@
 <!--  -->
 <!-- <div class="container"> -->
     <!-- <div class="row"> -->
-    
-    <div class="row">
-        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-        <x-adminlte-callout theme="success" class="bg-teal" icon="fas fa-lg fa-thumbs-up" title="Done">
-        <i class="text-dark">Your payment was complete!</i>
-        </x-adminlte-callout>
-        </div>
-    </div>
-    <div>fvbdfsgnfjkl</div>
+
     <div class="row mt-2">
         <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
           <div class="card">
             <div class="card-header p-3 pt-2">
               <div class="mt-n4 position-absolute">
-                <i class="bg-teal fas fa-lg fa-thumbs-up"></i>
+                <!-- <i class="bg-teal fas fa-lg fa-thumbs-up"></i> -->
               </div>
               <div class="text-end pt-1">
                 <p class="text-sm mb-0 text-capitalize">Today's Moneyss</p>
@@ -39,7 +31,7 @@
           <div class="card">
             <div class="card-header p-3 pt-2">
               <div class="icon icon-lg icon-shape bg-gradient-primary shadow-primary text-center border-radius-xl mt-n4 position-absolute">
-                <i class="material-icons opacity-10">person</i>
+                <!-- <i class="material-icons opacity-10">person</i> -->
               </div>
               <div class="text-end pt-1">
                 <p class="text-sm mb-0 text-capitalize">Today's Users</p>
@@ -56,7 +48,7 @@
           <div class="card">
             <div class="card-header p-3 pt-2">
               <div class="icon icon-lg icon-shape bg-gradient-success shadow-success text-center border-radius-xl mt-n4 position-absolute">
-                <i class="material-icons opacity-10">person</i>
+                <!-- <i class="material-icons opacity-10">person</i> -->
               </div>
               <div class="text-end pt-1">
                 <p class="text-sm mb-0 text-capitalize">New Clients</p>
@@ -73,7 +65,7 @@
           <div class="card">
             <div class="card-header p-3 pt-2">
               <div class="icon icon-lg icon-shape bg-gradient-info shadow-info text-center border-radius-xl mt-n4 position-absolute">
-                <i class="material-icons opacity-10">weekend</i>
+                <!-- <i class="material-icons opacity-10">weekend</i> -->
               </div>
               <div class="text-end pt-1">
                 <p class="text-sm mb-0 text-capitalize">Sales</p>
