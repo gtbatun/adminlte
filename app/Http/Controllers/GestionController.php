@@ -37,7 +37,8 @@ class GestionController extends Controller
             'ticket_id' => 'required', 
             'coment' => 'required', 
             'user_id' => 'required',
-            // 'status_id' => 'required',             
+            'area_id' => 'required',
+            'category_id' => 'required',              
             'image.*' => 'image|mimes:jpeg,png,jpg,gif' 
             //'image|mimes:jpeg,png,jpg,gif|max:2048' // Validar que cada archivo sea una imagen
         ]);
@@ -66,6 +67,7 @@ class GestionController extends Controller
             $update_ticket = Ticket::find($request->ticket_id);
             $update_ticket->status_id = $add_gestion->status_id;
             $update_ticket->category_id = $request->category_id;
+            $update_ticket->area_id = $request->area_id;
             $update_ticket->update();
         }
         

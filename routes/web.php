@@ -64,6 +64,8 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
         
         Route::get('setting', [SettingController::class,'index'])->name('setting.index');
 
+        Route::get('ticket/getCategory',[TicketController::class,'getCategory'])->name('ticket.getCategory');
+
         });
 // ruta agregad para visualizar las imagenes sin el link en cpanel
 Route::get('storage/{archivo}', function ($archivo) {

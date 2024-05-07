@@ -13,7 +13,12 @@ class Category extends Model
         'name',
         'description',
         'logo'];
+
         public function ticket(){
             return $this->hasMany(Ticket::class,'category_id');
+        }
+
+        public function area(){
+            return $this->belongsTo(Area::class,'area_id');
         }
 }

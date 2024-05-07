@@ -45,7 +45,7 @@
                         <tr>
                             <th>ID</th>
                             <th>TICKET</th>
-                            <th>CREACION</th>
+                            <!-- <th>CREACION</th> -->
                             <!-- <th>DEPARTAMENTO</th> -->
                             <th>CATEGORIA</th>
                             <th>AREA</th>
@@ -57,21 +57,36 @@
                     @can('view',$ticketItem)
                     <tr>
                 <td>{{$ticketItem->id}}</td>   
-                <td class=" text-truncate" style="max-width: 200px;" >
+                <td  >
                     <div >
-                    <a href="{{ route('ticket.show', $ticketItem) }}" title="{{$ticketItem->title}}">{{ $ticketItem->title }}</a>
+                        
+                    <!-- <a href="{{ route('ticket.show', $ticketItem) }}" title="{{$ticketItem->title}}">{{ $ticketItem->title }}</a> -->
                     <!-- <span class="text-secondary text-sm ">@lang($ticketItem->created_at->diffForHumans(null, false, false, 1))</span> -->
                     <!-- <span class="position-absolute top-10 start-100 translate-middle badge rounded-pill bg-secondary">@lang($ticketItem->created_at->diffForHumans(null, false, false, 1))</span> -->
                     </div>
-                    <!-- <div class="d-flex align-items-center">
-                     <p class="text-center bg-success text-white rounded-circle shadow-lg  p-3">{{ $ticketItem->usuario->name }}</p>                     
-                    <div class="ms-3">
+                    <div class="d-flex align-items-center">
+                     <!-- <p class="text-center  text-white rounded-circle shadow-lg  p-3">{{ $ticketItem->usuario->name }}</p>  -->
+                     <!-- <img src="{{ asset('storage/images/user/'. $ticketItem->image) }}" alt="{{ $ticketItem->usuario->name }}"> -->
+                     <!-- <img src="{{asset('storage/images/'. $ticketItem->images)}}" alt="{{ $ticketItem->usuario->name}}" class="img-thumbnail"> -->
+                     <!-- asset('storage/images/user/' . $this->image);                     -->
+                    <!-- <div class="ms-3">
                         <p class="fw-bold mb-1">{{ $ticketItem->title }}</p>
                         <p class="text-muted mb-0">{{ $ticketItem->created_at->diffForHumans(null, false, false, 1) }}</p>
+                     </div> -->
+                     <!-- <h1>A</h1> -->
+                    </div>                     
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">{{ $ticketItem->usuario->name }}</h5>
+                        <small class="text-success">{{ $ticketItem->created_at->diffForHumans(null, false, false, 1) }}</small>
+                        </div> 
+                        <div class="text-truncate">
+                        <p style="max-width: 300px; max-height: 15px;" >{{ $ticketItem->title }}</p>
+                        </div>
+                        
                     </div>
-                    </div> -->
+                    
                 </td>
-                <td>{{$ticketItem->created_at->diffForHumans(null, false, false, 1)}}</td>             
+                <!-- <td>{{$ticketItem->created_at->diffForHumans(null, false, false, 1)}}</td>              -->
                 <!-- <td>{{$ticketItem->department->name}}</td> -->
                 <td>{{$ticketItem->category->name}}</td>
                 <td>{{$ticketItem->area->name}}</td>

@@ -23,6 +23,20 @@ use Illuminate\Support\Facades\Storage;
 
 class TicketController extends Controller
 {
+    public function getCategory(Request $request)
+    {
+        $area_id = $request->area_id;
+        $area = Area::find($area_id);
+
+        if (!$area) {
+            return response()->json(['error' => 'Area not found'], 404);
+        }
+
+        $category = $area->category;
+
+        return response()->json($category);
+    }
+
     /**
      * Display a listing of the resource.
      */

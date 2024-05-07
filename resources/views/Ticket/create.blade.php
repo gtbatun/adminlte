@@ -66,32 +66,29 @@
                     <textarea class="form-control" style="height:150px" name="description" placeholder="Descripción...">{{old ('description')}}</textarea>
                     </div>
             </div>
+           
+            
+            <!--  -->
             <div class="col-xs-12 col-sm-12 col-md-4 mt-2">
                 <div class="form-group">
                     <strong>Asignar a:</strong>
-                    <!--  -->
-                    <select name="area_id" class="form-control border-0 bg-light shadow-sm " id="">
-                    <option value="">-- Elija un Area --</option>
+                    <select name="area_id" id="area" class="form-control border-0 bg-light shadow-sm " required>
+                    <option value="">Seleccionar un Area</option>
                     @foreach($areas as  $id => $name)
-                    <option value="{{$id}}"
-                    @if($id == old('area_id' , $ticket->area_id)) selected @endif >{{$name}}</option>
-                    @endforeach                    
+                    <option value="{{$id}}" @if($id == old('department_id' , $ticket->category_id)) selected @endif >{{$name}}</option>
+                    @endforeach
                     </select>
                 </div>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-4 mt-2">
                 <div class="form-group">
                     <strong>Asignar a:</strong>
-                    <!--  -->
-                    <select name="category_id" class="form-control border-0 bg-light shadow-sm " id="">
-                    <option value="">-- Categoria --</option>
-                    @foreach($category as  $id => $name)
-                    <option value="{{$id}}"
-                    @if($id == old('department_id' , $ticket->category_id)) selected @endif >{{$name}}</option>
-                    @endforeach                    
+                    <select name="category_id" id="category" class="form-control border-0 bg-light shadow-sm " required>
+                    <option value="">Seleccionar un categoria</option>                    
                     </select>
                 </div>
             </div>
+            <!--  -->
 
             
             <!--  seccion para insertar imagenes y visualizarlos-->
@@ -106,7 +103,24 @@
             <div id="responseMessage"></div>                         
             <div class="row" id="imagePreview"></div>            
             <div id="error-container"></div>
-            <script>
+ <script>
+
+    // funcion para capturar el area y clasifar las categorias pertenecientes a las areas
+    
+    $(document).ready(function () {
+        $('#area').change(function () {
+            var area_id = $(this).val();
+            console.log(area_id);
+            $.get("{{route('ticket.getCategory')}}", {area_id: area_id}, function (data) {
+                $('#category').empty();
+                $('#category').append('<option value="">Seleccionar una categoría</option>');
+                $.each(data, function (index, category) {
+                    $('#category').append('<option value="' + category.id + '">' + category.name + '</option>');
+                });
+            });
+            // console.log(category);
+        });
+    }); 
     //  
             let files = []; // Array para almacenar los archivos seleccionados
 
@@ -153,7 +167,7 @@
 
 //---------------------- Agregar un evento submit al formulario para enviar los archivos   ----------------------------------
             document.getElementById('ticketForm').addEventListener('submit', function(event) {
-                document.getElementById('submitBtn').setAttribute('disabled', 'true');
+                document.getElementById('submitBtn').setAttribute('disabled', 'true'); 
             event.preventDefault();
             let formData = new FormData(this);
                 
@@ -194,6 +208,7 @@
 
                 if (Object.keys(errors).length > 0) {
                     mostrarErrores(errors);
+                    habilitarEnvio();
                 } else {
                     // si todo esta bien, entonces se envian los datos al controlador en la base de datos
                 fetch("{{route('ticket.store') }}",{
@@ -215,6 +230,7 @@
                     console.error('Esto es lo que manda cuando hay un error:',error);
                     
                     mostrarErrores(error);
+                    
                 });
             }
             });
@@ -237,7 +253,13 @@
                     });
                 }
             }
-            
+
+            function habilitarEnvio() {
+                    document.getElementById('submitBtn').removeAttribute('disabled');
+                }
+                            
+
+
          </script>
 
 

@@ -1,56 +1,9 @@
 @extends('adminlte::page')
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 
 @section('content')
 @can('view',$ticket)
 <!--  -->
-<style>
-/* Activity */
-.dashboard .activity {
-  font-size: 14px;
-}
-
-.dashboard .activity .activity-item .activite-label {
-  color: #888;
-  position: relative;
-  flex-shrink: 0;
-  flex-grow: 0;
-  min-width: 64px;
-}
-
-.dashboard .activity .activity-item .activite-label::before {
-  content: "";
-  position: absolute;
-  right: -11px;
-  width: 4px;
-  top: 0;
-  bottom: 0;
-  background-color: #eceefe;
-}
-
-.dashboard .activity .activity-item .activity-badge {
-  margin-top: 3px;
-  z-index: 1;
-  font-size: 11px;
-  line-height: 0;
-  border-radius: 50%;
-  flex-shrink: 0;
-  border: 3px solid #fff;
-  flex-grow: 0;
-}
-
-.dashboard .activity .activity-item .activity-content {
-  padding-left: 10px;
-  padding-bottom: 20px;
-}
-
-.dashboard .activity .activity-item:first-child .activite-label::before {
-  top: 5px;
-}
-
-.dashboard .activity .activity-item:last-child .activity-content {
-  padding-bottom: 0;
-}
-</style>
 
 <!--  -->
 <div class="container bg-white shadow rounded" style="padding: 1%; border: 1px solid #adb5bd47;">
@@ -124,51 +77,49 @@
 
 <!-- seccion para ver el historial de gestiones -->
 
-@if (count($h_gestiones))
-<!-- Hay {{ count($h_gestiones) }} gestiones en curso. -->
-<div class="container bg-white shadow rounded  " style=" padding: 1%; border: 1px solid #adb5bd47;">
-    <h4>Historial  <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-secondary">{{'+ '.count($h_gestiones)}}</span></h4>
 
+
+<!--  -->
+
+<!--  -->
+@if(!empty($h_gestiones))
+<div class="container bg-white shadow rounded" style="padding: 1%; border: 1px solid #adb5bd47;">
+<h4>Historial  <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-secondary">{{'+ '.count($h_gestiones)}}</span></h4>
     <div class="overflow-auto p-3" style="max-width: 100%; max-height: 300px;">
-        <!-- {{$h_gestiones}} -->
-        @foreach ($h_gestiones as $gestion)
-        <div class="row rounded"  style=" padding: 1%; border: 1px solid #adb5bd47;  ">
-            <div class="col-xs-12 col-sm-12 col-md-12 mt-2 rounded" >
-            <label for=""><strong>{{$gestion->usuario->name}}:</strong></label>
-            <span>{{$gestion->created_at}}</span>
+        @foreach ($h_gestiones as $index => $gestion)
+        <div class="row rounded" style="padding: 1%; border: 1px solid #adb5bd47; {{$index % 2 == 0 ? 'background-color: #f8f9fa;' : ''}}">
+            <div class="col-md-12 mt-2 rounded {{ $index % 2 == 0 ? 'ml-0' : 'ml-3' }}">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">{{ $gestion->usuario->name }}</h5>
+                    <small class="text-success">{{ $gestion->created_at }}</small>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <p>{{ $gestion->coment }}</p>
+                </div>
+                @if(!empty($gestion->image))
+                <div class="form-group">
+                    <strong>Adjunto</strong>
+                    @foreach(explode(',', $gestion->image) as $imageItem)
+                    <a href="{{asset('storage/images/'. $imageItem)}}" target="_blank" alt="{{$gestion->id }}">
+                        <ul>
+                            <li>{{ $imageItem }}</li>
+                        </ul>
+                    </a>
+                    @endforeach
+                </div>
+                @endif
             </div>
-            <!-- hhh -->
-            <div class="col-xs-12 col-sm-12 col-md-12 mt-2">
-            <div class="form-group">
-            <strong>Comentario:</strong>
-            <span>{{$gestion->coment }}</span>
-            </div>
-            </div>
-            <div class="col-xs-12 col-sm-12 col-md-12 mt-2">
-            <div class="form-group">
-            <strong>Adjunto</strong>
-            @if(!empty($gestion->image))
-                @foreach(explode(',', $gestion->image) as $imageItem )
-                <a href="{{asset('storage/images/'. $imageItem)}}" target="_blank" alt="{{ $gestion->id }}">
-                    <ul>
-                    <li>{{$imageItem}}</li>
-                    </ul>
-                </a>
-                @endforeach
-            @endif
-            </div>
-            </div>
-        </div>            
-            <!-- Mostrar otros campos según sea necesario -->
+        </div>
         @endforeach
-   
-</div>
+    </div>
 </div>
 @endif
 
+<!--  -->
+
 <!-- fin de la seccion del historico de gestiones -->
 
-
+<div class="container">
         @if ($errors->any())
             <div class="alert alert-danger">
                 <strong>Alerta </strong> Algo fue mal..<br><br>
@@ -179,11 +130,11 @@
                 </ul>
             </div>
         @endif
-
+</div>
 
 
 <form action="{{route('gestion.store')}}" id="gestion" method="POST" enctype="multipart/form-data" style=" padding: 1%; border: 1px solid #adb5bd47;"class=" container bg-white shadow rounded rounded" >
-    <h4>Gestionar</h4> 
+    <!-- <h4>Gestionar</h4>  -->
         @csrf
         <input type="hidden" name="ticket_id" class="form-control" value="{{$ticket->id}}" >
         <!-- <input type="text" name="staff" class="form-control" value="{{$ticket->user_id}}" > -->
@@ -191,24 +142,38 @@
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 mt-2">
                 <div class="form-group">
-                    <strong>Comentarios:</strong>
-                    <textarea class="form-control" style="height:150px" name="coment"></textarea>
+                    <strong>Agregar comentario:</strong>
+                    <textarea class="form-control" style="height:150px" name="coment" require></textarea>
                     </div>
             </div>
             
-            <div class="col-xs-12 col-sm-12 col-md-6 mt-2">
+           
+            <!--  -->
+            <div class="col-xs-12 col-sm-12 col-md-3 mt-2">
                 <div class="form-group">
-                    <strong>Categoria:</strong>
-                    <!--  -->
-                    <select name="category_id" class="form-control border-0 bg-light shadow-sm " id="">
-                    <option value="">-- Categoria --</option>
-                    @foreach($category as  $id => $name)
-                    <option value="{{$id}}"
-                    @if($id == old('department_id' , $ticket->category_id)) selected @endif >{{$name}}</option>
-                    @endforeach                    
+                    <strong>Area:</strong>
+                    <select name="area_id" id="area" class="form-control border-0 bg-light shadow-sm ">
+                    <option value="">Seleccionar un Area</option>
+                    @foreach($areas as  $id => $name)
+                    <option value="{{$id}}" @if($id == old('area_id' , $ticket->area_id)) selected @endif >{{$name}}</option>
+                    @endforeach
                     </select>
                 </div>
             </div>
+            <div class="col-xs-12 col-sm-12 col-md-4 mt-2">
+                <div class="form-group">
+                    <strong>Categoria:</strong>
+                    <select name="category_id" id="category" class="form-control border-0 bg-light shadow-sm ">
+                        <option value=""> Seleccionar al puto del patas</option>
+                        @foreach($category as $id => $name)
+                        <option value="{{ $id }}" {{ $ticket->category_id == $id ? 'selected' : '' }}>{{ $name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            
+
+            <!--  -->
             <div class="col-xs-12 col-sm-12 col-md-6 mt-2 d-flex justify-content-end">
                 @if($ticket->status_id != 4)            
                 <div class="form-check">
@@ -233,6 +198,23 @@
             <div id="previewImages"></div>
 
             <script>
+                // 
+                $(document).ready(function () {
+                    $('#area').change(function () {
+                        var area_id = $(this).val();
+                        console.log(area_id);
+                        $.get("{{route('ticket.getCategory')}}", {area_id: area_id}, function (data) {
+                            $('#category').empty();
+                            $('#category').append('<option value="">Seleccionar una categoría</option>');
+                            $.each(data, function (index, category) {
+                                $('#category').append('<option value="' + category.id + '">' + category.name + '</option>');
+                            });
+                        });
+                        // console.log(category);
+                    });
+                }); 
+                // 
+
                 const fileInput = document.getElementById('fileInput');
                 const previewImages = document.getElementById('previewImages');
 
