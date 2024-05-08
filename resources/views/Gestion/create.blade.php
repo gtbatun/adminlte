@@ -2,7 +2,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 
 @section('content')
-@can('view',$ticket)
+<!-- @can('view',$ticket) -->
 <!--  -->
 
 <!--  -->
@@ -82,7 +82,7 @@
 <!--  -->
 
 <!--  -->
-@if(!empty($h_gestiones))
+@if(count($h_gestiones))
 <div class="container bg-white shadow rounded" style="padding: 1%; border: 1px solid #adb5bd47;">
 <h4>Historial  <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-secondary">{{'+ '.count($h_gestiones)}}</span></h4>
     <div class="overflow-auto p-3" style="max-width: 100%; max-height: 300px;">
@@ -149,7 +149,8 @@
             
            
             <!--  -->
-            <div class="col-xs-12 col-sm-12 col-md-3 mt-2">
+            
+            <div class="col-xs-12 col-sm-12 col-md-4 mt-2">
                 <div class="form-group">
                     <strong>Area:</strong>
                     <select name="area_id" id="area" class="form-control border-0 bg-light shadow-sm ">
@@ -174,7 +175,7 @@
             
 
             <!--  -->
-            <div class="col-xs-12 col-sm-12 col-md-6 mt-2 d-flex justify-content-end">
+            <div class="col-xs-12 col-sm-12 col-md-4 mt-2 d-flex justify-content-end">
                 @if($ticket->status_id != 4)            
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" value="1" name="cerrar" {{ $ticket->status_id == 4 ? 'checked' : '' }}>
@@ -251,5 +252,5 @@
     });
     </script>
 
-@endcan    
+<!-- @endcan     -->
 @endsection

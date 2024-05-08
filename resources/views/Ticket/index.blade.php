@@ -42,7 +42,7 @@
                 <table id="tickets"  class="table table-bordered shadow-lg mt-4 
                 table-striped  ">
                     <thead  class="table-dark ">
-                        <tr>
+                        <tr class="text-center">
                             <th>ID</th>
                             <th>TICKET</th>
                             <!-- <th>CREACION</th> -->
@@ -80,7 +80,9 @@
                         <small class="text-success">{{ $ticketItem->created_at->diffForHumans(null, false, false, 1) }}</small>
                         </div> 
                         <div class="text-truncate">
+                            <a href="{{ route('ticket.show', $ticketItem) }}" title="{{$ticketItem->title}}">
                         <p style="max-width: 300px; max-height: 15px;" >{{ $ticketItem->title }}</p>
+                        </a>
                         </div>
                         
                     </div>
@@ -94,19 +96,18 @@
                 {{$ticketItem->status->name}}
                     <!-- <a href="{{route('status.show',$ticketItem->status)}}"></a> -->
                 </td>                
-                <td>
-                <a href="{{route('ticket.show',$ticketItem)}}" title="Gestionar" class="btn btn-success"> Ver<i class='fas fa-eye'></i></a>
-                    
-                    @can('admin-access')
-                    <a href="{{route('ticket.edit',$ticketItem)}}" class="btn btn-warning">Editar <i class='fas fa-edit'></i></a>                 
-                    
-                    
-                    <form action="{{route('ticket.destroy',$ticketItem)}}" method="post" class="d-inline">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger">Eliminar <i class='fas fa-eraser'></i></button>
-                    </form>
-                    @endcan
+                <td class="justify-content-between">
+                    <div class="d-flex justify-content-center align-items-center">
+                        <a href="{{route('ticket.show',$ticketItem)}}" title="Gestionar" class="btn btn-success mr-2"> Ver <i class='fas fa-eye'></i></a>                    
+                        @can('admin-access')
+                        <a href="{{route('ticket.edit',$ticketItem)}}" class="btn btn-warning mr-2">Editar <i class='fas fa-edit'></i></a>               
+                        <form action="{{route('ticket.destroy',$ticketItem)}}" method="post" class="d-inline">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger mr-2">Eliminar <i class='fas fa-eraser'></i></button>
+                        </form>
+                        @endcan
+                    </div>
                 </td>
                 
             </tr>
