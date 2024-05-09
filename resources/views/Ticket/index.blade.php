@@ -163,16 +163,20 @@ $(document).ready(function() {
     $('#tickets').DataTable({
         "order": [[ 0,"desc" ]],
         "language": {
-            "search": "Buscar",
-            "lengthMenu": "Mostrar _MENU_ ticket por pagina",
-            "info":"Mostrando pagina _PAGE_ de _PAGES_ ",
-            "paginate": {
-                    "previous": "Anterior",
-                    "next": "Siguiente",
-                    "first": "Primero",
-                    "last": "Ultimo",
-                    }
-        }
+                "search": "Buscar",
+                "lengthMenu": "Mostrar _MENU_ ticket por pagina",
+                "info":"Mostrando _START_ de _END_ de _TOTAL_ ",
+                "infoFiltered":   "( filtrado de un total de _MAX_)",
+                "emptyTable":     "Sin Datos a Mostrar",
+                "zeroRecords":    "No se encontraron coincidencias",
+                "infoEmpty":      "Mostrando 0 de 0 de 0 coincidencias",
+                "paginate": {
+                        "previous": "Anterior",
+                        "next": "Siguiente",
+                        "first": "Primero",
+                        "last": "Ultimo",
+                        },
+            }
     } );
 } );
 </script>

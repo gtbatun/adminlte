@@ -54,6 +54,7 @@ class TicketController extends Controller
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
         return view('Ticket.report', compact('startDate', 'endDate', 'ticket'));
+        
         // return view('ticket.report');
     }
 
@@ -120,14 +121,13 @@ class TicketController extends Controller
     
         if ($request->hasFile('image')) {
             $imageNames = [];    
-            foreach ($request->file('image') as $image) {
-                
+            foreach ($request->file('image') as $image) {                
                 // $imageName = time() . '_' . Str::random(10) . '.' . $image->getClientOriginalExtension();                
                 // $imageName = time() . '_' . $image->getClientOriginalName() . '.' . $image->getClientOriginalExtension();
                 $imageName = time() . '_' . $image->getClientOriginalName();
                 // $image = ImageManager::make($image)->resize(300, 200)->encode();
 
-                // $image->storeAs('images', $imageName);
+                $image->storeAs('images', $imageName);
                 $imageNames[] = $imageName;
             }
             $concatenatedNames = implode(',', $imageNames);

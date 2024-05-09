@@ -8,6 +8,10 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
+use Illuminate\Http\Request;
+use Illuminate\Auth\Events\Registered;
+use App\Providers\RouteServiceProvider;
+
 class RegisterController extends Controller
 {
     /*
@@ -29,6 +33,7 @@ class RegisterController extends Controller
      * @var string
      */
     protected $redirectTo = '/home';
+    // protected $redirectTo = 'user/{id}/edit';
 
     /**
      * Create a new controller instance.
@@ -38,7 +43,7 @@ class RegisterController extends Controller
     public function __construct()
     {
         //guest
-        $this->middleware('auth');
+        $this->middleware('guest');
     }
 
     /**
@@ -69,5 +74,13 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
+    }
+    protected function registered(Request $request, $user)
+    {
+        // Obtener el ID del usuario recién creado
+        $userId = $user->id;
+
+        // Redirigir al usuario a la página de edición de su perfil con el ID del usuario
+        return redirect()->route('user.edit', ['user' => $userId]);
     }
 }

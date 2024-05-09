@@ -59,8 +59,11 @@ class TicketPolicy
      */
     public function update(User $user, Ticket $ticket): bool
     {
-        
-        return $user->id === $ticket->user_id || $user->department_id === $ticket->department_id;
+        if ($user->is_admin == 10) {
+            return true; // El administrador puede ver todos los tickets
+        }
+        return false; // Si no cumple ninguna de las condiciones anteriores, no puede ver el ticket
+        // return $user->id === $ticket->user_id || $user->department_id === $ticket->department_id;
         // return $user->is_admin === 1;
         // return $user->is($ticket->user);
     }

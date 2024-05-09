@@ -1,4 +1,8 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<!--  -->
+
+<!--  -->
+
 @extends('adminlte::page')
 @section('content')
 <div class="container">
@@ -23,8 +27,8 @@
     </div> 
 </form>
 
-    <div  id="previsualizacion"></div>
-
+   
+<div id="previsualizacion"></div>
 </div>
 
 
@@ -43,6 +47,27 @@
         // .then(response => response.json())
         .then(data => {
             document.getElementById('previsualizacion').innerHTML = data;
+            $('#tabla-reportes').DataTable({
+                button:[{extend: 'excelHtml', text: 'excel', className:'btn btn-success'}],
+                scrollY:450,
+                // paging:true,
+                "language": {
+                "search": "Buscar",
+                "lengthMenu": "Mostrar _MENU_ ticket por pagina",
+                "info":"Mostrando _START_ de _END_ de _TOTAL_ ",
+                // "info":"Mostrando pagina _PAGE_ de _PAGES_ ",
+                "infoFiltered":   "( filtrado de un total de _MAX_)",
+                "emptyTable":     "Sin Datos a Mostrar",
+                "zeroRecords":    "No se encontraron coincidencias",
+                "infoEmpty":      "Mostrando 0 de 0 de 0 coincidencias",
+                "paginate": {
+                        "previous": "Anterior",
+                        "next": "Siguiente",
+                        "first": "Primero",
+                        "last": "Ultimo",
+                        },
+            }
+            }); // Inicializa DataTables en la tabla generada
         })
         .catch(error => {
             console.error('Error:', error);

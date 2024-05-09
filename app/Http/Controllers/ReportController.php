@@ -9,6 +9,8 @@ use App\Models\Ticket;
 use App\Exports\TicketExport;
 use Maatwebsite\Excel\Facades\Excel;
 
+use Illuminate\Support\Facades\DB;
+
 class ReportController extends Controller
 {
     public function index()
@@ -21,7 +23,8 @@ class ReportController extends Controller
         // return $request;
         $fechaInicio = $request->fecha_inicio;
         $fechaFin = $request->fecha_fin;
-         $tickets = Ticket::whereBetween('created_at', [$fechaInicio, $fechaFin])->get();
+        //  $tickets = Ticket::whereBetween('created_at', [$fechaInicio, $fechaFin])->get();
+         $tickets = Ticket::whereBetween(DB::raw("DATE_FORMAT(created_at, '%Y-%m-%d')"), [$fechaInicio, $fechaFin])->get();
 
         // return $tickets;
         // return response()->json(compact('tickets'));
