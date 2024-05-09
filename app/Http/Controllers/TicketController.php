@@ -17,9 +17,10 @@ use Maatwebsite\Excel\Facades\Excel;
 
 // 
 use Illuminate\Support\Facades\Gate;
-
-
+//
+// use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\ImageManager;
 
 class TicketController extends Controller
 {
@@ -120,15 +121,34 @@ class TicketController extends Controller
         if ($request->hasFile('image')) {
             $imageNames = [];    
             foreach ($request->file('image') as $image) {
+                
                 // $imageName = time() . '_' . Str::random(10) . '.' . $image->getClientOriginalExtension();                
                 // $imageName = time() . '_' . $image->getClientOriginalName() . '.' . $image->getClientOriginalExtension();
                 $imageName = time() . '_' . $image->getClientOriginalName();
-                $image->storeAs('images', $imageName);
+                // $image = ImageManager::make($image)->resize(300, 200)->encode();
+
+                // $image->storeAs('images', $imageName);
                 $imageNames[] = $imageName;
             }
             $concatenatedNames = implode(',', $imageNames);
             $add_ticket->image = $concatenatedNames;
         }
+        // 
+        if ($request->hasFile('image1')) {
+            $imageNames = [];    
+            foreach ($request->file('image') as $image) {
+                // $imageName = time() . '_' . Str::random(10) . '.' . $image->getClientOriginalExtension();                
+                // $imageName = time() . '_' . $image->getClientOriginalName() . '.' . $image->getClientOriginalExtension();
+                $imageName = time() . '_' . $image->getClientOriginalName();
+                $image->storeAs('images', $imageName);
+                // $compressedImage = Image::make($image)->resize(300, 200)->encode();
+                $imageNames[] = $imageName;
+            }
+            $concatenatedNames = implode(',', $imageNames);
+            $add_ticket->image = $concatenatedNames;
+        }
+
+        
         $add_ticket->save();
         return response()->json(['message' => 'Ticket created successfully','redirect_to' => route('ticket.index')], 200); 
         
