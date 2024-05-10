@@ -51,6 +51,7 @@
         @csrf
         <input type="hidden" name="user_id" class="form-control" value="{{auth()->user()->id}}" >
         <input type="hidden" name="department_id" class="form-control" value="{{auth()->user()->department_id}}" >
+
         <input type="hidden" name="status_id" class="form-control" value="1" >
         <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12 mt-2">
@@ -103,14 +104,49 @@
             <div id="responseMessage"></div>                         
             <div class="row" id="imagePreview"></div>            
             <div id="error-container"></div>
+
+<!-- Modal para alerta de perfil incompleto -->
+<div class="modal" id="depart" tabindex="-5" role="dialog" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Perfil Incompleto</h5>
+        <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"> -->
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Para continuar, por favor complete sus datos de registro.</p>
+      </div>
+      <div class="modal-footer">
+        <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button> -->
+        <!-- Aquí puedes agregar un botón para redirigir al usuario a la página de asignación de departamento -->
+        <a href="{{ route('user.edit', auth()->user()->id) }}" class="btn btn-primary">Ir a Perfil</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--  -->
+<?php $department_id = auth()->user()->department_id;?>
+
  <script>
+
+    // script para ejecutar modal de alerta
+    $(document).ready(function() {
+    // Verificar si el departamento está asignado
+    @if(!$department_id )
+      // Mostrar el modal si el departamento no está asignado
+      $('#depart').modal('show');
+    @endif
+  });
 
     // funcion para capturar el area y clasifar las categorias pertenecientes a las areas
     
     $(document).ready(function () {
         $('#area').change(function () {
             var area_id = $(this).val();
-            console.log(area_id);
+            // console.log(area_id);
             $.get("{{route('ticket.getCategory')}}", {area_id: area_id}, function (data) {
                 $('#category').empty();
                 $('#category').append('<option value="">Seleccionar una categoría</option>');
@@ -182,6 +218,7 @@
                 // seccion para validar los input y que contegan valores
                 // console.log('array de imagenes:',files);
                 let errors = {};
+                
 
                 if (!title) {
                     errors.title = ['El título es requerido'];
@@ -230,6 +267,8 @@
                     console.error('Esto es lo que manda cuando hay un error:',error);
                     
                     mostrarErrores(error);
+                   console.log(errors);
+                    habilitarEnvio();
                     
                 });
             }

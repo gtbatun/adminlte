@@ -28,8 +28,8 @@
     </h1> -->
     
 
-    <!-- {{count($ticket)}} -->
-    @if(count($ticket))  
+    {{count($ticket)}}
+    @if(count($ticket) != 0)  
     <div class="container-fluid">
     <div class="row">
         <div class="col-12">
@@ -125,7 +125,9 @@
 </div>  
 <!-- {{ $ticket->links() }} -->
     @else
-    <h3 class="text-center">No hay tickets creados, seleccioné el boton crear nuevo ticket para crear</h3>
+    <div class="container" >
+    <h3 class="text-center mt-5">Sin tickets creados, seleccioné el boton crear nuevo ticket</h3>
+    </div>
     @endisset
 </div>
 

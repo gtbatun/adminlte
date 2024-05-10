@@ -17,6 +17,7 @@ use App\Http\Controllers\ReportController;
 use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\ChartJSController;
+use Illuminate\Support\Facades\DB;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,12 +47,12 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 
     Route::middleware('can:admin-access')->group(function(){
-        Route::resource('area',AreaController::class);
-        Route::resource('category',CategoryController::class);
+        Route::resource('area',AreaController::class);     
+
         Route::resource('department',DepartmentController::class);
         Route::resource('inventory',InventoryController::class);
         Route::resource('status',StatusController::class); 
-        
+        Route::resource('category',CategoryController::class);
         
         //Ruta para el reset de contraseña de los usuarios
         Route::post('/user/update/password', [UserController::class, 'updatePassword'])->name('user.update.password');
@@ -64,9 +65,11 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
         
         Route::get('setting', [SettingController::class,'index'])->name('setting.index');
 
-        Route::get('ticket/getCategory',[TicketController::class,'getCategory'])->name('ticket.getCategory');
+        
+        
 
         });
+
 // ruta agregad para visualizar las imagenes sin el link en cpanel
 Route::get('storage/{archivo}', function ($archivo) {
     $rutaArchivo = storage_path('app/public/' . $archivo);
@@ -79,7 +82,7 @@ Route::get('storage/{archivo}', function ($archivo) {
 
 //Ruta GRUD para los usuarios
 Route::resource('user', UserController::class);
-
+Route::get('ticket/getCategory',[TicketController::class,'getCategory'])->name('ticket.getCategory');
 Route::resource('gestion',GestionController::class);
 Route::resource('ticket',TicketController::class);
 

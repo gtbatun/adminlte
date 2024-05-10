@@ -95,7 +95,7 @@ class UserController extends Controller
             'name' => 'required',
             'email' => 'required',
             'department_id' => 'required',
-            'extension' => 'min:2',
+            // 'extension' => 'min:2',
             'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Asegúrate de validar también la imagen
         ]);
 

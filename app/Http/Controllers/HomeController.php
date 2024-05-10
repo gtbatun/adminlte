@@ -33,7 +33,7 @@ class HomeController extends Controller
 
             $agente = Ticket::whereYear('ticket.created_at', date('Y'))
             ->where('gestion.status_id', '=', '4')
-            ->where('users.is_admin', '=', '1')
+            ->where('users.is_admin', '=', '10')
             ->join('gestion', 'gestion.ticket_id', '=', 'ticket.id')
             ->join('users', 'users.id', '=', 'gestion.user_id')
             ->selectRaw('COUNT(*) as count, users.name as user_name')
@@ -73,10 +73,16 @@ class HomeController extends Controller
         $labels1 = array_values($labels1);
         $data1 = array_values($data1);
         //
+        /// recien agregado para poner datos en el dashboard
+        $ticketCounts = DB::table('ticket')
+            ->select('status_id', DB::raw('COUNT(*) as total'),'status.name')
+            ->join('status','ticket.status_id', '=', 'status.id')
+            ->groupBy('status_id')
+            ->get();
 
    
         // return view('home', compact('a_labels', 'a_data','d_labels', 'd_data','labels1', 'data1'));
-        return view('chart', compact('a_labels', 'a_data','d_labels', 'd_data','labels1', 'data1'));
+        return view('chart', compact('a_labels', 'a_data','d_labels', 'd_data','labels1', 'data1','ticketCounts'));
         // return view('home');
     }
 }

@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Exports\TicketExport;
 use Maatwebsite\Excel\Facades\Excel;
 
+
 // 
 use Illuminate\Support\Facades\Gate;
 //
@@ -69,7 +70,8 @@ class TicketController extends Controller
                 ->paginate();
         }else{
             $ticket = Ticket::with('area','category','status','department')
-               // ->where('user_id', $user->id) // Filtrar por el ID del usuario actual
+               // ->where('user_id', $user->id) // Filtrar por el ID del usuario actual                
+                ->where('department_id', '=', $user->department_id )
                 ->where('status_id', '!=', 4 )
                 ->latest()
                 ->paginate();
@@ -133,20 +135,7 @@ class TicketController extends Controller
             $concatenatedNames = implode(',', $imageNames);
             $add_ticket->image = $concatenatedNames;
         }
-        // 
-        if ($request->hasFile('image1')) {
-            $imageNames = [];    
-            foreach ($request->file('image') as $image) {
-                // $imageName = time() . '_' . Str::random(10) . '.' . $image->getClientOriginalExtension();                
-                // $imageName = time() . '_' . $image->getClientOriginalName() . '.' . $image->getClientOriginalExtension();
-                $imageName = time() . '_' . $image->getClientOriginalName();
-                $image->storeAs('images', $imageName);
-                // $compressedImage = Image::make($image)->resize(300, 200)->encode();
-                $imageNames[] = $imageName;
-            }
-            $concatenatedNames = implode(',', $imageNames);
-            $add_ticket->image = $concatenatedNames;
-        }
+      
 
         
         $add_ticket->save();

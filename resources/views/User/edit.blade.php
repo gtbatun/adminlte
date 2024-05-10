@@ -10,18 +10,27 @@
           <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
           <li class="breadcrumb-item">Users</li>
           <li class="breadcrumb-item active">Profile</li>
+          
       </ol>
       </nav>
   </div>
 </div>
+
+<!-- @if(!isset(auth()->user()->department_id))
+<p class="text-danger"></p>
+<h2 class="text-danger"> Complete su perfil</h2>
+@endif -->
+
     @if(Session::get('success'))
             <div class="alert alert-success mt-2">
             <strong>{{Session::get('success')}} </strong><br>
             </div>
     @endif
+    
 <!-- End Page Title -->
     <section class="section profile">
       <div class="container">
+      @include('partials.validation-errors')
       <div class="row">
       
         <div class="col-xl-4">
@@ -40,6 +49,11 @@
               @endif              
             </div>
           </div>
+          @if(!isset(auth()->user()->department_id))
+          <x-adminlte-alert theme="danger" title="Alerta">
+          Complete su perfil
+          </x-adminlte-alert>
+          @endif
 
         </div>
         <!-- seccion de visiaulizacion de datos a mostrar -->
@@ -69,7 +83,7 @@
                       <div class="col-md-8 col-lg-9">
                         <!-- <img class="sm" src="{{asset('storage/images/user/'. $user->image)}}" alt="Profile"> -->
                         <div class="pt-2">
-                          <input name="image" type="file" accept="image/*" >
+                          <input name="image" type="file" accept="image/*" class="form-control @error('image') is-invalid @enderror" >
                         </div>
                       </div>
                     </div>
@@ -84,12 +98,11 @@
                     <div class="row mb-3">
                       <label for="Job" class="col-md-4 col-lg-3 col-form-label">Departamento</label>
                       <div class="col-md-8 col-lg-9">
-                        <!-- <input name="job" type="text" class="form-control" id="Job" value="Web Designer"> -->
-                        <select name="department_id" class="form-control border-0 bg-light shadow-sm " id="">
+                        <select name="department_id" class="form-control border-0 bg-light shadow-sm @error('department_id') is-invalid @enderror">
                           <option value="">-- Departamento --</option>
                           @foreach($department as  $id => $name)
                           <option value="{{$id}}"
-                          @if($id == old('department_id' , $user->department_id)) selected @endif >{{$name}}</option>
+                          @if($id == old('department_id' , $user->department_id)) selected @endif  >{{$name}}</option>
                           @endforeach                    
                           </select>
                       </div>
@@ -98,8 +111,8 @@
 
                     <div class="row mb-3">
                       <label for="Phone" class="col-md-4 col-lg-3 col-form-label">Extension</label>
-                      <div class="col-md-8 col-lg-9">
-                        <input name="extension" type="text" class="form-control" id="Phone" value="{{$user->extension}}">
+                      <div class="col-md-8 col-lg-2">
+                        <input name="extension" type="text" class="form-control @error('extension') is-invalid @enderror" id="Phone" value="{{$user->extension}}" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                       </div>
                     </div>
 

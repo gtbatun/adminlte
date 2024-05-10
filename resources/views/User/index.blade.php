@@ -47,7 +47,12 @@
                 <td>{{$userItem->id}}</td>  
                 <td>{{$userItem->name}}</td>
                 <td>{{$userItem->email}}</td>
-                <td>{{$userItem->department->name}}</td>               
+                @if(isset($userItem->department->name))
+                    <td>{{$userItem->department->name }} </td>                    
+                @else
+                    <td> </td>
+                @endif
+                               
                 <td>{{$userItem->created_at->diffForHumans(null, false, false, 1)}}</td>             
                 <td>
                 <a href="{{route('user.edit',$userItem)}}" class="btn btn-info">Editar <i class='fas fa-edit'></i></a>
