@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Area;
 use App\Models\Category;
 use Illuminate\Http\Request;
 
@@ -13,7 +14,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::latest()->paginate();
+        $categories = Category::with('area')->latest()->paginate(10);
         return view('Category.index',['categories' => $categories]);
     }
 
@@ -23,7 +24,7 @@ class CategoryController extends Controller
     public function create()
     {
         $category = new Category;
-        return view('Category.create',['category' => $category]);
+        return view('Category.create',['areas' => Area::pluck('name','id'),'category' => $category]);
     }
 
     /**
@@ -33,7 +34,8 @@ class CategoryController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'description' => 'required'            
+            'description' => 'required',
+            'area_id' => 'required'            
         ]);
 
         Category::create($request->all());
@@ -56,7 +58,7 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        return view('Category.edit',['category' => $category]);
+        return view('Category.edit',['areas' => Area::pluck('name','id'),'category' => $category]);
     }
 
     /**
@@ -66,7 +68,8 @@ class CategoryController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'description' => 'required'
+            'description' => 'required',
+            'area_id' => 'required'
         ]);
         $category->update($request->all()); 
         return redirect()->route('category.index', $category)->with('success','La categoria fue actualizado con exito');

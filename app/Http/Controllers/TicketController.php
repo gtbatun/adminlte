@@ -63,7 +63,6 @@ class TicketController extends Controller
     { 
         $user = Auth::user();
         
-
         if($user->is_admin == 10){
             $ticket = Ticket::with('area','category','status','department')
                 ->latest()

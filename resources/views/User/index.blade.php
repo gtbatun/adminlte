@@ -68,6 +68,7 @@
                    
                     @endforeach
                 </table>
+                {{$users->links()}}
             </div>
             <!-- /.card-body -->
             </div>

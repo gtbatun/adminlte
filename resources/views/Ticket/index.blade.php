@@ -28,7 +28,7 @@
     </h1> -->
     
 
-    {{count($ticket)}}
+    <!-- {{count($ticket)}} -->
     @if(count($ticket) != 0)  
     <div class="container-fluid">
     <div class="row">
@@ -104,7 +104,7 @@
                         <form action="{{route('ticket.destroy',$ticketItem)}}" method="post" class="d-inline">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-danger mr-2">Eliminar <i class='fas fa-eraser'></i></button>
+                            <button type="submit" class="btn btn-danger mt-3 ">Eliminar <i class='fas fa-eraser'></i></button>
                         </form>
                         @endcan
                     </div>

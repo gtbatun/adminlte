@@ -17,6 +17,7 @@ use App\Http\Controllers\ReportController;
 use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\ChartJSController;
+use Illuminate\Auth\Events\Verified;
 use Illuminate\Support\Facades\DB;
 
 /*
@@ -29,6 +30,7 @@ use Illuminate\Support\Facades\DB;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
 // DB::listen(function($query){
 //     var_dump($query->sql);
 // });
@@ -38,9 +40,9 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
-Auth::routes();
+Auth::routes(['register' => true, 'verify' => true]);
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth','verified'])->group(function () {
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

@@ -12,7 +12,8 @@ class Category extends Model
     protected $fillable =[
         'name',
         'description',
-        'logo'];
+        'logo',
+        'area_id'];
 
         public function ticket(){
             return $this->hasMany(Ticket::class,'category_id');
@@ -21,4 +22,5 @@ class Category extends Model
         public function area(){
             return $this->belongsTo(Area::class,'area_id');
         }
+        
 }
