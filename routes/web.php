@@ -31,9 +31,9 @@ use Illuminate\Support\Facades\DB;
 |
 */
 
-// DB::listen(function($query){
-//     var_dump($query->sql);
-// });
+DB::listen(function($query){
+    var_dump($query->sql);
+});
 
 
 Route::get('/', function () {
@@ -87,6 +87,8 @@ Route::resource('user', UserController::class);
 Route::get('ticket/getCategory',[TicketController::class,'getCategory'])->name('ticket.getCategory');
 Route::resource('gestion',GestionController::class);
 Route::resource('ticket',TicketController::class);
+//ruta para retornas datos a la dasboard
+Route::get('/api/tickets', [TicketController::class, 'getTickets'])->name('api.tickets');
 
 
 

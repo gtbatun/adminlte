@@ -1,6 +1,11 @@
 @extends('adminlte::page')
 @section('content')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <!-- CSS Files -->
 <!-- <link id="pagestyle" href="../assets/css/material-dashboard.css?v=3.1.0" rel="stylesheet" /> -->
@@ -79,6 +84,89 @@
         </div>
     </div>
 <!-- </div> -->
+<!--  -->
+<div class="row">
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-4 col-xs-12">
+            <div class="row">
+                <div class="col-md-11">
+                    <div class="card">
+                        <div class="card-body">
+                            <h3 class="text-center">Tickets por Dia</h3>
+                            <div class="form-group">
+                                <label for="filter">Filtrar por:</label>
+                                <select class="form-control" id="filter">
+                                    <option value="day">Día</option>
+                                    <option value="month" selected>Mes</option>
+                                    <option value="year">Año</option>
+                                </select>
+                            </div>
+                            <canvas id="dia" width="200" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<!-- scrip para validar los datos a mostar -->
+<script>
+     const apiUrl = "{{ route('api.tickets') }}";
+
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('dia').getContext('2d');
+    const filterSelect = document.getElementById('filter');
+
+    let chart;
+
+    const fetchData = (filter) => {
+        const url = `${apiUrl}?filter=${filter}`;
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                const labels = data.map(item => item.label);
+                const counts = data.map(item => item.count);
+
+                if (chart) {
+                    chart.destroy();
+                }
+
+                chart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Tickets',
+                            data: counts,
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching data:',error);
+            });
+    };
+
+    fetchData(filterSelect.value);
+
+    filterSelect.addEventListener('change', function() {
+        fetchData(this.value);
+    });
+});
+</script>
 
 <!--  -->
 
@@ -221,5 +309,6 @@
 
 </script>
 @endpush
-<!-- ------------------------------- -->
+
+
 @endsection
