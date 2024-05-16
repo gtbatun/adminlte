@@ -27,36 +27,7 @@ use Illuminate\Support\Facades\DB;
 class TicketController extends Controller
 {
 
-    /** */
-    public function getTickets(Request $request)
-    {
-        $filter = $request->input('filter', 'month');
-        $departmentId = Auth::user()->department_id;
-        $query = DB::table('ticket')
-            ->select(DB::raw('DATE(ticket.created_at) as label'), DB::raw('COUNT(*) as count'))
-            ->where('ticket.department_id', '=', $departmentId)
-            ->groupBy(DB::raw('DATE(ticket.created_at)'));
 
-        switch ($filter) {
-            case 'day':
-                $query->whereDate('ticket.created_at', '=', date('Y-m-d'));
-                break;
-            case 'month':
-                $query->whereMonth('ticket.created_at', '=', date('m'))
-                      ->whereYear('ticket.created_at', '=', date('Y'));
-                break;
-            case 'year':
-                $query->whereYear('ticket.created_at', '=', date('Y'));
-                break;
-        }
-
-        $tickets = $query->get();
-        dd($tickets);
-
-        return response()->json($tickets);
-    } 
-
-    /** */
 
 
     public function getCategory(Request $request)
@@ -111,7 +82,7 @@ class TicketController extends Controller
         }
         
 
-        return view('ticket.index',[
+        return view('Ticket.index',[
             'newTicket'=> new Ticket,
             'ticket' => $ticket
             

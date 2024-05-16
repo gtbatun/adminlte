@@ -20,13 +20,13 @@
 <p class="text-danger"></p>
 <h2 class="text-danger"> Complete su perfil</h2>
 @endif -->
-
+<div class="container">
     @if(Session::get('success'))
             <div class="alert alert-success mt-2">
             <strong>{{Session::get('success')}} </strong><br>
             </div>
     @endif
-    
+</div>   
 <!-- End Page Title -->
     <section class="section profile">
       <div class="container">
@@ -95,6 +95,7 @@
                       </div>
                     </div>
 
+                    @if($user->department_id == '' || $user->isAdmin())
                     <div class="row mb-3">
                       <label for="Job" class="col-md-4 col-lg-3 col-form-label">Departamento</label>
                       <div class="col-md-8 col-lg-9">
@@ -107,6 +108,7 @@
                           </select>
                       </div>
                     </div>
+                    @endif
                     
 
                     <div class="row mb-3">
@@ -122,7 +124,7 @@
                         <input name="email" type="email" class="form-control" id="Email" value="{{$user->email}}">
                       </div>
                     </div>
-                    @if($user->isAdmin())
+                    @if($user->is_admin == 10)
                     <div class="row mb-3">
                     <label for="Role" class="col-md-4 col-lg-3 col-form-label">Role</label>
                     <div class="col-md-8 col-lg-9">

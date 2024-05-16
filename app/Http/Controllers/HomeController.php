@@ -43,7 +43,7 @@ $agente = Ticket::whereYear('ticket.created_at', date('Y'))
 ->groupBy('users.name')
 ->pluck('count', 'user_name');
 }else{
-    echo "hola";
+    // echo "hola";
     $agente = Ticket::whereMonth('ticket.created_at', date('m'))
                 ->where('ticket.department_id', '=', auth()->user()->department_id)
             // ->where('gestion.status_id', '=', '4')

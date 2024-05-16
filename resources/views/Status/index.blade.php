@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 @section('content')
-<h1>index de status</h1>
+<!-- <h1>index de status</h1> -->
 
 <div class="container">
     <div class="col-12 mt-4">
