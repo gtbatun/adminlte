@@ -94,8 +94,8 @@ class UserController extends Controller
         $validatedData = $request->validate([
             'name' => 'required',
             'email' => 'required',
-            'department_id' => 'required',
-            // 'extension' => 'min:2',
+            'department_id' => 'nullable|integer',
+            'extension' => 'nullable|min:2',
             'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Asegúrate de validar también la imagen
         ]);
 

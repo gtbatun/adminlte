@@ -16,6 +16,8 @@ use App\Exports\TicketExport;
 use Maatwebsite\Excel\Facades\Excel;
 
 
+
+
 // 
 use Illuminate\Support\Facades\Gate;
 //
@@ -26,9 +28,23 @@ use Illuminate\Support\Facades\DB;
 
 class TicketController extends Controller
 {
+    /** funcion para refrescar la tabla de tickets sin recargar la pagina */ 
 
+    public function data()
+    {
+        // $tickets = Ticket::where('department_id', Auth::user()->department_id)->get();
+       
+        // $tickets = Ticket::with('area','category','status','department')
+        // ->latest()
+        // ->paginate();
+        //  return view('Ticket.table', compact('tickets'));
+        // $tickets = Ticket::where('department_id', Auth::user()->department_id)->get();
+        $tickets = Ticket::with('area','category','status','department')->get();
+        return response()->json($tickets);
+    }
 
-
+    
+    /* **/
 
     public function getCategory(Request $request)
     {
@@ -82,11 +98,12 @@ class TicketController extends Controller
         }
         
 
-        return view('Ticket.index',[
-            'newTicket'=> new Ticket,
-            'ticket' => $ticket
+        // return view('Ticket.index',[
+        //     'newTicket'=> new Ticket,
+        //     'ticket' => $ticket
             
-        ]);
+        // ]);
+        return view('Ticket.index');
     }
 
     /**

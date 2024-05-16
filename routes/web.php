@@ -89,7 +89,7 @@ Route::get('ticket/getCategory',[TicketController::class,'getCategory'])->name('
 Route::resource('gestion',GestionController::class);
 Route::resource('ticket',TicketController::class);
 
-
+Route::get('/tickets/data', [TicketController::class, 'data'])->name('tickets.data');
 
 
 
