@@ -5,11 +5,10 @@
 
 @extends('adminlte::page')
 @section('content')
-<div class="row" >
-    <div class="col-12 mt-4 d-flex justify-content-between ">
+<div class="container-fuid" >
+    <div class="col-12 mt-0 d-flex justify-content-between ">
         @isset($status)			    
-            <h3 class="card-title">Tickets {{$status->name}}</h3>
-        <a class="btn btn-primary" href="{{route('ticket.index')}}"> Regresar a Tickets</a>            
+            <h3 class="card-title">Tickets {{$status->name}}</h3>         
         @else
             <h3 >@lang('Tickets')</h3>
         @endisset
@@ -23,16 +22,17 @@
     @include('partials.validation-errors')
 
 <div class="container-fluid">
-    <!-- <h1>Tickets</h1> -->
-    <div class="card fluid">
+    <div class="card fluid">    
     <div class="table-responsive ">
-    <table id="tickets-table" class="table table-bordered shadow-lg mt-5 table-striped" >
+    <table id="tickets-table" class="table table-bordered shadow-sm mt-5 table-striped" >
         <thead  class="table-dark ">
             <tr class="text-center">
                 <th>ID</th>
-                <th>Title</th>
-                <th>Description</th>
-                <th>Created At</th>
+                <th>TICKET</th>
+                <th>CATEGORIA</th>
+                <th>AREA</th>
+                <th>ESTATUS</th>
+                <th>ACCION</th>
             </tr>
         </thead>
         <tbody>
@@ -41,7 +41,7 @@
     </div>
     </div>
 </div>
-@endsection
+@stop
 
 <script>
     $(document).ready(function() {
@@ -64,14 +64,21 @@
             },
             ajax: {
                 url: "{{ route('tickets.data') }}",
-                dataSrc: ''
+                dataSrc: 'data'
             },
             columns: [
                 { data: 'id' },
                 { data: 'title' },
-                { data: 'description' },
-                { data: 'created_at' }
-            ]
+                { data: 'category' },
+                { data: 'area' },
+                { data: 'status' },
+                { data: 'actions', orderable: false, searchable: false }
+            ],
+            responsive: true,
+            scrollY: '650px', // Set the height of the scrollable area
+                scrollCollapse: true, // Enable scrolling
+                paging: true, // Enable pagination
+                
         });
 
         // Configura el intervalo de actualización
@@ -80,5 +87,4 @@
         }, 5000); // 5000 ms = 5 segundos
     });
 </script>
-
 

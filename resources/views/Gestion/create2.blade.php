@@ -1,8 +1,5 @@
 @extends('adminlte::page')
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-<!-- moment.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-    
 
 @section('content')
 <!-- @can('view',$ticket) -->
@@ -85,9 +82,40 @@
 <!--  -->
 
 <!--  -->
+@if(count($h_gestiones))
+<div class="container bg-white shadow rounded" style="padding: 1%; border: 1px solid #adb5bd47;">
+<h4>Historial  <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-secondary">{{'+ '.count($h_gestiones)}}</span></h4>
+    <div class="overflow-auto p-3" style="max-width: 100%; max-height: 300px;">
+        @foreach ($h_gestiones as $index => $gestion)
+        <div class="row rounded" style="padding: 1%; border: 1px solid #adb5bd47; {{$index % 2 == 0 ? 'background-color: #f8f9fa;' : ''}}">
+            <div class="col-md-12 mt-2 rounded {{ $index % 2 == 0 ? 'ml-0' : 'ml-3' }}">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">{{ $gestion->usuario->name }}</h5>
+                    <small class="text-success">{{ $gestion->created_at }}</small>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <p>{{ $gestion->coment }}</p>
+                </div>
+                @if(!empty($gestion->image))
+                <div class="form-group">
+                    <strong>Adjunto</strong>
+                    @foreach(explode(',', $gestion->image) as $imageItem)
+                    <a href="{{asset('storage/images/'. $imageItem)}}" target="_blank" alt="{{$gestion->id }}">
+                        <ul>
+                            <li>{{ $imageItem }}</li>
+                        </ul>
+                    </a>
+                    @endforeach
+                </div>
+                @endif
+            </div>
+        </div>
+        @endforeach
+    </div>
+</div>
+@endif
 
-
-<div id="gestiones-container" class="container bg-white shadow rounded mt-0" style="padding: 1%; border: 1px solid #adb5bd47;">
+<div id="gestiones-container" class="container bg-white shadow rounded mt-4" style="padding: 1%; border: 1px solid #adb5bd47;">
         <!-- El contenido se actualizará dinámicamente aquí -->
 </div>
 
@@ -232,7 +260,7 @@
         $(document).ready(function() {
             function loadGestiones() {
                 $.ajax({
-                    url: "{{ route('tickets.gestiones', ['ticket' => $ticket->id]) }}",
+                    url: '{{ route('tickets.gestiones', ['ticket' => $ticket->id]) }}',
                     method: 'GET',
                     success: function(data) {
                         var gestionesHtml = '<h4>Historial <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-secondary">+ ' + data.length + '</span></h4>';
@@ -243,7 +271,7 @@
                             gestionesHtml += '<div class="col-md-12 mt-2 rounded ' + (index % 2 === 0 ? 'ml-0' : 'ml-3') + '">';
                             gestionesHtml += '<div class="d-flex w-100 justify-content-between">';
                             gestionesHtml += '<h5 class="mb-1">' + gestion.usuario.name + '</h5>';
-                            gestionesHtml += '<small class="text-success">' + moment(gestion.created_at).fromNow() + '</small>';
+                            gestionesHtml += '<small class="text-success">' + gestion.created_at + '</small>';
                             gestionesHtml += '</div>';
                             gestionesHtml += '<div class="d-flex justify-content-between">';
                             gestionesHtml += '<p>' + gestion.coment + '</p>';

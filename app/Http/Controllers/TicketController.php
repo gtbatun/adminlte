@@ -32,15 +32,38 @@ class TicketController extends Controller
 
     public function data()
     {
-        // $tickets = Ticket::where('department_id', Auth::user()->department_id)->get();
-       
-        // $tickets = Ticket::with('area','category','status','department')
-        // ->latest()
-        // ->paginate();
-        //  return view('Ticket.table', compact('tickets'));
-        // $tickets = Ticket::where('department_id', Auth::user()->department_id)->get();
-        $tickets = Ticket::with('area','category','status','department')->get();
-        return response()->json($tickets);
+        
+        $user = Auth::user();
+        
+        if($user->is_admin == 10){
+            $tickets = Ticket::with('area','category','status','department')->get();
+        }else{
+            $tickets = Ticket::with('area','category','status','department')
+               // ->where('user_id', $user->id) // Filtrar por el ID del usuario actual                
+                ->where('department_id', '=', $user->department_id )
+                ->where('status_id', '!=', 4 )->get();
+        }
+
+        // $tickets = Ticket::with('area','category','status','department')->get();
+        $tickets = $tickets->map(function($ticket){
+            return [
+                'id' => $ticket->id,
+                'usuario' => $ticket->usuario->name,
+                'title' => view('Ticket.Partials.title', ['ticket' => $ticket])->render(),
+                'category' => $ticket->category->name,
+                'area' => $ticket->area->name,
+                'status' => $ticket->status->name,
+                'created_at' => $ticket->created_at->diffForHumans(),
+                'actions' => view('Ticket.Partials.actions', ['ticket' => $ticket])->render()
+            ];
+        });
+        return response()->json(['data' => $tickets]);
+    }
+    /*** ontener las gestiones de lo cada ticket*/
+    public function getGestiones(Ticket $ticket)
+    {
+        $h_gestiones1 = Gestion::where('ticket_id', $ticket->id)->with('usuario')->orderby('created_at','desc')->get();
+        return response()->json($h_gestiones1);
     }
 
     
@@ -169,16 +192,25 @@ class TicketController extends Controller
      */
     public function show(Ticket $ticket)
     {
+        
+        $ticket = Ticket::with('usuario','department','category','area')->findOrFail($ticket->id);
         //se agra la funcion o lo findorfail para que falle  en la busqueda de un ticket que no existe
-        $h_gestiones = Gestion::where('ticket_id',$ticket->id )->get();
+        $h_gestiones = Gestion::where('ticket_id',$ticket->id )->with('usuario')->orderBy('created_at', 'desc')->get();
         //show para mostar el formulario de insert de gestiones de cada ticket
+        // return $h_gestiones;
         return view('Gestion.create',[
             'areas' => Area::pluck('name','id'),
             'category' => Category::pluck('name','id'),
             'department' => Department::pluck('name','id'),
             'status' => Status::pluck('name','id'),
             'h_gestiones' => $h_gestiones,
-            'ticket' => $ticket]);
+            'ticket' => $ticket
+        ]);
+
+        /**  */
+      
+
+        /**  */
     }
 
     /**

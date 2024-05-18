@@ -90,8 +90,8 @@ Route::resource('gestion',GestionController::class);
 Route::resource('ticket',TicketController::class);
 
 Route::get('/tickets/data', [TicketController::class, 'data'])->name('tickets.data');
-
-
+/** Consultar las gestiones de cada ticket */
+Route::get('/tickets/{ticket}/gestiones', [TicketController::class, 'getGestiones'])->name('tickets.gestiones');
 
 
 Route::get('graf/', [ChartJSController::class, 'index']); 

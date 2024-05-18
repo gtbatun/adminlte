@@ -108,9 +108,8 @@
                         </form>
                         @endcan
                     </div>
-                </td>
-                
-            </tr>
+                </td>                
+            </tr>          
             @endcan
                     @endforeach
                 </table>
