@@ -124,13 +124,14 @@
                         <input name="email" type="email" class="form-control" id="Email" value="{{$user->email}}">
                       </div>
                     </div>
-                    @if($user->is_admin == 10)
+                    
+                    @if(auth()->user()->is_admin == 10)
                     <div class="row mb-3">
                     <label for="Role" class="col-md-4 col-lg-3 col-form-label">Role</label>
                     <div class="col-md-8 col-lg-9">
                         <select name="is_admin" class="form-control" id="Role">
                             <option value="0" {{ $user->is_admin == 0 ? 'selected' : '' }}>Usuario estándar</option>
-                            <option value="1" {{ $user->is_admin == 1 ? 'selected' : '' }}>Administrador</option>
+                            <option value="10" {{ $user->is_admin == 10 ? 'selected' : '' }}>Administrador</option>
                         </select>
                     </div>
                 </div>
