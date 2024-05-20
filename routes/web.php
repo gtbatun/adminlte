@@ -20,6 +20,7 @@ use App\Http\Controllers\ChartJSController;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Support\Facades\DB;
 
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -111,6 +112,10 @@ Route::get('ticket-export/', [TicketController::class, 'export'])->name('ticket-
 
 // Route::get('ticket-export/', [TicketController::class, 'export']);
 // Route::get('ticket-export/{fechaInicio}/{fechaFin}', [TicketController::class, 'export'])->name('ticket-export');
+
+
+
+
 
 });
 

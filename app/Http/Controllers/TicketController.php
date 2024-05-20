@@ -15,15 +15,16 @@ use Illuminate\Support\Facades\Auth;
 use App\Exports\TicketExport;
 use Maatwebsite\Excel\Facades\Excel;
 
-
+/* **/
+use Spatie\Image\Image;
 
 
 // 
 use Illuminate\Support\Facades\Gate;
 //
-// use Intervention\Image\Facades\Image;
+
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\ImageManager;
+
 use Illuminate\Support\Facades\DB;
 
 class TicketController extends Controller
