@@ -83,8 +83,28 @@
 
 
 
-<!--  -->
+<!-- con mejor vista  -->
+<div class="container card direct-chat direct-chat-primary">
+        <div class="card-header">
+        <h3 class="card-title">Historial</h3>
+            <div class="card-tools">
+            <span title="3 New Messages" class="badge badge-primary">3</span>
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+                </button>
+                <button type="button" class="btn btn-tool" title="Contacts" data-widget="chat-pane-toggle">
+                <i class="fas fa-comments"></i>
+                </button>
+                <button type="button" class="btn btn-tool" data-card-widget="remove">
+                <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
 
+    <div id="gestiones-container1" >
+            <!-- El contenido se actualizará dinámicamente aquí -->
+    </div>
+</div>
 <!--  -->
 
 
@@ -281,6 +301,69 @@
             setInterval(loadGestiones, 5000); // 5000 ms = 5 seconds
         });
     </script>
+    <!-- llllllllllllllllllllllllllllllllllllllllllllllllllllll -->
+    
+<script>
+        $(document).ready(function() {
+            function loadGestiones() {
+                $.ajax({
+                    url: "{{ route('tickets.gestiones', ['ticket' => $ticket->id]) }}",
+                    method: 'GET',
+                    success: function(data) {
+                        // var gestionesHtml = '<h4>Historial <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-secondary">+ ' + data.length + '</span></h4>';
+                        // gestionesHtml += '<div class="overflow-auto p-3" style="max-width: 100%; max-height: 300px;">';
+                        var gestionesHtml = '';
+
+                        data.forEach(function(gestion, index) {
+                            gestionesHtml += '<div class="direct-chat-msg" >';
+                                gestionesHtml += '<div class="direct-chat-infos clearfix ">';
+                                    gestionesHtml += '<span class="direct-chat-name float-left">' + gestion.usuario.name + '</span>';
+                                    gestionesHtml += '<span class="direct-chat-timestamp float-right">' + moment(gestion.created_at).fromNow() + '</span>';
+                                gestionesHtml += '</div>';
+                                gestionesHtml += '<img class="direct-chat-img" src="/storage/images/user/'+gestion.usuario.image+'" alt="'+ gestion.usuario.id +'">';
+                                // gestionesHtml += gestion.usuario.image;
+                                gestionesHtml += '<div class="direct-chat-text">';
+                                    gestionesHtml += gestion.coment;
+                                gestionesHtml += '</div>';
+                            gestionesHtml += '</div>';
+                            
+                            // console.log(gestion);
+
+                            if (gestion.image) {
+                                var images = gestion.image.split(',');
+                                gestionesHtml += '<div class="form-group">';
+                                gestionesHtml += '<strong>Adjunto</strong>';
+                                images.forEach(function(image) {
+                                    gestionesHtml += '<a href="/storage/images/' + image + '" target="_blank">';
+                                    gestionesHtml += '<ul><li>' + image + '</li></ul>';
+                                    gestionesHtml += '</a>';
+                                });
+                                gestionesHtml += '</div>';
+                            }
+
+                            gestionesHtml += '</div></div>';
+                        });
+                        
+
+                        gestionesHtml += '</div>';
+                        $('#gestiones-container1').html(gestionesHtml);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error loading gestiones:', error);
+                    }
+                });
+            }
+
+            
+            // Load gestiones initially
+            loadGestiones();
+
+            // Reload gestiones every 5 seconds
+            setInterval(loadGestiones, 5000); // 5000 ms = 5 seconds
+        });
+    </script>
+
+    <!-- ------------------------------------------- -->
 
 <!--  -->
 <!-- @endcan     -->
