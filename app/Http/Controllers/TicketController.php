@@ -15,11 +15,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Exports\TicketExport;
 use Maatwebsite\Excel\Facades\Excel;
 
-/* **/
-use Spatie\Image\Image;
-
-
-// 
+ 
 use Illuminate\Support\Facades\Gate;
 //
 
@@ -29,10 +25,21 @@ use Illuminate\Support\Facades\DB;
 
 class TicketController extends Controller
 {
+    /** constructor para ver y solicitar que todos esten autenticados y evitar error de datatable */ 
+    public function __construct(){
+        $this->middleware('auth');
+    }
+
+    /** */   
+
+    /*
     /** funcion para refrescar la tabla de tickets sin recargar la pagina */ 
 
     public function data()
     {
+        if (!auth()->check()) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
         
         $user = Auth::user();
         
@@ -175,6 +182,9 @@ class TicketController extends Controller
                 // $image = ImageManager::make($image)->resize(300, 200)->encode();
 
                 $image->storeAs('images', $imageName);
+                // $fullpach = storage_path('app/public/images/'. $pach);
+
+                
                 $imageNames[] = $imageName;
             }
             $concatenatedNames = implode(',', $imageNames);

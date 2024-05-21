@@ -15,8 +15,9 @@
             <h3 class="text-leftb">Ticket # {{$ticket->id}}
                 @if($ticket->status_id == 4)
             <span class="position-relative top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                {{$ticket_dato->status->name}}
+                {{$ticket->status->name}}
                 @endif
+
             </span>
             </h3>
         </div>

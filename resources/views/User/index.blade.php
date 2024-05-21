@@ -37,6 +37,7 @@
                             <th>ID</th>
                             <th>NOMBRE</th>
                             <th>EMAIL</th>
+                            <th>VERIFICADO</th>
                             <th>DEPARTAMENTO</th>
                             <th>FECHA DE CREACION</th>
                             <th>ACCION</th>
@@ -47,6 +48,13 @@
                 <td>{{$userItem->id}}</td>  
                 <td>{{$userItem->name}}</td>
                 <td>{{$userItem->email}}</td>
+                <td>
+                    @if (is_null($userItem->email_verified_at))
+                        <a href="{{ route('admin.verify-email', $userItem->id) }}" class="btn btn-primary">Verificar Correo</a>
+                    @else
+                        Verificado
+                    @endif
+                </td>
                 @if(isset($userItem->department->name))
                     <td>{{$userItem->department->name }} </td>                    
                 @else

@@ -67,6 +67,9 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
         Route::get('report-export/{fechaInicio}/{fechaFin}', [ReportController::class, 'reportexport'])->name('report-export');
         
         Route::get('setting', [SettingController::class,'index'])->name('setting.index');
+        /**seccion para autorizar la verificacion de correo */
+        Route::get('/admin/verify-email/{userId}', [UserController::class, 'verifyUserEmail'])->name('admin.verify-email');
+        
 
         
         

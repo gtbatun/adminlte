@@ -64,7 +64,14 @@
             },
             ajax: {
                 url: "{{ route('tickets.data') }}",
-                dataSrc: 'data'
+                dataSrc: 'data',
+                error: function(xhr, status, error) {
+                    if (xhr.status === 401 || xhr.status === 419) {
+                        window.location.href = '{{ route("login") }}';
+                    } else {
+                        console.log("Ajax error: " + error);
+                    }
+                }
             },
             columns: [
                 { data: 'id' },
@@ -85,6 +92,10 @@
         setInterval(function() {
             table.ajax.reload(null, false); // false para no resetear la posición de la paginación
         }, 5000); // 5000 ms = 5 segundos
+    });
+
+    $('#tickets-table').on('error.dt', function(e, settings, techNote, message) {
+    console.log('DataTables error: ', message);
     });
 </script>
 

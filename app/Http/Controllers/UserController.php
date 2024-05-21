@@ -13,6 +13,20 @@ use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
+    public function verifyUserEmail($userId)
+    {
+        $user = User::find($userId);
+
+        if ($user) {
+            $user->email_verified_at = now();
+            $user->save();
+
+            return redirect()->back()->with('success', 'El correo electrónico del usuario ha sido verificado.');
+        }
+
+        return redirect()->back()->with('error', 'Usuario no encontrado.');
+    }
+    
     public function index(){
         
         $users = User::latest()->paginate(10);
