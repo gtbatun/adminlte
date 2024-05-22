@@ -50,7 +50,8 @@
     <form class="bg-white py-3 px-4 shadow rounded " id="ticketForm" action="{{route('ticket.store')}}" method="POST" enctype="multipart/form-data" >
         @csrf
         <input type="hidden" name="user_id" class="form-control" value="{{auth()->user()->id}}" >
-        <input type="hidden" name="department_id" class="form-control" value="{{auth()->user()->department_id}}" >
+        <!-- <input type="hidden" name="department_id" class="form-control" value="{{auth()->user()->department_id}}" > -->
+        <input type="hidden" name="type" class="form-control" value="{{auth()->user()->department_id}}" >
 
         <input type="hidden" name="status_id" class="form-control" value="1" >
         <div class="row">
@@ -67,56 +68,37 @@
                     <textarea class="form-control" style="height:150px" name="description" placeholder="Descripción...">{{old ('description')}}</textarea>
                     </div>
             </div>
-           
-            
-            <!--  -->
-            <div class="col-xs-12 col-sm-12 col-md-4 mt-2">
-                <div class="form-group">
-                    <strong>Asignar a:</strong>
-                    <select name="area_id" id="area" class="form-control border-0 bg-light shadow-sm " required>
-                    <option value="">Seleccionar un Area</option>
-                    @foreach($areas as  $id => $name)
-                    <option value="{{$id}}" @if($id == old('area_id' , $ticket->area_id)) selected @endif >{{$name}}</option>
-                    @endforeach
-                    </select>
-                </div>
-            </div>
-            <div class="col-xs-12 col-sm-12 col-md-4 mt-2">
-                <div class="form-group">
-                    <strong>Asignar a:</strong>
-                    <select name="category_id" id="category" class="form-control border-0 bg-light shadow-sm " required>
-                    <option value="">Seleccionar un categoria</option>                    
-                    </select>
-                </div>
-            </div>
-            <!--  -->
             <!-- ------------------------------------------------------------------------------------------ -->
-            <div class="container">
-            <h2>Select Options</h2>
-            <form>
-                <div class="form-group">
-                    <label for="country">Departamento:</label>
-                    <select class="form-control" id="country" name="country">
-                        <option value="">Select Country</option>
-                        @foreach($departments as $departmentuno)
-                            <option value="{{ $departmentuno->id }}">{{ $departmentuno->name }}</option>
-                        @endforeach
-                    </select>
+            <!-- <div class="container"> -->
+                <div class="col-xs-12 col-sm-12 col-md-4 mt-2">            
+                    <div class="form-group">
+                        <label for="country">Departamento:</label>
+                        <select class="form-control" id="country" name="department_id">
+                            <option value="">Seleccione un Departamento</option>
+                            @foreach($departments as $departmentuno)
+                                <option value="{{ $departmentuno->id }}">{{ $departmentuno->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="state">State:</label>
-                    <select class="form-control" id="state" name="state">
-                        <option value="">Select State</option>
-                    </select>
+                <div class="col-xs-12 col-sm-12 col-md-4 mt-2"> 
+                    <div class="form-group">
+                        <label for="state">Area:</label>
+                        <select class="form-control" id="state" name="area_id">
+                            <option value="">Seleccione un Area</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="city">City:</label>
-                    <select class="form-control" id="city" name="city">
-                        <option value="">Select City</option>
-                    </select>
+                <div class="col-xs-12 col-sm-12 col-md-4 mt-2"> 
+                    <div class="form-group">
+                        <label for="city">Categoria:</label>
+                        <select class="form-control" id="city" name="category_id">
+                            <option value="">Seleccione una categoria</option>
+                        </select>
+                    </div>
                 </div>
-            </form>
-        </div>
+            
+        <!-- </div> -->
 
             <!-- ------------------------------------------------------------------------------------------ -->
 
@@ -167,7 +149,10 @@ $(document).ready(function() {
                 dataType: "json",
                 success: function(data) {
                     $('#state').empty();
-                    $('#state').append('<option value="">Select State</option>');
+                    $('#state').append('<option value="">Seleccione un area</option>');
+                    
+                    $('#city').empty();
+                    $('#city').append('<option value="">Seleccione una categoria</option>');
                     $.each(data, function(key, value) {
                         $('#state').append('<option value="'+ value.id +'">'+ value.name +'</option>');
                     });
@@ -175,9 +160,9 @@ $(document).ready(function() {
             });
         } else {
             $('#state').empty();
-            $('#state').append('<option value="">Select State</option>');
+            $('#state').append('<option value="">Select Area</option>');
             $('#city').empty();
-            $('#city').append('<option value="">Select City</option>');
+            $('#city').append('<option value="">Select Category1</option>');
         }
     });
 
@@ -190,7 +175,7 @@ $(document).ready(function() {
                 dataType: "json",
                 success: function(data) {
                     $('#city').empty();
-                    $('#city').append('<option value="">Select City</option>');
+                    $('#city').append('<option value="">Selecionar categoria</option>');
                     $.each(data, function(key, value) {
                         $('#city').append('<option value="'+ value.id +'">'+ value.name +'</option>');
                     });
@@ -198,7 +183,7 @@ $(document).ready(function() {
             });
         } else {
             $('#city').empty();
-            $('#city').append('<option value="">Select City</option>');
+            $('#city').append('<option value="">Seleccionar </option>');
         }
     });
 });

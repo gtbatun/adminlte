@@ -40,9 +40,9 @@ use Illuminate\Support\Facades\DB;
 // });
 
 
-Route::get('/', function () {
-    return view('auth.login');
-});
+// Route::get('/', function () {
+//     return view('auth.login');
+// });
 
 Auth::routes(['register' => true, 'verify' => true]);
 

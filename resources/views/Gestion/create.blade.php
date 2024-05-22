@@ -25,14 +25,14 @@
         <div class="col-xs-12 col-sm-6 col-md-3 mt-2">
             <div class="form-group">
                 <!-- <label for=""><strong>Usuario solicitante:</strong></label> -->
-                <h6><strong>Usuario solicitante:</strong></h6>
+                <h6><strong>Solicitante:</strong></h6>
                 <span>{{$ticket->usuario->name}}</span>
             </div>
         </div>
         <div class="col-xs-12 col-sm-6 col-md-3 mt-2">
             <div class="form-group">
                 <h6><strong>Departamento:</strong></h6>
-                <span>{{$ticket->department->name}}</span>
+                <span>{{$ticket->usuario->department->name}}</span>
             </div>
         </div>
         <div class="col-xs-12 col-sm-6 col-md-3 mt-2">
@@ -163,7 +163,7 @@
                 <div class="form-group">
                     <strong>Categoria:</strong>
                     <select name="category_id" id="category" class="form-control border-0 bg-light shadow-sm ">
-                        <option value=""> Seleccionar al puto del patas</option>
+                        <option value=""> Seleccionar categoria</option>
                         @foreach($category as $id => $name)
                         <option value="{{ $id }}" {{ $ticket->category_id == $id ? 'selected' : '' }}>{{ $name }}</option>
                         @endforeach

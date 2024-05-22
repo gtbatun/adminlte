@@ -19,7 +19,10 @@ class Category extends Model
             return $this->hasMany(Ticket::class,'category_id');
         }
         public function areas(){
-            return $this->belongsTo(Area::class);
+            return $this->belongsTo(Area::class,'category_id');
+        }
+        public function area(){
+            return  $this->belongsTo(Area::class,'area_id');
         }
         
 }

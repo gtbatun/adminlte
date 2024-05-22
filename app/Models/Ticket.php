@@ -9,7 +9,7 @@ class Ticket extends Model
 {
     use HasFactory;
     protected $table = 'ticket';
-    protected $fillable = ['title','description','image','area_id','user_id','category_id','department_id','status_id'];
+    protected $fillable = ['title','description','image','area_id','user_id','category_id','department_id','status_id','type'];
 
     public function area(){
         return  $this->belongsTo(Area::class,'area_id');
@@ -30,5 +30,14 @@ class Ticket extends Model
 //funcion para devolver las imagenes almacenadas en el campo imagen como un array y poder mostarlos nuevamente 
     public function getImageAttyyyribute(){
         return explode(',',$this->attributes['image']);
+    }
+
+    public function tickets()
+    {
+        return $this->hasMany(Ticket::class, 'user_id');
+    }
+    public function user(){
+        // se lee, un ticket pertenece a una categoria
+        return $this->belongsTo(User::class,'user_id');
     }
 }

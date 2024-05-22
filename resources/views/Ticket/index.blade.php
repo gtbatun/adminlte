@@ -30,6 +30,8 @@
                 <th>ID</th>
                 <th>TICKET</th>
                 <th>CATEGORIA</th>
+                <th>Depart</th>
+                <th>type</th>
                 <th>Sucursal</th>
                 <th>AREA</th>
                 <th>ESTATUS</th>
@@ -47,6 +49,7 @@
 <script>
     $(document).ready(function() {
         var table = $('#tickets-table').DataTable({
+            
             "order": [[ 0,"desc" ]],
             "language": {
                 "search": "Buscar",
@@ -78,6 +81,8 @@
                 { data: 'id' },
                 { data: 'title' },
                 { data: 'category' },
+                { data: 'department' },
+                { data: 'type' },
                 { data: 'sucursal' },
                 { data: 'area' },
                 { data: 'status' },
@@ -89,6 +94,7 @@
                 paging: true, // Enable pagination
                 
         });
+        
 
         // Configura el intervalo de actualización
         setInterval(function() {
@@ -98,6 +104,7 @@
 
     $('#tickets-table').on('error.dt', function(e, settings, techNote, message) {
     console.log('DataTables error: ', message);
+    
     });
 </script>
 
