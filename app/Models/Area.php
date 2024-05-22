@@ -18,11 +18,12 @@ class Area extends Model
             return $this->hasMany(Ticket::class,'area_id');
         }
         /** */
-        public function departamento(){
-            return $this->belongsTo(Department::class,'area_id');
+
+        public function departamentos(){
+            return $this->belongsTo(Department::class);
         }
         // seccion agregada para el area en la section add ticket para mostrar y filtar categorias
         public function category(){
-            return $this->hasMany(Category::class,'area_id');
+            return $this->hasMany(Category::class);
         }
 }

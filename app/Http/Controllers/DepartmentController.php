@@ -3,10 +3,27 @@
 namespace App\Http\Controllers;
 
 use App\Models\Department;
+use App\Models\Area;
+use App\Models\Category;
 use Illuminate\Http\Request;
 
 class DepartmentController extends Controller
 {
+    /**solicitudes para las departamento dividir areas y categorias(select option anidado) */
+    public function getArea($department_id)
+    {
+        $areas = Area::where('department_id', $department_id)->get();
+        return response()->json($areas);
+    }
+
+    public function getCategory($area_id)
+    {
+        $categorias = Category::where('area_id', $area_id)->get();
+        
+        return response()->json($categorias);
+    }
+
+    /** */
     /**
      * Display a listing of the resource.
      */

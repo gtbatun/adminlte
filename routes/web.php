@@ -12,7 +12,7 @@ use App\Http\Controllers\TicketController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\SucursalController;
 
-use App\Http\Controllers\LocationController;
+
 
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ReportController;
@@ -102,9 +102,11 @@ Route::get('/tickets/data', [TicketController::class, 'data'])->name('tickets.da
 Route::get('/tickets/{ticket}/gestiones', [TicketController::class, 'getGestiones'])->name('tickets.gestiones');
 
 /**Consultar category asignada a un area y que pertenecen a un departamento */
-Route::get('/get-area/{department_id}', [LocationController::class, 'getArea']);
-Route::get('/get-category/{area_id}', [LocationController::class, 'getCategory']);
+Route::get('/get-area/{department_id}', [DepartmentController::class, 'getArea']);
+Route::get('/get-category/{area_id}', [DepartmentController::class, 'getCategory']);
 
+/**ver tickets cerrados */
+Route::get('/ticket-closed',[TicketController::class,'closed'])->name('ticket.closed');
 Route::get('graf/', [ChartJSController::class, 'index']); 
 
 // Route::get('graf1', [ChartJSController::class, 'index']); 

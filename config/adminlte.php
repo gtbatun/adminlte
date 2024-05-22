@@ -359,6 +359,11 @@ return [
             'icon'   => 'far fa-fw fa-file',  
         ],
         [
+            'text'   => 'Ticket cerrados',
+            'route'  => 'ticket.closed',
+            'icon'   => 'far fa-fw fa-file',  
+        ],
+        [
             'text'   => 'Inventario',
             'route'  => 'inventory.index',            
             'icon'   => 'far fa-fw fa-hdd',

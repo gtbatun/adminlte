@@ -95,7 +95,7 @@
                       </div>
                     </div>
                     <!-- Agregar seccion de sucursal -->
-                    @if($user->sucursal_id == '' || $user->isAdmin())
+                    @if($user->sucursal_id == '' || auth()->user()->is_admin == 10)
                     <div class="row mb-3">
                       <label for="Job" class="col-md-4 col-lg-3 col-form-label">Sucursal</label>
                       <div class="col-md-8 col-lg-9">
@@ -111,7 +111,7 @@
                     @endif
                     <!-- fin de seccion de agregar sucrsal -->
 
-                    @if($user->department_id == '' || $user->isAdmin())
+                    @if($user->department_id == '' || auth()->user()->is_admin == 10)
                     <div class="row mb-3">
                       <label for="Job" class="col-md-4 col-lg-3 col-form-label">Departamento</label>
                       <div class="col-md-8 col-lg-9">

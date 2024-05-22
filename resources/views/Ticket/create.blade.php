@@ -90,6 +90,35 @@
                 </div>
             </div>
             <!--  -->
+            <!-- ------------------------------------------------------------------------------------------ -->
+            <div class="container">
+            <h2>Select Options</h2>
+            <form>
+                <div class="form-group">
+                    <label for="country">Departamento:</label>
+                    <select class="form-control" id="country" name="country">
+                        <option value="">Select Country</option>
+                        @foreach($departments as $departmentuno)
+                            <option value="{{ $departmentuno->id }}">{{ $departmentuno->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="state">State:</label>
+                    <select class="form-control" id="state" name="state">
+                        <option value="">Select State</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="city">City:</label>
+                    <select class="form-control" id="city" name="city">
+                        <option value="">Select City</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+
+            <!-- ------------------------------------------------------------------------------------------ -->
 
             
             <!--  seccion para insertar imagenes y visualizarlos-->
@@ -126,7 +155,54 @@
     </div>
   </div>
 </div>
+<!-- scrip para el nuevo select option -->
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#country').on('change', function() {
+        var countryID = $(this).val();
+        if (countryID) {
+            $.ajax({
+                url: '/get-area/' + countryID,
+                type: "GET",
+                dataType: "json",
+                success: function(data) {
+                    $('#state').empty();
+                    $('#state').append('<option value="">Select State</option>');
+                    $.each(data, function(key, value) {
+                        $('#state').append('<option value="'+ value.id +'">'+ value.name +'</option>');
+                    });
+                }
+            });
+        } else {
+            $('#state').empty();
+            $('#state').append('<option value="">Select State</option>');
+            $('#city').empty();
+            $('#city').append('<option value="">Select City</option>');
+        }
+    });
 
+    $('#state').on('change', function() {
+        var stateID = $(this).val();
+        if (stateID) {
+            $.ajax({
+                url: '/get-category/' + stateID,
+                type: "GET",
+                dataType: "json",
+                success: function(data) {
+                    $('#city').empty();
+                    $('#city').append('<option value="">Select City</option>');
+                    $.each(data, function(key, value) {
+                        $('#city').append('<option value="'+ value.id +'">'+ value.name +'</option>');
+                    });
+                }
+            });
+        } else {
+            $('#city').empty();
+            $('#city').append('<option value="">Select City</option>');
+        }
+    });
+});
+</script>
 <!--  -->
 <?php $department_id = auth()->user()->department_id;?>
 

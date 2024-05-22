@@ -18,9 +18,8 @@ class Category extends Model
         public function ticket(){
             return $this->hasMany(Ticket::class,'category_id');
         }
-
-        public function area(){
-            return $this->belongsTo(Area::class,'area_id');
+        public function areas(){
+            return $this->belongsTo(Area::class);
         }
         
 }

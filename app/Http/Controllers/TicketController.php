@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\Department;
 use App\Models\Gestion;
 use App\Models\Status;
+use App\Models\User;
 use App\Models\Sucursal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -45,10 +46,12 @@ class TicketController extends Controller
         $user = Auth::user();
         
         if($user->is_admin == 10){
-            $tickets = Ticket::with('area','category','status','department')->get();
+            $tickets = Ticket::with('area','category','status','department')
+            ->where('status_id', '!=', 4 )
+            ->get();
         }else{
             $tickets = Ticket::with('area','category','status','department')
-               // ->where('user_id', $user->id) // Filtrar por el ID del usuario actual                
+               // ->where('user_id', $user->id) // Filtrar por el ID del usuario actual               
                 ->where('department_id', '=', $user->department_id )
                 ->where('status_id', '!=', 4 )->get();
         }
@@ -113,6 +116,33 @@ class TicketController extends Controller
         
         // return view('ticket.report');
     }
+    public function closed(){
+        $user = Auth::user();
+        
+        if($user->is_admin == 10){
+            $ticket_clo = Ticket::with('area','category','status','department')
+                ->where('status_id', '=', 4 )
+                // ->latest()
+                // ->paginate()
+                ->get();
+        }else{
+            $ticket_clo = Ticket::with('area','category','status','department')
+            //    ->join('users', 'ticket.user_id', '=', 'users.id')             
+                // ->where('users.sucursal_id', '=', 'department.sucursal_id' )
+                // ->where('ticket.department_id', '=', $user->department_id )
+                ->where('ticket.status_id','=', 4 )
+                ->latest()
+                ->paginate();
+            
+        }
+        
+
+        return view('Ticket.closed',[
+            // 'newTicket'=> new Ticket,
+            'ticket' => $ticket_clo
+            
+        ]);
+    }
 
     public function index()
     { 
@@ -149,8 +179,9 @@ class TicketController extends Controller
         return view('Ticket.create',
         [
             'areas' => Area::pluck('name','id'),
-            'category' => Category::pluck('name','id'),
+            'category' => Category::pluck('name','id','area_id'),
             'department' => Department::pluck('name','id'),
+            'departments' => Department::all(),
             'status' => Status::pluck('name','id'),
             'ticket' => $ticket
         ]);

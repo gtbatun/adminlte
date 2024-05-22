@@ -13,4 +13,9 @@ class Sucursal extends Model
                             'name',
                             'description',
                             'logo'];
+    
+    public function UTicket(){
+        // se lee, muchos usuarios pertenece a una sucursal
+        return $this->hasMany(User::class);
+    }
 }
