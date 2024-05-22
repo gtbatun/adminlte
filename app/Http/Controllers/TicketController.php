@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\Department;
 use App\Models\Gestion;
 use App\Models\Status;
+use App\Models\Sucursal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
@@ -59,6 +60,7 @@ class TicketController extends Controller
                 'usuario' => $ticket->usuario->name,
                 'title' => view('Ticket.Partials.title', ['ticket' => $ticket])->render(),
                 'category' => $ticket->category->name,
+                'sucursal' => $ticket->usuario->sucursal->name,
                 'area' => $ticket->area->name,
                 'status' => $ticket->status->name,
                 'created_at' => $ticket->created_at->diffForHumans(),
@@ -90,6 +92,7 @@ class TicketController extends Controller
 
         return response()->json($category);
     }
+    
 
     /**
      * Display a listing of the resource.

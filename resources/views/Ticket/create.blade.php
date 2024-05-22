@@ -76,7 +76,7 @@
                     <select name="area_id" id="area" class="form-control border-0 bg-light shadow-sm " required>
                     <option value="">Seleccionar un Area</option>
                     @foreach($areas as  $id => $name)
-                    <option value="{{$id}}" @if($id == old('department_id' , $ticket->category_id)) selected @endif >{{$name}}</option>
+                    <option value="{{$id}}" @if($id == old('area_id' , $ticket->area_id)) selected @endif >{{$name}}</option>
                     @endforeach
                     </select>
                 </div>

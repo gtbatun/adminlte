@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Department;
+use App\Models\Sucursal;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 
@@ -76,14 +77,13 @@ class UserController extends Controller
         [
             'user' => $user, 
             'department' => Department::pluck('name','id'),
+            'sucursal' => Sucursal::pluck('name','id'),
         ]);
     }
     
 
     public function show(){
-       
-        // return view('User.profile');
-        return "sdsdsdsdsdsdsdsdsdsdsds";
+        //
     }
     public function updatepassword(Request $request){
         $request->validate([
@@ -109,6 +109,8 @@ class UserController extends Controller
             'name' => 'required',
             'email' => 'required',
             'department_id' => 'nullable|integer',
+            'sucursal_id' => 'nullable|integer',
+            'is_admin' => 'nullable|integer',
             'extension' => 'nullable|min:2',
             'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Asegúrate de validar también la imagen
         ]);

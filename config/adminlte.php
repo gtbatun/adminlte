@@ -327,6 +327,11 @@ return [
                     'text' => 'Categoria',
                     'route'  => 'category.index',
                     'can' => 'admin-access',
+                ],                
+                [
+                    'text' => 'Sucursal',
+                    'route'  => 'sucursal.index',
+                    'can' => 'admin-access',
                 ],
                 [
                     'text' => 'Departamento',

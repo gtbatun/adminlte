@@ -37,14 +37,16 @@
         </div>
         <div class="col-xs-12 col-sm-6 col-md-3 mt-2">
             <div class="form-group">
-                <h6><strong>Area:</strong></h6>
-                <span>{{$ticket->area->name}}</span>
+                <h6><strong>Area: </strong>{{$ticket->area->name}}</h6>
+                <!-- <span>{{$ticket->area->name}}</span> -->
+                <span>{{$ticket->category->name}}</span>
             </div>
         </div>
         <div class="col-xs-12 col-sm-6 col-md-3 mt-2">
             <div class="form-group">
-                <h6><strong>Categoria:</strong></h6>
-                <span>{{$ticket->category->name}}</span>
+                <h6><strong>Ext: </strong>{{$ticket->usuario->extension}}</h6>
+                
+                <span><strong class="text-danger">{{$ticket->usuario->sucursal->name}}</strong></span>
             </div>
         </div>
         <div class="col-xs-12 col-sm-6 col-md-3 mt-2">
@@ -80,7 +82,6 @@
 <!--  -->
 
 <!-- seccion para ver el historial de gestiones -->
-
 
 
 <!-- con mejor vista  -->

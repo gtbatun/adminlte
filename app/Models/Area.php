@@ -17,6 +17,10 @@ class Area extends Model
         public function ticket(){
             return $this->hasMany(Ticket::class,'area_id');
         }
+        /** */
+        public function departamento(){
+            return $this->belongsTo(Department::class,'area_id');
+        }
         // seccion agregada para el area en la section add ticket para mostrar y filtar categorias
         public function category(){
             return $this->hasMany(Category::class,'area_id');

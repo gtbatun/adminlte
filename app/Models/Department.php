@@ -17,6 +17,13 @@ class Department extends Model
         public function ticket(){
             return $this->hasMany(Ticket::class,'department_id');
         }
+// seccion recien agreagada paara qyue sea posible los 3 niveles en el select option
+        public function area()
+        {
+            return $this->hasMany(Area::class);
+        }
+
+
 
         
 }

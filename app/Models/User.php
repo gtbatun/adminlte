@@ -25,6 +25,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'department_id',
         'extension',
         'image',
+        'sucursal_id',
     ];
 
     /**
@@ -61,5 +62,8 @@ class User extends Authenticatable implements MustVerifyEmail
     public function department(){
         return  $this->belongsTo(Department::class,'department_id');
     }
-   
+    public function sucursal(){
+        // se lee, un usuario pertenece a una sucursal
+        return $this->belongsTo(Sucursal::class,'sucursal_id');
+    }
 }

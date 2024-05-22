@@ -10,6 +10,9 @@ use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\StatusController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\SucursalController;
+
+use App\Http\Controllers\LocationController;
 
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ReportController;
@@ -56,6 +59,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
         Route::resource('inventory',InventoryController::class);
         Route::resource('status',StatusController::class); 
         Route::resource('category',CategoryController::class);
+        Route::resource('sucursal',SucursalController::class);
         
         //Ruta para el reset de contraseña de los usuarios
         Route::post('/user/update/password', [UserController::class, 'updatePassword'])->name('user.update.password');
@@ -97,6 +101,9 @@ Route::get('/tickets/data', [TicketController::class, 'data'])->name('tickets.da
 /** Consultar las gestiones de cada ticket */
 Route::get('/tickets/{ticket}/gestiones', [TicketController::class, 'getGestiones'])->name('tickets.gestiones');
 
+/**Consultar category asignada a un area y que pertenecen a un departamento */
+Route::get('/get-area/{department_id}', [LocationController::class, 'getArea']);
+Route::get('/get-category/{area_id}', [LocationController::class, 'getCategory']);
 
 Route::get('graf/', [ChartJSController::class, 'index']); 
 

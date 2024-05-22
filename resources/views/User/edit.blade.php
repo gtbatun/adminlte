@@ -94,6 +94,22 @@
                         <input name="name" type="text" class="form-control" id="fullName" value="{{$user->name}}">
                       </div>
                     </div>
+                    <!-- Agregar seccion de sucursal -->
+                    @if($user->sucursal_id == '' || $user->isAdmin())
+                    <div class="row mb-3">
+                      <label for="Job" class="col-md-4 col-lg-3 col-form-label">Sucursal</label>
+                      <div class="col-md-8 col-lg-9">
+                        <select name="sucursal_id" class="form-control border-0 bg-light shadow-sm @error('department_id') is-invalid @enderror">
+                          <option value="">-- Sucursal --</option>
+                          @foreach($sucursal as  $id => $name)
+                          <option value="{{$id}}"
+                          @if($id == old('sucursal_id' , $user->sucursal_id)) selected @endif  >{{$name}}</option>
+                          @endforeach                    
+                          </select>
+                      </div>
+                    </div>
+                    @endif
+                    <!-- fin de seccion de agregar sucrsal -->
 
                     @if($user->department_id == '' || $user->isAdmin())
                     <div class="row mb-3">

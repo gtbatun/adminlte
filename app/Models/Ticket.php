@@ -27,6 +27,10 @@ class Ticket extends Model
         // se lee, un ticket pertenece a una categoria
         return $this->belongsTo(User::class,'user_id');
     }
+    public function sucursal(){
+        // se lee, un ticket pertenece a una sucursal
+        return $this->belongsTo(Sucursal::class,'sucursal_id');
+    }
 //funcion para devolver las imagenes almacenadas en el campo imagen como un array y poder mostarlos nuevamente 
     public function getImageAttyyyribute(){
         return explode(',',$this->attributes['image']);

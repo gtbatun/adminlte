@@ -30,6 +30,7 @@
                 <th>ID</th>
                 <th>TICKET</th>
                 <th>CATEGORIA</th>
+                <th>Sucursal</th>
                 <th>AREA</th>
                 <th>ESTATUS</th>
                 <th>ACCION</th>
@@ -77,6 +78,7 @@
                 { data: 'id' },
                 { data: 'title' },
                 { data: 'category' },
+                { data: 'sucursal' },
                 { data: 'area' },
                 { data: 'status' },
                 { data: 'actions', orderable: false, searchable: false }
@@ -91,7 +93,7 @@
         // Configura el intervalo de actualización
         setInterval(function() {
             table.ajax.reload(null, false); // false para no resetear la posición de la paginación
-        }, 5000); // 5000 ms = 5 segundos
+        }, 10000); // 5000 ms = 5 segundos
     });
 
     $('#tickets-table').on('error.dt', function(e, settings, techNote, message) {
