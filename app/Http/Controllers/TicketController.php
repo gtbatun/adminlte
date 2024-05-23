@@ -142,11 +142,15 @@ class TicketController extends Controller
             $ticket_clo = Ticket::with('area','category','status','department')
                 ->where('status_id', '=', 4 )
                 ->get();
-        }else{
-            $ticket_clo = Ticket::with('area','category','status','department')
-                ->where('status_id', 4 )
-                ->latest()
-                ->paginate();
+        }else{            
+                $ticket_clo = Ticket::with('area','category','status','department')
+                ->where(function($query) {
+                    $query->where('department_id', auth()->user()->department_id)
+                        ->orWhere('type','=', auth()->user()->department_id);
+                })
+                ->where('status_id', '=', 4)
+                ->get();
+                
            
             
         }
@@ -189,15 +193,19 @@ class TicketController extends Controller
     public function create()
     {
         // excluir sistemas y soporte, todos lo pueden ver sin excepcion
-        // $excludedDepartments = [5,6];
-        $additionalDepartmentIds = [2,4,6]; // agregar en esta seccion los departamento que se desean visualizar
-        $departamento = Department::whereIn('id', $additionalDepartmentIds)
+        $additionalDepartmentIds = [20,21]; // agregar en esta seccion los departamento que se desean visualizar
+        $departamento1 = Department::whereIn('id', $additionalDepartmentIds)
                         // ->orWhereIn('id',$additionalDepartmentIds)
                         ->pluck('name', 'id');
                         
                         // $departamento = Department::where('sucursal_id', auth()->user()->sucursal_id)
                         // ->orWhereIn('id',$additionalDepartmentIds)
                         // ->pluck('name', 'id');
+        
+        $departamento = Department::where('sucursal_id', auth()->user()->sucursal_id)
+        ->where('id',18) // poner un array si se desa poner mas departamentos
+        ->orWhereIn('id',$additionalDepartmentIds)
+            ->pluck('name', 'id');
         $ticket = new Ticket;
         return view('Ticket.create',
         [

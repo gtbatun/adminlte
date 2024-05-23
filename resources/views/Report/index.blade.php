@@ -1,10 +1,6 @@
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-<!--  -->
-
-<!--  -->
-
 @extends('adminlte::page')
 @section('content')
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <div class="container">
 
 <form class="bg-white py-3 px-4 shadow rounded"  method="post" id="form-generar-reporte" >

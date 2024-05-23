@@ -1,14 +1,10 @@
 @extends('adminlte::page')
+@section('content')
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <!-- moment.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-    
-
-@section('content')
 <!-- @can('view',$ticket) -->
-<!--  -->
 
-<!--  -->
 <div class="container bg-white shadow rounded" style="padding: 1%; border: 1px solid #adb5bd47;">
     <div class="row">
         <div class="col-md-12 mt-2">
@@ -137,6 +133,7 @@
         <input type="hidden" name="ticket_id" class="form-control" value="{{$ticket->id}}" >
         <!-- <input type="text" name="staff" class="form-control" value="{{$ticket->user_id}}" > -->
         <input type="hidden" name="user_id" class="form-control" value="{{auth()->user()->id}}" >
+        <input type="hidden" name="status1_id" class="form-control" value="{{$ticket->status_id}}" >
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 mt-2">
                 <div class="form-group">
@@ -181,7 +178,7 @@
                 @endif
                 @if($ticket->status_id == 4)            
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="2" name="reopen" >
+                    <input class="form-check-input" type="checkbox" value="2" name="reopen" {{ $ticket->status_id == 4 ? 'checked' : '' }}>
                     <label class="form-check-label text-success" for="status_id"><strong>Reabrir Ticket</strong></label>            
                 </div>
                 @endif
@@ -195,46 +192,7 @@
             </div>
             <div id="previewImages"></div>
 
-            <script>
-                // 
-                $(document).ready(function () {
-                    $('#area').change(function () {
-                        var area_id = $(this).val();
-                        console.log(area_id);
-                        $.get("{{route('ticket.getCategory')}}", {area_id: area_id}, function (data) {
-                            $('#category').empty();
-                            $('#category').append('<option value="">Seleccionar una categoría</option>');
-                            $.each(data, function (index, category) {
-                                $('#category').append('<option value="' + category.id + '">' + category.name + '</option>');
-                            });
-                        });
-                        // console.log(category);
-                    });
-                }); 
-                // 
-
-                const fileInput = document.getElementById('fileInput');
-                const previewImages = document.getElementById('previewImages');
-
-                fileInput.addEventListener('change', function() {
-                    previewImages.innerHTML = ''; // Limpiar cualquier vista previa existente
-
-                    const files = fileInput.files;
-                    for (let i = 0; i < files.length; i++) {
-                        const file = files[i];
-                        const reader = new FileReader();
-                        reader.onload = function(e) {
-                            const img = document.createElement('img');
-                            img.src = e.target.result;
-                            img.style.maxWidth = '200px';
-                            img.style.maxHeight = '200px';
-                            previewImages.appendChild(img);
-                        };
-                        reader.readAsDataURL(file);
-                    }
-                });
-            </script>
-            <!--  -->
+            
             <div class="col-xs-12 col-sm-12 col-md-12 text-center mt-2">
                 <a  class="btn btn-primary" href="{{route('ticket.index')}}" >Cancelar</a>
                 <button type="submit" id="submitGt" class="btn btn-primary">Guardar</button>
@@ -242,6 +200,48 @@
         </div>
     </form>
     </div>
+<!-- ---------------------------------------------------- -->
+<script>
+        // 
+        $(document).ready(function () {
+            $('#area').change(function () {
+                var area_id = $(this).val();
+                console.log(area_id);
+                $.get("{{route('ticket.getCategory')}}", {area_id: area_id}, function (data) {
+                    $('#category').empty();
+                    $('#category').append('<option value="">Seleccionar una categoría</option>');
+                    $.each(data, function (index, category) {
+                        $('#category').append('<option value="' + category.id + '">' + category.name + '</option>');
+                    });
+                });
+                // console.log(category);
+            });
+        }); 
+        // 
+
+        const fileInput = document.getElementById('fileInput');
+        const previewImages = document.getElementById('previewImages');
+
+        fileInput.addEventListener('change', function() {
+            previewImages.innerHTML = ''; // Limpiar cualquier vista previa existente
+
+            const files = fileInput.files;
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.style.maxWidth = '200px';
+                    img.style.maxHeight = '200px';
+                    previewImages.appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+    <!--  -->
+<!-- -------------------------------------------------------- -->
 
     <script>
     document.getElementById('gestion').addEventListener('submit', function() {

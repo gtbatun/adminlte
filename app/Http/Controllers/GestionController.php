@@ -60,7 +60,8 @@ class GestionController extends Controller
             $add_gestion->status_id = 4; //4 es el id del status Finalizado
         }elseif(isset($request->reopen)){
             $add_gestion->status_id = 5; //4 es el id del status Finalizado
-        }        
+        }      
+        // return $request;  
         $add_gestion->save();
 
         if (isset($add_gestion->status_id)) {
@@ -68,7 +69,7 @@ class GestionController extends Controller
             $update_ticket->status_id = $add_gestion->status_id;
             $update_ticket->category_id = $request->category_id;
             $update_ticket->area_id = $request->area_id;
-            $update_ticket->update();
+           $update_ticket->update();
         }
         
         return redirect()->route('ticket.index')->with('success','El ticket fue Gestionado con exito');

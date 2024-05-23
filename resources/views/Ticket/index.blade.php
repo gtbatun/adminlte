@@ -1,10 +1,9 @@
 
+@extends('adminlte::page')
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
-
-
-@extends('adminlte::page')
 @section('content')
+
 <div class="container-fuid" >
     <div class="col-12 mt-0 d-flex justify-content-between ">
         @isset($status)			    
@@ -44,7 +43,7 @@
     </div>
     </div>
 </div>
-@stop
+@endsection
 
 <script>
     $(document).ready(function() {
