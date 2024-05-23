@@ -190,7 +190,7 @@ class TicketController extends Controller
     {
         // excluir sistemas y soporte, todos lo pueden ver sin excepcion
         // $excludedDepartments = [5,6];
-        $additionalDepartmentIds = [5,6,7]; // agregar en esta seccion los departamento que se desean visualizar
+        $additionalDepartmentIds = [2,4,6]; // agregar en esta seccion los departamento que se desean visualizar
         $departamento = Department::whereIn('id', $additionalDepartmentIds)
                         // ->orWhereIn('id',$additionalDepartmentIds)
                         ->pluck('name', 'id');
@@ -204,6 +204,7 @@ class TicketController extends Controller
             'areas' => Area::pluck('name','id'),
             'category' => Category::pluck('name','id','area_id'),
             'department' => $departamento,
+            // 'department' => Department::pluck('name','id'),
             'status' => Status::pluck('name','id'),
             'ticket' => $ticket
         ]);

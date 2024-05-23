@@ -32,7 +32,7 @@
                 <th>CATEGORIA</th>
                 <th>ASIGNADO</th>
                 <th>TIPO</th>
-                <th>Sucursal</th>
+                <th>SUCURSAL</th>
                 <th>AREA</th>
                 <th>ESTATUS</th>
                 <th>ACCION</th>

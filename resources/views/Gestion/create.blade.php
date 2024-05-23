@@ -145,8 +145,7 @@
                     </div>
             </div>
             
-           
-            <!--  -->
+           <!--  -->
             
             <div class="col-xs-12 col-sm-12 col-md-4 mt-2">
                 <div class="form-group">
@@ -162,10 +161,10 @@
             <div class="col-xs-12 col-sm-12 col-md-4 mt-2">
                 <div class="form-group">
                     <strong>Categoria:</strong>
-                    <select name="category_id" id="category" class="form-control border-0 bg-light shadow-sm ">
+                    <select name="category_id" id="category" class="form-control border-0 bg-light shadow-sm " >
                         <option value=""> Seleccionar categoria</option>
                         @foreach($category as $id => $name)
-                        <option value="{{ $id }}" {{ $ticket->category_id == $id ? 'selected' : '' }}>{{ $name }}</option>
+                        <option value="{{ $id }}" {{ $ticket->category_id == $id ? 'selected' : '' }} >{{ $name }}</option>
                         @endforeach
                     </select>
                 </div>

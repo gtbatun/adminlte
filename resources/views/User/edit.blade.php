@@ -40,7 +40,7 @@
             <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
               @if($user->image != NULL)
                 <!-- <img src="{{asset('storage/images/user/'. $user->image)}}" alt="Profile" class="rounded-circle sm img-fluid" > -->
-                <img src="{{ route('archivo', ['archivo' => 'images/user/' . $user->image]) }}" class="rounded-circle sm img-fluid" alt="Profile">
+                <img src="{{ route('archivo', ['archivo' => 'images/user/' . $user->image]) }}" class="rounded-circle sm img-thumbnail" alt="Profile">
                 
               @endif              
               <h2>{{$user->name}}</h2>

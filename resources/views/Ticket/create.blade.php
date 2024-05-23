@@ -92,7 +92,7 @@
                 <div class="col-xs-12 col-sm-12 col-md-4 mt-2"> 
                     <div class="form-group">
                         <label for="city">Categoria:</label>
-                        <select class="form-control" id="city" name="category_id">
+                        <select class="form-control" id="city" name="category_id" >
                             <option value="">Seleccione una categoria</option>
                         </select>
                     </div>
@@ -177,7 +177,7 @@ $(document).ready(function() {
                     $('#city').empty();
                     $('#city').append('<option value="">Selecionar categoria</option>');
                     $.each(data, function(key, value) {
-                        $('#city').append('<option value="'+ value.id +'">'+ value.name +'</option>');
+                        $('#city').append('<option value="'+ value.id +'" title="Solicité Agregar mas opciones si es necesario" >'+ value.name +'</option>');
                     });
                 }
             });

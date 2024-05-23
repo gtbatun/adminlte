@@ -297,10 +297,10 @@ return [
         //     'text'         => 'Buscar',
         //     'topnav_right' => true,
         // ],
-        // [
-        //     'type'         => 'fullscreen-widget',
-        //     'topnav_right' => true,
-        // ],
+        [
+            'type'         => 'fullscreen-widget',
+            'topnav_right' => true,
+        ],
 
         // Sidebar items:
         [
@@ -315,12 +315,25 @@ return [
         [
             'text'    => 'Settings',
             'url'     => 'settings',            
-            'icon'   => 'far fa-fw fa-folder',
+            'icon'   => 'fas fa-cog',
             'can' => 'admin-access', 
             'submenu' => [
                 [
+                    'text' => 'Sucursal',
+                    'route'  => 'sucursal.index',
+                    'icon' => 'fas fa-map-marked',
+                    'can' => 'admin-access',
+                ],
+                [
+                    'text' => 'Departamento',
+                    'route'  => 'department.index',
+                    'icon'  => 'fas fa-cube',
+                    'can' => 'admin-access',
+                ],
+                [
                     'text' => 'Area',
                     'route'  => 'area.index',
+                    'icon'  => 'fas fa-cubes',
                     'can' => 'admin-access',
                 ],
                 [
@@ -328,19 +341,11 @@ return [
                     'route'  => 'category.index',
                     'can' => 'admin-access',
                 ],                
-                [
-                    'text' => 'Sucursal',
-                    'route'  => 'sucursal.index',
-                    'can' => 'admin-access',
-                ],
-                [
-                    'text' => 'Departamento',
-                    'route'  => 'department.index',
-                    'can' => 'admin-access',
-                ],
+                
                 [
                     'text' => 'Estatus',
                     'route'  => 'status.index',
+                    'icon'  => 'fas fa-toggle-on',
                     'can' => 'admin-access',
                 ],
                 [
@@ -356,12 +361,15 @@ return [
         [
             'text'   => 'Ticket',
             'route'  => 'ticket.index',
-            'icon'   => 'far fa-fw fa-file',  
+            // 'icon'   => 'far fa-fw fa-file',
+            'icon'   => 'fas fa-lock-open',
+            'icon_color' => 'green'  
         ],
         [
-            'text'   => 'Ticket cerrados',
+            'text'   => ' Ticket cerrados',
             'route'  => 'ticket.closed',
-            'icon'   => 'far fa-fw fa-file',  
+            'icon'   => 'fas fa-lock',
+            'icon_color' => 'red'  
         ],
         [
             'text'   => 'Inventario',
@@ -380,6 +388,7 @@ return [
             'text' => 'Reportes',
             'route'  => 'report.index',
             'can' => 'admin-access',
+            'icon' => 'far fa-file',
             // 'can'  => 'manage-blog',
         ],
 
