@@ -37,7 +37,7 @@ class TicketPolicy
     
         // Verificar si el ticket pertenece a un departamento del usuario
         // Aquí deberás adaptar la lógica según cómo tengas implementado el sistema de departamentos
-        if ($user->department_id === $ticket->department_id) {
+        if ($user->department_id = $ticket->department_id) {
             return true;
         }
         // verificar a que Dep pertenece el ticket y mostrarlo
