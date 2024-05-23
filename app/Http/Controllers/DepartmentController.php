@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Department;
 use App\Models\Area;
 use App\Models\Category;
+use App\Models\Sucursal;
 use Illuminate\Http\Request;
 
 class DepartmentController extends Controller
@@ -29,7 +30,7 @@ class DepartmentController extends Controller
      */
     public function index()
     {
-        $departments = Department::latest()->paginate(5);
+        $departments = Department::latest()->paginate();
         return view('Department.index',['departments' => $departments]);
     }
 
@@ -39,7 +40,9 @@ class DepartmentController extends Controller
     public function create()
     {
         $department = new Department;
-        return view('Department.create',['department' => $department]);
+        return view('Department.create',[
+            'sucursal' => Sucursal::pluck('name','id')
+            ,'department' => $department]);
     }
 
     /**
@@ -73,7 +76,9 @@ class DepartmentController extends Controller
      */
     public function edit(Department $department)
     {
-        return view('Department.edit',['department' => $department]);
+        return view('Department.edit',[
+            'sucursal' => Sucursal::pluck('name','id'),
+            'department' => $department]);
     }
 
     /**
@@ -83,7 +88,8 @@ class DepartmentController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'description' => 'required'
+            'description' => 'required',
+            'sucursal_id' => 'required'
         ]);
         $department->update($request->all()); 
         return redirect()->route('department.index', $department)->with('success','El Departamento fue actualizado con exito');

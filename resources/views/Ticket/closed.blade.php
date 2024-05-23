@@ -19,7 +19,7 @@
         <div class="col-12">
             <div class="card fluid">
             <div class="table-responsive ">
-                <table id="tickets"  class="table table-bordered shadow-lg mt-4 
+                <table id="tickets_clo"  class="table table-bordered shadow-lg mt-4 
                 table-striped  ">
                     <thead  class="table-dark ">
                         <tr class="text-center">
@@ -93,7 +93,7 @@
 <script>
     
 $(document).ready(function() {
-    $('#tickets').DataTable({
+    $('#tickets_clo').DataTable({
         "order": [[ 0,"desc" ]],
         "language": {
                 "search": "Buscar",

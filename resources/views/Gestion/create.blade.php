@@ -85,7 +85,7 @@
 
 
 <!-- con mejor vista  -->
-<div class="container card direct-chat direct-chat-primary">
+<!-- <div class="container card direct-chat direct-chat-primary">
         <div class="card-header">
         <h3 class="card-title">Historial</h3>
             <div class="card-tools">
@@ -102,10 +102,10 @@
             </div>
         </div>
 
-    <div id="gestiones-container1" >
+    <div id="gestiones-container1" > -->
             <!-- El contenido se actualizará dinámicamente aquí -->
-    </div>
-</div>
+    <!-- </div>
+</div> -->
 <!--  -->
 
 

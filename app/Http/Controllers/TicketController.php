@@ -50,14 +50,6 @@ class TicketController extends Controller
             ->where('status_id', '!=', 4 )
             ->get();
         }else{ 
-            //  $tickets = Ticket::with('area','category','status','department')                
-            // ->join('users', 'users.department_id', '=', 'ticket.department_id')
-            // ->where('department_id', '=', $user->department_id )
-            // ->where('type', '=', $user->department_id)
-            // ->where('department_id', '=', $user->department_id )
-            // ->where('status_id', '!=', 4)
-            // ->get();
-
             $tickets = Ticket::with('area','category','status','department')
                 ->where(function($query) {
                     $query->where('department_id', auth()->user()->department_id)
@@ -67,18 +59,30 @@ class TicketController extends Controller
                 ->get();
                 }
         // 
-        
 
         // $tickets = Ticket::with('area','category','status','department')->get();
         $tickets = $tickets->map(function($ticket){
+            $userDepartmentId = auth()->user()->department_id;
+            $typeString = ($ticket->department_id == $userDepartmentId) ?  'Asignado':'Creado'; // En este caso, ambos retornos son 'creado'
+            $typeColor = ($ticket->department_id == $userDepartmentId) ?  'rgba(209, 90, 13)' : 'rgba(5, 47, 233)' ;
+            
+            
+            $color = ($ticket->status->name == 'Nuevo') ? 'rgba(255, 0, 0, 0.2)' : 'rgba(0, 0, 0, 0.0)';
+            $color = ($ticket->status->name == 'En proceso') ? 'rgba(255, 165, 0, 0.2)' : $color;
+
+            // $typeColorback = ($ticket->status == 'Nuevo') ? 'rgba(0, 0, 255, 0.2)' : 'rgba(0, 255, 0, 0.2)'; // Azul para Asignado, Verde para Creado
+
             return [
                 'id' => $ticket->id,
                 'usuario' => $ticket->usuario->name,
                 'title' => view('Ticket.Partials.title', ['ticket' => $ticket])->render(),
                 'category' => $ticket->category->name,
                 'sucursal' => $ticket->usuario->sucursal->name,
-                'department' => $ticket->department_id,
-                'type' => $ticket->type,
+                'department' => $ticket->department->name,
+                // 'type' => $ticket->type,
+                'type' => $typeString,
+                'typeColor' => $typeColor, // Include the color in the response
+                'typeColorback' => $color, // Include the color in the response
                 'area' => $ticket->area->name,
                 'status' => $ticket->status->name,
                 'created_at' => $ticket->created_at->diffForHumans(),
@@ -137,25 +141,19 @@ class TicketController extends Controller
         if($user->is_admin == 10){
             $ticket_clo = Ticket::with('area','category','status','department')
                 ->where('status_id', '=', 4 )
-                // ->latest()
-                // ->paginate()
                 ->get();
         }else{
             $ticket_clo = Ticket::with('area','category','status','department')
-            //    ->join('users', 'ticket.user_id', '=', 'users.id')             
-                // ->where('users.sucursal_id', '=', 'department.sucursal_id' )
-                // ->where('ticket.department_id', '=', $user->department_id )
-                ->where('ticket.status_id','=', 4 )
+                ->where('status_id', 4 )
                 ->latest()
                 ->paginate();
+           
             
         }
         
 
         return view('Ticket.closed',[
-            // 'newTicket'=> new Ticket,
-            'ticket' => $ticket_clo
-            
+            'ticket' => $ticket_clo           
         ]);
     }
 
@@ -190,13 +188,18 @@ class TicketController extends Controller
      */
     public function create()
     {
+        // excluir sistemas y soporte, todos lo pueden ver sin excepcion
+        // $excludedDepartments = [5,6];
+        $additionalDepartmentIds = [5, 6,7,8]; // agregar en esta seccion los departamento que se desean visualizar
+        $departamento = Department::where('sucursal_id', auth()->user()->sucursal_id)
+                        ->orWhereIn('id',$additionalDepartmentIds)
+                        ->pluck('name', 'id');
         $ticket = new Ticket;
         return view('Ticket.create',
         [
             'areas' => Area::pluck('name','id'),
             'category' => Category::pluck('name','id','area_id'),
-            'department' => Department::pluck('name','id'),
-            'departments' => Department::all(),
+            'department' => $departamento,
             'status' => Status::pluck('name','id'),
             'ticket' => $ticket
         ]);

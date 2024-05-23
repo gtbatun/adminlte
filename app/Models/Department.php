@@ -12,6 +12,7 @@ class Department extends Model
     protected $fillable =[
         'name',
         'description',
+        'sucursal_id',
         'logo'];
 
         public function ticket(){
@@ -21,9 +22,9 @@ class Department extends Model
         public function areas()
         {
             return $this->hasMany(Area::class,'department_id');
-        }
-
-
-
+        }   
         
+        public function sucursal(){
+            return  $this->belongsTo(Sucursal::class);
+        }     
 }

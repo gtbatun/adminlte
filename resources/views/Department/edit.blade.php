@@ -9,7 +9,7 @@
 			 method="POST"
 			 enctype="multipart/form-data"
 			 action="{{ route('department.update',$department)}}" >
-			<h1 class="display-4">Editar Area</h1>
+			<h1 class="display-4">Editar Departamento</h1>
 			<hr>
 				@method('PUT')
 				@include('Department._form',['btnText' => 'Actualizar'])

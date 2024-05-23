@@ -15,14 +15,15 @@
 
         @endif
 
-    
+  
       @isset($departments)  
        <div class="col-12 mt-4">
         <div class="card fluid">
             <div class="card-body">
         <table class="table table-bordered text-black shadow-lg mt-2">
             <tr class="text-secondary">
-                <!-- <th>ID</th> -->
+                <th>ID</th>
+                <th>Sucursal</th>
                 <th>Departamento</th>
                 <th>Descripcion</th>
                 <th>Acción</th>
@@ -30,7 +31,8 @@
             
             @foreach($departments as $department)
             <tr>
-                
+                <td class="fw-bold">{{$department->id}}</td>
+                <td class="fw-bold">{{$department->sucursal->name}}</td>
                 <td class="fw-bold">{{$department->name}}</td>
                 <td class="fw-bold">{{$department->description}}</td>
                 <td>

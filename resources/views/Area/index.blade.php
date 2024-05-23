@@ -22,7 +22,8 @@
             <div class="card-body">
         <table class="table table-bordered text-black">
             <tr class="text-secondary">
-                <!-- <th>ID</th> -->
+                <th>ID</th>
+                <th>Departamento</th>
                 <th>Area</th>
                 <th>Descripcion</th>
                 <th>Acción</th>
@@ -30,7 +31,8 @@
             
             @foreach($areas as $area)
             <tr>
-                
+                <td class="fw-bold">{{$area->id}}</td>
+                <td class="fw-bold">{{$area->department->name}}</td>
                 <td class="fw-bold">{{$area->name}}</td>
                 <td class="fw-bold">{{$area->description}}</td>
                 <td>

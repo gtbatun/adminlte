@@ -30,8 +30,8 @@
                 <th>ID</th>
                 <th>TICKET</th>
                 <th>CATEGORIA</th>
-                <th>Depart</th>
-                <th>type</th>
+                <th>ASIGNADO</th>
+                <th>TIPO</th>
                 <th>Sucursal</th>
                 <th>AREA</th>
                 <th>ESTATUS</th>
@@ -88,6 +88,16 @@
                 { data: 'status' },
                 { data: 'actions', orderable: false, searchable: false }
             ],
+            createdRow: function(row, data, dataIndex) {
+            // Aplica el color basado en el valor de 'typeColor'
+            $('td', row).eq(4).css('background-color', data.typeColor); // 'eq(5)' es el índice de la columna 'type'
+            $(row).css('background-color', data.typeColorback); // 'eq(5)' es el índice de la columna 'type'
+
+            //var typeCell = $('td', row).eq(4); // 'eq(5)' es el índice de la columna 'type'
+            var typeColorback = (data.type === 'Asignado') ? 'rgba(0, 0, 255)' : 'rgba(0, 255, 0, 0.2)';
+            
+            
+            },
             responsive: true,
             scrollY: '650px', // Set the height of the scrollable area
                 scrollCollapse: true, // Enable scrolling

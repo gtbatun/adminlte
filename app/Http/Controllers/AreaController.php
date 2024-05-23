@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Area;
+use App\Models\Department;
 use Illuminate\Http\Request;
 
 class AreaController extends Controller
@@ -22,7 +23,10 @@ class AreaController extends Controller
     public function create()
     {
         $area = new Area;
-        return view('Area.create',['area' => $area]);
+        return view('Area.create',[
+            'department' => Department::pluck('name','id'),
+            'area' => $area
+        ]);
     }
 
     /**
@@ -32,7 +36,8 @@ class AreaController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'description' => 'required'            
+            'description' => 'required',
+            'department_id' => 'required'              
         ]);
 
         Area::create($request->all());
@@ -55,7 +60,9 @@ class AreaController extends Controller
      */
     public function edit(Area $area)
     {
-        return view('Area.edit',['area' => $area]);
+        return view('Area.edit',[
+            'department' => Department::pluck('name','id'),
+            'area' => $area]);
     }
 
     /**
