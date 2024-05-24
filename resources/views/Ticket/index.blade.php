@@ -1,8 +1,9 @@
 
 @extends('adminlte::page')
+@section('content')
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
-@section('content')
 
 <div class="container-fuid" >
     <div class="col-12 mt-0 d-flex justify-content-between ">
@@ -20,31 +21,35 @@
     @endif
     @include('partials.validation-errors')
 
-<div class="container-fluid">
-    <div class="card fluid">    
-    <div class="table-responsive ">
-    <table id="tickets-table" class="table table-bordered shadow-sm mt-5 table-striped" >
-        <thead  class="table-dark ">
-            <tr class="text-center">
-                <th>ID</th>
-                <th>TICKET</th>
-                <th>CATEGORIA</th>
-                <th>ASIGNADO</th>
-                <th>TIPO</th>
-                <th>SUCURSAL</th>
-                <th>AREA</th>
-                <th>ESTATUS</th>
-                <th>ACCION</th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
-    </div>
+    <div class="col-12 mt-1">
+        <div class="card fluid">   
+            <div class="card-body">  
+                <div class="table-responsive ">
+                    <table id="tickets-table" class="table table-bordered shadow-sm mt-1 table-striped" >
+                        <thead  class="table-dark ">
+                            <tr class="text-center">
+                                <th>ID</th>
+                                <th>TICKET</th>
+                                <th>CATEGORIA</th>
+                                <th>ASIGNADO</th>
+                                <th>TIPO</th>
+                                <th>SUCURSAL</th>
+                                <th>AREA</th>
+                                <th>ESTATUS</th>
+                                <th>ACCION</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 @endsection
 
+@section('js')
 <script>
     $(document).ready(function() {
         var table = $('#tickets-table').DataTable({
@@ -117,3 +122,4 @@
     });
 </script>
 
+@endsection

@@ -1,92 +1,79 @@
-<!-- optimizar las consultas de las select options, se esta realizando 3 consultas una por cada opcion -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 @extends('adminlte::page')
 @section('content')
-
-<div >
-
-    
+<!-- optimizar las consultas de las select options, se esta realizando 3 consultas una por cada opcion -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<div>    
     @if(Session::get('success'))
         <div class="alert alert-success mt-2">
         <strong>{{Session::get('success')}} </strong><br>
         </div>
     @endif
-    @include('partials.validation-errors')
-
-    
+    @include('partials.validation-errors')    
     <div class="d-grid gap-2 d-md-flex justify-content-md-end m-2">
     <a href="{{route('user.create')}}" type="button" class="btn btn-primary p-2 ">Nuevo Usuario</a>
-    </div>
-    
+    </div>    
     @isset($users)  
     <div class="container-fluid">
 
 
-    <div class="row">
-        <div class="col-12">
-            <div class="card fluid">
-                <!-- <div class="card-header d-flex justify-content-between"> 
-                    <h3 class="card-title">Listado de Tickets</h3> 
-                 </div> -->
-            <!-- /.card-header -->
-            <div class="card-body ">
-                <table id="users" class="table table-bordered shadow-lg mt-2
-                table-striped  ">
-                    <thead  class="table-dark ">
-                        <tr>
-                            <th>ID</th>
-                            <th>NOMBRE</th>
-                            <th>EMAIL</th>
-                            <th>VERIFICADO</th>
-                            <th>DEPARTAMENTO</th>
-                            <th>FECHA DE CREACION</th>
-                            <th>ACCION</th>
-                        </tr>
-                    </thead>
-                    @foreach($users as $userItem)                    
-                    <tr>
-                <td>{{$userItem->id}}</td>  
-                <td>{{$userItem->name}}</td>
-                <td>{{$userItem->email}}</td>
-                <td>
-                    @if (is_null($userItem->email_verified_at))
-                        <a href="{{ route('admin.verify-email', $userItem->id) }}" class="btn btn-primary">Verificar Correo</a>
-                    @else
-                        Verificado
-                    @endif
-                </td>
-                @if(isset($userItem->department->name))
-                    <td>{{$userItem->department->name }} </td>                    
-                @else
-                    <td> </td>
-                @endif
-                               
-                <td>{{$userItem->created_at->diffForHumans(null, false, false, 1)}}</td>             
-                <td>
-                <a href="{{route('user.edit',$userItem)}}" class="btn btn-info">Editar <i class='fas fa-edit'></i></a>
-                <button type="button" class="btn btn-warning edit-password-btn" data-toggle="modal" data-target="#modal-update-password" data-user-id="{{ $userItem->id }}" data-user-name="{{ $userItem->name }}">Modificar Contraseña</button>
-    
-                    <form action="{{route('user.destroy',$userItem)}}" method="post" class="d-inline">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger">Eliminar <i class='fas fa-eraser'></i></button>
-                    </form>
-                </td>
-             </tr>          
-                   
-                    @endforeach
-                </table>
-                {{$users->links()}}
+        <div class="row">
+            <div class="col-12">
+                <div class="card fluid">
+                <div class="card-body ">
+                    <table id="tb-users" class="table table-bordered shadow-lg mt-2 table-striped  ">
+                        <thead  class="table-dark ">
+                            <tr>
+                                <th>ID</th>
+                                <th>NOMBRE</th>
+                                <th>EMAIL</th>
+                                <th>VERIFICADO</th>
+                                <th>DEPARTAMENTO</th>
+                                <!-- <th>FECHA DE CREACION</th> -->
+                                <th>ACCION</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($users as $userItem)                    
+                            <tr>
+                                <td>{{$userItem->id}}</td>  
+                                <td>{{$userItem->name}}</td>
+                                <td>{{$userItem->email}}</td>
+                                <td>
+                                    @if (is_null($userItem->email_verified_at))
+                                        <a href="{{ route('admin.verify-email', $userItem->id) }}" class="btn btn-primary">Verificar Correo</a>
+                                    @else
+                                        Verificado
+                                    @endif
+                                </td>
+                                @if(isset($userItem->department->name))
+                                    <td>{{$userItem->department->name }} </td>                    
+                                @else
+                                    <td> </td>
+                                @endif                                    
+                                <!-- <td>{{$userItem->created_at->diffForHumans(null, false, false, 1)}}</td>              -->
+                                <td>
+                                <a href="{{route('user.edit',$userItem)}}" class="btn btn-info">Ed <i class='fas fa-edit'></i></a>
+                                <button type="button" class="btn btn-warning edit-password-btn" data-toggle="modal" data-target="#modal-update-password" data-user-id="{{ $userItem->id }}" data-user-name="{{ $userItem->name }}">Pass</button>            
+                                    <form action="{{route('user.destroy',$userItem)}}" method="post" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger">Dell <i class='fas fa-eraser'></i></button>
+                                    </form>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                    
+                </div>
+                <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
             </div>
-            <!-- /.card-body -->
-            </div>
-            <!-- /.card -->
+            <!-- /.col -->
         </div>
-        <!-- /.col -->
-    </div>
-    <!-- /.row -->
+        <!-- /.row -->
 </div>
-  
        
     @else
     <p>No hay Usuarios creados</p>
@@ -115,6 +102,8 @@
         </div>
     </div>
 </div>
+@endsection
+@section('js')
 <!--  -->
 <script>
     $(document).ready(function() {
@@ -128,14 +117,36 @@
         });  
      });
 </script>
-
-
-
-
-
-
-
-
-
+<script>
+    
+$(document).ready(function() {
+    $('#tb-users').DataTable({
+        "order": [[ 0,"desc" ]],
+        "language": {
+                "search": "Buscar",
+                "lengthMenu": "Mostrar _MENU_ ticket por pagina",
+                "info":"Mostrando _START_ de _END_ de _TOTAL_ ",
+                "infoFiltered":   "( filtrado de un total de _MAX_)",
+                "emptyTable":     "Sin Datos a Mostrar",
+                "zeroRecords":    "No se encontraron coincidencias",
+                "infoEmpty":      "Mostrando 0 de 0 de 0 coincidencias",
+                "paginate": {
+                        "previous": "Anterior",
+                        "next": "Siguiente",
+                        "first": "Primero",
+                        "last": "Ultimo",
+                        },
+            }
+    } );
+} );
+</script>
 @endsection
+
+
+
+
+
+
+
+
 

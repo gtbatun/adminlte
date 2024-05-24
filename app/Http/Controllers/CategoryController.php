@@ -14,7 +14,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::with('areas')->latest()->paginate();
+        // $categories = Category::with('areas')->latest()->paginate();
+        $categories = Category::with('area')->get();
         return view('Category.index',['categories' => $categories]);
     }
 

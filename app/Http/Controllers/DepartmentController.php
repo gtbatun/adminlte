@@ -30,7 +30,7 @@ class DepartmentController extends Controller
      */
     public function index()
     {
-        $departments = Department::latest()->paginate();
+        $departments = Department::all();
         return view('Department.index',['departments' => $departments]);
     }
 
