@@ -75,18 +75,47 @@
     </div>
 </div>
 
-<!--  -->
-
+<!-- ---------------------------------------------------- -->
+<div class="container mt-5">
+    <div class="card direct-chat direct-chat-primary">
+        <div class="card-header">
+            <h3 class="card-title">Historial</h3>
+            <div class="card-tools">
+                <span title="3 New Messages" class="badge badge-primary">3</span>
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                </button>
+                <button type="button" class="btn btn-tool" title="Contacts" data-widget="chat-pane-toggle">
+                    <i class="fas fa-comments"></i>
+                </button>
+                <button type="button" class="btn btn-tool" data-card-widget="remove">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="direct-chat-messages" id="chat-messages">
+                <!-- Messages will be appended here -->
+            </div>
+            <div class="direct-chat-contacts">
+                <ul class="contacts-list" id="contacts-list">
+                    <!-- Contacts will be appended here -->
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ---------------------------------------------------- -->
 <!-- seccion para ver el historial de gestiones -->
 
 
 <!-- con mejor vista  -->
-<!-- <div class="container card direct-chat direct-chat-primary">
+<div class="container card direct-chat direct-chat-primary">
         <div class="card-header">
         <h3 class="card-title">Historial</h3>
             <div class="card-tools">
-            <span title="3 New Messages" class="badge badge-primary">3</span>
-                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+             <span title="3 New Messages" class="badge badge-primary">3</span>
+                <!--<button type="button" class="btn btn-tool" data-card-widget="collapse">
                 <i class="fas fa-minus"></i>
                 </button>
                 <button type="button" class="btn btn-tool" title="Contacts" data-widget="chat-pane-toggle">
@@ -94,14 +123,14 @@
                 </button>
                 <button type="button" class="btn btn-tool" data-card-widget="remove">
                 <i class="fas fa-times"></i>
-                </button>
+                </button> -->
             </div>
         </div>
 
-    <div id="gestiones-container1" > -->
+    <div id="gestiones-container1" >
             <!-- El contenido se actualizará dinámicamente aquí -->
-    <!-- </div>
-</div> -->
+    </div>
+</div>
 <!--  -->
 
 
@@ -362,9 +391,54 @@
             setInterval(loadGestiones, 5000); // 5000 ms = 5 seconds
         });
     </script>
-
+<!-- <span class="direct-chat-name float-${message.user_id == {{ Auth::id() }} ? 'right' : 'left'}">${message.user.name}</span> -->
     <!-- ------------------------------------------- -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript">
+    $(document).ready(function() {
+        // Fetch messages from server
+        $.ajax({
+            url:"{{ route('tickets.gestiones', ['ticket' => $ticket->id]) }}",
+            method: 'GET',
+            success: function(data) {
+                // Clear existing messages
+                $('#chat-messages').empty();
+                console.log(data);
+                // Iterate over each message and append to the chat
+                data.forEach(function(h_gestiones) {
+                    var messageHtml =`
+                        <div class="direct-chat-msg ${h_gestiones.user_id == {{ Auth::id() }} ? 'right' : ''}">
+                            <div class="direct-chat-infos clearfix">                                
+                                <span class="direct-chat-timestamp float-${h_gestiones.user_id == {{ Auth::id() }} ? 'left' : 'right'}">${h_gestiones.created_at}</span>
+                            </div> 
+                            <div class="direct-chat-text">
+                                ${g_gestiones.coment}
+                            </div>                           
+                        </div>`;
+                    
+                    $('#chat-messages').append(messageHtml);
+                });
+            },
+            error: function(error) {
+                console.error('Error fetching messages:', error);
+            }
+        });
 
-<!--  -->
+        // Optionally, fetch contacts in a similar manner
+        // $.ajax({
+        //     url: "{{ route('gestion.ticket', ['ticket' => $ticket->id]) }}",
+        //     method: 'GET',
+        //     success: function(data) {
+        //         // Iterate over each contact and append to the contacts list
+        //         console.log(data);
+        //     },
+        //     error: function(error) {
+        //         console.error('Error fetching contacts:', error);
+        //     }
+        // });
+    });
+</script>
+
+<!-- ---------------------------------------------------------  -->
 <!-- @endcan     -->
 @endsection

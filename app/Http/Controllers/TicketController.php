@@ -63,26 +63,45 @@ class TicketController extends Controller
         // $tickets = Ticket::with('area','category','status','department')->get();
         $tickets = $tickets->map(function($ticket){
             $userDepartmentId = auth()->user()->department_id;
-            $typeString = ($ticket->department_id == $userDepartmentId) ?  'Asignado':'Creado'; // En este caso, ambos retornos son 'creado'
-            $typeColor = ($ticket->department_id == $userDepartmentId) ?  'rgba(209, 90, 13)' : 'rgba(5, 47, 233)' ;
+            // $typeString = ($ticket->department_id == $userDepartmentId) ?  'Asignado':'Creado'; // En este caso, ambos retornos son 'creado'
+            // $typeColor = ($ticket->department_id == $userDepartmentId) ?  'rgba(209, 90, 13)' : 'rgba(5, 47, 233)' ;
+
+            $user = auth()->user();
+
+            // if($ticket->user_id = $user->id){
+            //     $typeString = 'Creado';
+            // }elseif($ticket->department_id == $user->department_id){
+            //     $typeString = 'Creado';
+            // }
+            if ($ticket->user_id == $user->id) {
+                $type = '<strong>Creado</strong>'; 
+                
+                $color = 'rgba(46, 204, 133,0.4)'; // Azul
+            } elseif ($ticket->department_id == $user->department_id) {
+                $type = '<strong>Asigado</strong>';
+                $color = 'rgba(231, 76, 60,0.4)'; // Naranja
+            } else {
+                $type = '<strong>'.$ticket->department->name.'</strong>';
+                // $color = 'rgba(147, 149, 179,0.4)'; // Gris
+                $color = '';
+            }
             
             
-            $color = ($ticket->status->name == 'Nuevo') ? 'rgba(255, 0, 0, 0.2)' : 'rgba(0, 0, 0, 0.0)';
-            $color = ($ticket->status->name == 'En proceso') ? 'rgba(255, 165, 0, 0.2)' : $color;
+            $color1 = ($ticket->status->name == 'Nuevo') ? 'rgba(255, 0, 0, 0.2)' : 'rgba(0, 0, 0, 0.0)';
+            $typeColorback = ($ticket->status->name == 'En proceso') ? 'rgba(255, 165, 0, 0.2)' : $color1;
 
             // $typeColorback = ($ticket->status == 'Nuevo') ? 'rgba(0, 0, 255, 0.2)' : 'rgba(0, 255, 0, 0.2)'; // Azul para Asignado, Verde para Creado
 
             return [
                 'id' => $ticket->id,
-                'usuario' => $ticket->usuario->name,
                 'title' => view('Ticket.Partials.title', ['ticket' => $ticket])->render(),
                 'category' => $ticket->category->name,
                 'sucursal' => $ticket->usuario->sucursal->name,
-                'department' => $ticket->department->name,
-                // 'type' => $ticket->type,
-                'type' => $typeString,
-                'typeColor' => $typeColor, // Include the color in the response
-                'typeColorback' => $color, // Include the color in the response
+                // 'department' => $ticket->department->name,
+                'type' => $type,
+                // 'type' => $typeString,
+                'typeColor' => $color, // Include the color in the response
+                'typeColorback' => $typeColorback, // Include the color in the response
                 'area' => $ticket->area->name,
                 'status' => $ticket->status->name,
                 'created_at' => $ticket->created_at->diffForHumans(),
@@ -149,10 +168,7 @@ class TicketController extends Controller
                         ->orWhere('type','=', auth()->user()->department_id);
                 })
                 ->where('status_id', '=', 4)
-                ->get();
-                
-           
-            
+                ->get();    
         }
         
 
@@ -273,6 +289,7 @@ class TicketController extends Controller
         $area_id = $ticket->area_id;
         $ticket = Ticket::with('usuario','department','category','area')->findOrFail($ticket->id);
         //se agra la funcion o lo findorfail para que falle  en la busqueda de un ticket que no existe
+        
         $h_gestiones = Gestion::where('ticket_id',$ticket->id )->with('usuario')->orderBy('created_at', 'desc')->get();
         //show para mostar el formulario de insert de gestiones de cada ticket
         // return $h_gestiones;

@@ -32,7 +32,7 @@
                                 <th>TICKET</th>
                                 <th>CATEGORIA</th>
                                 <th>ASIGNADO</th>
-                                <th>TIPO</th>
+                                <!-- <th>TIPO</th> -->
                                 <th>SUCURSAL</th>
                                 <th>AREA</th>
                                 <th>ESTATUS</th>
@@ -85,7 +85,7 @@
                 { data: 'id' },
                 { data: 'title' },
                 { data: 'category' },
-                { data: 'department' },
+                // { data: 'department' },
                 { data: 'type' },
                 { data: 'sucursal' },
                 { data: 'area' },
@@ -94,8 +94,9 @@
             ],
             createdRow: function(row, data, dataIndex) {
             // Aplica el color basado en el valor de 'typeColor'
-            $('td', row).eq(4).css('background-color', data.typeColor); // 'eq(5)' es el índice de la columna 'type'
-            $(row).css('background-color', data.typeColorback); // 'eq(5)' es el índice de la columna 'type'
+            $('td', row).eq(3).css('background-color', data.typeColor); // 'eq(5)' es el índice de la columna 'type'
+            $('td', row).eq(6).css('background-color', data.typeColorback); // 'eq(5)' es el índice de la columna 'type'
+            //$(row).css('background-color', data.typeColorback); // 'eq(5)' es el índice de la columna 'type'
 
             //var typeCell = $('td', row).eq(4); // 'eq(5)' es el índice de la columna 'type'
             var typeColorback = (data.type === 'Asignado') ? 'rgba(0, 0, 255)' : 'rgba(0, 255, 0, 0.2)';

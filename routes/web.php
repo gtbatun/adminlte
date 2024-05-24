@@ -74,10 +74,6 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
         /**seccion para autorizar la verificacion de correo */
         Route::get('/admin/verify-email/{userId}', [UserController::class, 'verifyUserEmail'])->name('admin.verify-email');
         
-
-        
-        
-
         });
 
 // ruta agregad para visualizar las imagenes sin el link en cpanel
@@ -107,6 +103,11 @@ Route::get('/get-category/{area_id}', [DepartmentController::class, 'getCategory
 
 /**ver tickets cerrados */
 Route::get('/ticket-closed',[TicketController::class,'closed'])->name('ticket.closed');
+
+/**Ver las gestiones que se tienen por ticket */
+Route::get('gestiones', [GestionController::class, 'getGestiones'])->name('gestion.ticket');
+
+
 Route::get('graf/', [ChartJSController::class, 'index']); 
 
 // Route::get('graf1', [ChartJSController::class, 'index']); 

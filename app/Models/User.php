@@ -59,6 +59,7 @@ class User extends Authenticatable implements MustVerifyEmail
     public function adminlte_image(){
         return asset('storage/images/user/' . $this->image);
     }
+    
     public function department(){
         return  $this->belongsTo(Department::class,'department_id');
     }

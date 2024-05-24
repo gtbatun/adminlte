@@ -27,10 +27,12 @@ class Ticket extends Model
         // se lee, un ticket pertenece a una categoria
         return $this->belongsTo(User::class,'user_id');
     }
+
 //funcion para devolver las imagenes almacenadas en el campo imagen como un array y poder mostarlos nuevamente 
     public function getImageAttyyyribute(){
         return explode(',',$this->attributes['image']);
     }
+
 
     public function tickets()
     {
@@ -39,5 +41,10 @@ class Ticket extends Model
     public function user(){
         // se lee, un ticket pertenece a una categoria
         return $this->belongsTo(User::class,'user_id');
+    }
+
+    //usuario que creo el ticket
+    public function Usercreator(){
+        return  $this->belongsTo(User::class,'user_id');
     }
 }

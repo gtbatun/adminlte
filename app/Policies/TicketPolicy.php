@@ -29,12 +29,16 @@ class TicketPolicy
         if ($user->is_admin == 10) {
             return true; // El administrador puede ver todos los tickets
         }
+
+        // ver todo pero sin botones
+        if ($user->is_admin == 5) {
+            return true; // El administrador puede ver todos los tickets
+        }
     
         // Verificar si el ticket pertenece al usuario
         if ($user->id === $ticket->user_id) {
             return true;
-        }
-    
+        }    
         // Verificar si el ticket pertenece a un departamento del usuario
         // Aquí deberás adaptar la lógica según cómo tengas implementado el sistema de departamentos
         if ($user->department_id = $ticket->department_id) {
