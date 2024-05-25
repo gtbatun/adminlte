@@ -5,7 +5,19 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 <!-- @can('view',$ticket) -->
 
-<div class="container bg-white shadow rounded" style="padding: 1%; border: 1px solid #adb5bd47;">
+<div class="container">
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <strong>Alerta </strong> Algo fue mal..<br><br>
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+</div>
+<div class="container-fluid bg-white shadow rounded" style="padding: 1%; border: 1px solid #adb5bd47;">
     <div class="row">
         <div class="col-md-12 mt-2">
             <h3 class="text-leftb">Ticket # {{$ticket->id}}
@@ -75,88 +87,75 @@
     </div>
 </div>
 
-<!-- ---------------------------------------------------- -->
-<div class="container mt-5">
-    <div class="card direct-chat direct-chat-primary">
-        <div class="card-header">
-            <h3 class="card-title">Historial</h3>
-            <div class="card-tools">
-                <span title="3 New Messages" class="badge badge-primary">3</span>
-                <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                    <i class="fas fa-minus"></i>
-                </button>
-                <button type="button" class="btn btn-tool" title="Contacts" data-widget="chat-pane-toggle">
-                    <i class="fas fa-comments"></i>
-                </button>
-                <button type="button" class="btn btn-tool" data-card-widget="remove">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
+
+<!-- vista resumida -->
+    <div class="container-fuid">
+        <div class="card direct-chat direct-chat-primary">
+            <!-- <div class="card-header"> -->
+                <!-- <h3 class="card-title">Historial</h3> -->
+                <!-- <div class="card-tools"> -->
+                    <!-- <span title="3 New Messages" class="badge badge-primary">3</span> -->
+                    <!-- <button type="button" class="btn btn-tool" data-card-widget="collapse"> -->
+                        <!-- <i class="fas fa-minus"></i> -->
+                    <!-- </button> -->
+                <!-- </div> -->
+            <!-- </div> -->
+            <!-- <div class="card-body"> -->
+                <div class="direct-chat-msg" id="gestiones-container1">
+                    <!-- Messages will be appended here -->
+                </div>
+            <!-- </div> -->
+        <!-- <div class="card-footer">
+            <form action="#" method="post">
+                <div class="input-group">
+                    <input class="form-group" type="file" id="fileInput"  accept="image/*" multiple>
+                    <input type="text" name="message" placeholder="Type Message ..." class="form-control">
+                    <span class="input-group-append">
+                    <button type="button" class="btn btn-primary">Send</button><span>add</span>
+                    </span>
+                </div>
+            </form>
+        </div> -->
+        <!-- <div class="card-footer">
+            <form action="#" method="post">
+                <div class="input-group">
+                    <input type="text" name="message" placeholder="Type Message ..." class="form-control">
+                    <span class="input-group-append">
+                        <button type="button" class="btn btn-primary">Send</button>
+                        <button type="button" class="btn btn-secondary" id="addImageButton"><i class="fas fa-image"></i></button>
+                        <button type="button" class="btn btn-secondary" id="captureScreenButton"><i class="fas fa-camera"></i></button>
+                    </span>
+                </div>
+            </form>
+            <input type="file" id="fileInput" accept="image/*" multiple style="display: none;">
+        </div> -->
+        <div class="card-footer">
+            <form id="messageForm">
+                <div class="input-group">
+                    <input type="text" name="message" placeholder="Type Message ..." class="form-control" id="messageInput">
+                    <span class="input-group-append">
+                        <button type="button" class="btn btn-primary" id="sendMessageButton">Send</button>
+                        <button type="button" class="btn btn-secondary" id="addImageButton"><i class="fas fa-image"></i></button>
+                        <button type="button" class="btn btn-secondary" id="captureScreenButton"><i class="fas fa-camera"></i></button>
+                    </span>
+                </div>
+                <input type="file" id="fileInput" accept="image/*" multiple style="display: none;">
+            </form>
+            <div id="imagePreviewContainer" class="mt-3"></div>
         </div>
-        <div class="card-body">
-            <div class="direct-chat-messages" id="chat-messages">
-                <!-- Messages will be appended here -->
-            </div>
-            <div class="direct-chat-contacts">
-                <ul class="contacts-list" id="contacts-list">
-                    <!-- Contacts will be appended here -->
-                </ul>
-            </div>
+
         </div>
     </div>
-</div>
-<!-- ---------------------------------------------------- -->
-<!-- seccion para ver el historial de gestiones -->
 
-
-<!-- con mejor vista  -->
-<div class="container card direct-chat direct-chat-primary">
-        <div class="card-header">
-        <h3 class="card-title">Historial</h3>
-            <div class="card-tools">
-             <span title="3 New Messages" class="badge badge-primary">3</span>
-                <!--<button type="button" class="btn btn-tool" data-card-widget="collapse">
-                <i class="fas fa-minus"></i>
-                </button>
-                <button type="button" class="btn btn-tool" title="Contacts" data-widget="chat-pane-toggle">
-                <i class="fas fa-comments"></i>
-                </button>
-                <button type="button" class="btn btn-tool" data-card-widget="remove">
-                <i class="fas fa-times"></i>
-                </button> -->
-            </div>
-        </div>
-
-    <div id="gestiones-container1" >
-            <!-- El contenido se actualizará dinámicamente aquí -->
-    </div>
-</div>
-<!--  -->
-
-
-<div id="gestiones-container" class="container bg-white shadow rounded mt-0" style="padding: 1%; border: 1px solid #adb5bd47;">
-        <!-- El contenido se actualizará dinámicamente aquí -->
-</div>
-
-<!--  -->
 
 <!-- fin de la seccion del historico de gestiones -->
 
-<div class="container">
-        @if ($errors->any())
-            <div class="alert alert-danger">
-                <strong>Alerta </strong> Algo fue mal..<br><br>
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-</div>
+<!-- -------------------------------------- -->
+
+<!-- ------------------------------------------ -->
 
 
-<form action="{{route('gestion.store')}}" id="gestion" method="POST" enctype="multipart/form-data" style=" padding: 1%; border: 1px solid #adb5bd47;"class=" container bg-white shadow rounded rounded" >
+<form action="{{route('gestion.store')}}" id="gestion" method="POST" enctype="multipart/form-data" style=" padding: 1%; border: 1px solid #adb5bd47;" class=" container-fluid bg-white shadow rounded rounded" >
     <!-- <h4>Gestionar</h4>  -->
         @csrf
         <input type="hidden" name="ticket_id" class="form-control" value="{{$ticket->id}}" >
@@ -229,6 +228,10 @@
         </div>
     </form>
     </div>
+    </div>
+ @endsection
+ 
+ @section('js')
 <!-- ---------------------------------------------------- -->
 <script>
         // 
@@ -278,167 +281,244 @@
     });
     </script>
 <!--  -->
-<script>
-        $(document).ready(function() {
-            function loadGestiones() {
-                $.ajax({
-                    url: "{{ route('tickets.gestiones', ['ticket' => $ticket->id]) }}",
-                    method: 'GET',
-                    success: function(data) {
-                        var gestionesHtml = '<h4>Historial <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-secondary">+ ' + data.length + '</span></h4>';
-                        gestionesHtml += '<div class="overflow-auto p-3" style="max-width: 100%; max-height: 300px;">';
-
-                        data.forEach(function(gestion, index) {
-                            gestionesHtml += '<div class="row rounded" style="padding: 1%; border: 1px solid #adb5bd47; ' + (index % 2 === 0 ? 'background-color: #f8f9fa;' : '') + '">';
-                            gestionesHtml += '<div class="col-md-12 mt-2 rounded ' + (index % 2 === 0 ? 'ml-0' : 'ml-3') + '">';
-                            gestionesHtml += '<div class="d-flex w-100 justify-content-between">';
-                            gestionesHtml += '<h5 class="mb-1">' + gestion.usuario.name + '</h5>';
-                            gestionesHtml += '<small class="text-success">' + moment(gestion.created_at).fromNow() + '</small>';
-                            gestionesHtml += '</div>';
-                            gestionesHtml += '<div class="d-flex justify-content-between">';
-                            gestionesHtml += '<p>' + gestion.coment + '</p>';
-                            gestionesHtml += '</div>';
-
-                            if (gestion.image) {
-                                var images = gestion.image.split(',');
-                                gestionesHtml += '<div class="form-group">';
-                                gestionesHtml += '<strong>Adjunto</strong>';
-                                images.forEach(function(image) {
-                                    gestionesHtml += '<a href="/storage/images/' + image + '" target="_blank">';
-                                    gestionesHtml += '<ul><li>' + image + '</li></ul>';
-                                    gestionesHtml += '</a>';
-                                });
-                                gestionesHtml += '</div>';
-                            }
-
-                            gestionesHtml += '</div></div>';
-                        });
-
-                        gestionesHtml += '</div>';
-                        $('#gestiones-container').html(gestionesHtml);
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Error loading gestiones:', error);
-                    }
-                });
-            }
-
-            // Load gestiones initially
-            loadGestiones();
-
-            // Reload gestiones every 5 seconds
-            setInterval(loadGestiones, 5000); // 5000 ms = 5 seconds
-        });
-    </script>
-    <!-- llllllllllllllllllllllllllllllllllllllllllllllllllllll -->
     
-<script>
+    <script>
+        function formatDate(format, dateString) {
+            const date = new Date(dateString);
+
+            const map = {
+                'hh': String(date.getHours()).padStart(2, '0'),
+                'mm': String(date.getMinutes()).padStart(2, '0'),
+                'ss': String(date.getSeconds()).padStart(2, '0'),
+                'yyyy': date.getFullYear(),
+                'MM': String(date.getMonth() + 1).padStart(2, '0'),
+                'dd': String(date.getDate()).padStart(2, '0')
+            };
+
+            return format.replace(/hh|mm|ss|yyyy|MM|dd/g, matched => map[matched]);
+        }
+
         $(document).ready(function() {
-            function loadGestiones() {
-                $.ajax({
-                    url: "{{ route('tickets.gestiones', ['ticket' => $ticket->id]) }}",
-                    method: 'GET',
-                    success: function(data) {
-                        // var gestionesHtml = '<h4>Historial <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-secondary">+ ' + data.length + '</span></h4>';
-                        // gestionesHtml += '<div class="overflow-auto p-3" style="max-width: 100%; max-height: 300px;">';
-                        var gestionesHtml = '';
+            $.ajax({
+                url: "{{ route('tickets.gestiones', ['ticket' => $ticket->id]) }}",
+                method: 'GET',
+                success: function(data) {
+                    var gestionesHtml = '';
+                    gestionesHtml += '<div class="card direct-chat direct-chat-primary">';
+                    var userId = {{ Auth::id() }}; // Obtiene el ID del usuario logueado
 
-                        data.forEach(function(gestion, index) {
-                            gestionesHtml += '<div class="direct-chat-msg" >';
-                                gestionesHtml += '<div class="direct-chat-infos clearfix ">';
-                                    gestionesHtml += '<span class="direct-chat-name float-left">' + gestion.usuario.name + '</span>';
-                                    gestionesHtml += '<span class="direct-chat-timestamp float-right">' + moment(gestion.created_at).fromNow() + '</span>';
-                                gestionesHtml += '</div>';
-                                gestionesHtml += '<img class="direct-chat-img" src="/storage/images/user/'+gestion.usuario.image+'" alt="'+ gestion.usuario.id +'">';
-                                // gestionesHtml += gestion.usuario.image;
-                                gestionesHtml += '<div class="direct-chat-text">';
-                                    gestionesHtml += gestion.coment;
-                                gestionesHtml += '</div>';
-                            gestionesHtml += '</div>';
-                            
-                            // console.log(gestion);
+                    
 
-                            if (gestion.image) {
-                                var images = gestion.image.split(',');
-                                gestionesHtml += '<div class="form-group">';
-                                gestionesHtml += '<strong>Adjunto</strong>';
-                                images.forEach(function(image) {
-                                    gestionesHtml += '<a href="/storage/images/' + image + '" target="_blank">';
-                                    gestionesHtml += '<ul><li>' + image + '</li></ul>';
-                                    gestionesHtml += '</a>';
-                                });
-                                gestionesHtml += '</div>';
-                            }
+                    gestionesHtml += '<div class="card-header">';
+                    gestionesHtml += '<h3 class="card-title">Historial </h3>';
+                    gestionesHtml += '<div class="card-tools">';
+                    gestionesHtml +='<span title="3 New Messages" class="badge badge-primary">+ ' + data.length + '</span>';
+                    gestionesHtml += '<button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>';
+                    gestionesHtml += '</div>';
+                    gestionesHtml += '</div>';
+                    
+                    gestionesHtml += '<div class="card-body">';
+                    gestionesHtml += '<div class="direct-chat-messages">';
 
-                            gestionesHtml += '</div></div>';
-                        });
-                        
+                    if (data.length > 0) {
 
+                    data.forEach(function(gestion) {
+                        var isCurrentUser = gestion.usuario.id === userId;
+
+                        gestionesHtml += '<div class="direct-chat-msg ' + (isCurrentUser ? 'right' : '') + '">';
+                        gestionesHtml += '<div class="direct-chat-infos clearfix">';
+                        gestionesHtml += '<span class="direct-chat-name float-' + (isCurrentUser ? 'right' : 'left') + '">' + gestion.usuario.name + '</span>';
+                        gestionesHtml += '<span class="direct-chat-timestamp float-' + (isCurrentUser ? 'left' : 'right') + '">' + formatDate('hh:mm:ss',gestion.created_at) + '</span>';
                         gestionesHtml += '</div>';
-                        $('#gestiones-container1').html(gestionesHtml);
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Error loading gestiones:', error);
+                        if(gestion.usuario.image){
+                            gestionesHtml += '<img class="direct-chat-img" src="/storage/images/user/' + gestion.usuario.image + '" alt="' + gestion.usuario.id + '">';
+                        } 
+                        gestionesHtml += '<div class="direct-chat-text">';
+                        gestionesHtml += gestion.coment;
+                        gestionesHtml += '</div>';
+                        gestionesHtml += '</div>';
+
+                        if (gestion.image) {
+                            var images = gestion.image.split(',');
+                            gestionesHtml += '<div class="form-group">';
+                            gestionesHtml += '<strong>Adjunto</strong>';
+                            images.forEach(function(image) {
+                                gestionesHtml += '<a href="/storage/images/' + image + '" target="_blank">';
+                                gestionesHtml += '<ul><li>' + image + '</li></ul>';
+                                gestionesHtml += '</a>';
+                            });
+                            gestionesHtml += '</div>';
+                        }
+                    });
+                    
+                    }else{
+                        gestionesHtml += '<p class="text-center">No hay gestiones para mostrar</p>';
                     }
-                });
-            }
+                    gestionesHtml += '</div>';
+                    gestionesHtml += '</div>';
+                    gestionesHtml += '</div>';
 
-            
-            // Load gestiones initially
-            loadGestiones();
-
-            // Reload gestiones every 5 seconds
-            setInterval(loadGestiones, 5000); // 5000 ms = 5 seconds
+                    $('#gestiones-container1').html(gestionesHtml);
+                    // Reinicializar los componentes de AdminLTE
+                    // $('[data-card-widget="collapse"]').CardWidget('init');
+                    // Colapsar la tarjeta si no hay gestiones
+                    if (data.length === 0) {
+                        $('[data-card-widget="collapse"]').CardWidget('collapse');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error loading gestiones:', error);
+                }
+            });            
+                // Configura el intervalo de actualización
+                setInterval(function() {
+                table.ajax.reload(null, false); // false para no resetear la posición de la paginación
+                }, 10000); // 5000 ms = 5 segundos
         });
     </script>
-<!-- <span class="direct-chat-name float-${message.user_id == {{ Auth::id() }} ? 'right' : 'left'}">${message.user.name}</span> -->
-    <!-- ------------------------------------------- -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script type="text/javascript">
-    $(document).ready(function() {
-        // Fetch messages from server
-        $.ajax({
-            url:"{{ route('tickets.gestiones', ['ticket' => $ticket->id]) }}",
-            method: 'GET',
-            success: function(data) {
-                // Clear existing messages
-                $('#chat-messages').empty();
-                console.log(data);
-                // Iterate over each message and append to the chat
-                data.forEach(function(h_gestiones) {
-                    var messageHtml =`
-                        <div class="direct-chat-msg ${h_gestiones.user_id == {{ Auth::id() }} ? 'right' : ''}">
-                            <div class="direct-chat-infos clearfix">                                
-                                <span class="direct-chat-timestamp float-${h_gestiones.user_id == {{ Auth::id() }} ? 'left' : 'right'}">${h_gestiones.created_at}</span>
-                            </div> 
-                            <div class="direct-chat-text">
-                                ${g_gestiones.coment}
-                            </div>                           
-                        </div>`;
-                    
-                    $('#chat-messages').append(messageHtml);
-                });
-            },
-            error: function(error) {
-                console.error('Error fetching messages:', error);
-            }
-        });
-
-        // Optionally, fetch contacts in a similar manner
-        // $.ajax({
-        //     url: "{{ route('gestion.ticket', ['ticket' => $ticket->id]) }}",
-        //     method: 'GET',
-        //     success: function(data) {
-        //         // Iterate over each contact and append to the contacts list
-        //         console.log(data);
-        //     },
-        //     error: function(error) {
-        //         console.error('Error fetching contacts:', error);
-        //     }
-        // });
-    });
-</script>
+   
 
 <!-- ---------------------------------------------------------  -->
+<script>
+    $(document).ready(function() {
+        // Botón para agregar imágenes
+        $('#addImageButton').on('click', function() {
+            $('#fileInput').click();
+        });
+
+        // Botón para capturar pantalla (este es un ejemplo simple, puedes implementar una captura de pantalla más avanzada según tus necesidades)
+        $('#captureScreenButton').on('click', function() {
+            alert('Función de captura de pantalla no implementada');
+            // Aquí podrías implementar la lógica para capturar la pantalla
+            // Hay librerías como html2canvas que pueden ayudarte con esto
+        });
+
+        // Manejar el evento de selección de archivos
+        $('#fileInput').on('change', function() {
+            var files = $(this).prop('files');
+            // Aquí puedes manejar los archivos seleccionados
+            console.log(files);
+        });
+    });
+</script>
 <!-- @endcan     -->
+
+<script>
+$(document).ready(function() {
+    // Botón para agregar imágenes
+    $('#addImageButton').on('click', function() {
+        $('#fileInput').click();
+    });
+
+    // Botón para capturar pantalla (placeholder, puedes implementar según tus necesidades)
+    $('#captureScreenButton').on('click', function() {
+        alert('Función de captura de pantalla no implementada');
+        // Aquí podrías implementar la lógica para capturar la pantalla
+        // Librerías como html2canvas pueden ayudarte con esto
+    });
+
+    // Manejar el evento de selección de archivos
+    $('#fileInput').on('change', function() {
+        handleFiles(this.files);
+    });
+
+    // Manejar el evento de pegado en el input
+    $('#messageInput').on('paste', function(event) {
+        handlePaste(event);
+    });
+
+    // Enviar el mensaje
+    $('#sendMessageButton').on('click', function() {
+        sendMessage();
+    });
+
+    function handleFiles(files) {
+        var container = $('#imagePreviewContainer');
+        Array.from(files).forEach(file => {
+            if (file.type.startsWith('image/')) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    var img = $('<img>').attr('src', e.target.result);
+                    container.append(img);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+
+    function handlePaste(event) {
+        var items = (event.clipboardData || event.originalEvent.clipboardData).items;
+        var container = $('#imagePreviewContainer');
+        for (var index in items) {
+            var item = items[index];
+            if (item.kind === 'file') {
+                var blob = item.getAsFile();
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    var img = $('<img>').attr('src', e.target.result);
+                    container.append(img);
+                };
+                reader.readAsDataURL(blob);
+            }
+        }
+    }
+
+    function sendMessage() {
+        var message = $('#messageInput').val();
+        var files = $('#fileInput')[0].files;
+
+        if (message || files.length > 0 || $('#imagePreviewContainer img').length > 0) {
+            var formData = new FormData();
+            formData.append('message', message);
+            Array.from(files).forEach(file => {
+                formData.append('images[]', file);
+            });
+
+            // Agregar las imágenes pegadas
+            $('#imagePreviewContainer img').each(function(index, img) {
+                var blob = dataURLToBlob($(img).attr('src'));
+                formData.append('pastedImages[]', blob, 'pastedImage' + index + '.png');
+            });
+
+            $.ajax({
+                url: 'your-server-endpoint', // Reemplaza con tu endpoint de servidor
+                method: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    $('#messageInput').val('');
+                    $('#fileInput').val('');
+                    $('#imagePreviewContainer').empty();
+                    // Aquí puedes manejar la respuesta del servidor
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error sending message:', error);
+                }
+            });
+        }
+    }
+
+    function dataURLToBlob(dataURL) {
+        var arr = dataURL.split(','), mime = arr[0].match(/:(.*?);/)[1],
+            bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+        while(n--){
+            u8arr[n] = bstr.charCodeAt(n);
+        }
+        return new Blob([u8arr], {type:mime});
+    }
+});
+
+
+</script>
+@endsection
+
+@section('css')
+<style>
+ #imagePreviewContainer img {
+    max-width: 100px;
+    max-height: 100px;
+    margin: 5px;
+}   
+</style>
 @endsection

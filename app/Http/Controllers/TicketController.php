@@ -45,7 +45,7 @@ class TicketController extends Controller
         
         $user = Auth::user();
         
-        if($user->is_admin == 10){
+        if($user->is_admin == 10 || $user->is_admin == 5){
             $tickets = Ticket::with('area','category','status','department')
             ->where('status_id', '!=', 4 )
             ->get();
@@ -113,7 +113,7 @@ class TicketController extends Controller
     /*** ontener las gestiones de lo cada ticket*/
     public function getGestiones(Ticket $ticket)
     {
-        $h_gestiones1 = Gestion::where('ticket_id', $ticket->id)->with('usuario')->orderby('created_at','desc')->get();
+        $h_gestiones1 = Gestion::where('ticket_id', $ticket->id)->with('usuario')->orderby('created_at','asc')->get();
         return response()->json($h_gestiones1);
     }
 
@@ -157,7 +157,7 @@ class TicketController extends Controller
     public function closed(){
         $user = Auth::user();
         
-        if($user->is_admin == 10){
+        if($user->is_admin == 10 || $user->is_admin == 5){
             $ticket_clo = Ticket::with('area','category','status','department')
                 ->where('status_id', '=', 4 )
                 ->get();
@@ -290,7 +290,8 @@ class TicketController extends Controller
         $ticket = Ticket::with('usuario','department','category','area')->findOrFail($ticket->id);
         //se agra la funcion o lo findorfail para que falle  en la busqueda de un ticket que no existe
         
-        $h_gestiones = Gestion::where('ticket_id',$ticket->id )->with('usuario')->orderBy('created_at', 'desc')->get();
+        $h_gestiones = Gestion::where('ticket_id',$ticket->id )->with('usuario')->get();
+        // $h_gestiones = Gestion::where('ticket_id',$ticket->id )->with('usuario')->orderBy('created_at', 'desc')->get();
         //show para mostar el formulario de insert de gestiones de cada ticket
         // return $h_gestiones;
         return view('Gestion.create',[

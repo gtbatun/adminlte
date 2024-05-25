@@ -73,10 +73,10 @@
                 <!-- <input name="is_admin" type="text" class="form-control" id="Phone" > -->
                 
                 <select name="is_admin" id="" class="form-control @error('is_admin') is-invalid @enderror"  >
-                <option value="">-- Role --</option>
-                <option value="0">Usuario Standar</option>
-                <option value="1">Administrador</option>
-                <!-- <option value="2">Encargado</option> -->
+                <option value="">Seleccionar un role</option>
+                <option title="Ver tickets creados y asignados al Dep" value="0">Usuario Standar</option>
+                <option title="Ver todos los ticket creados" value="5">Supervisor</option>
+                <option title="Ver todas la opciones y configuraciones" value="10">Administrador</option>
                 </select>
                 </div>
             </div>

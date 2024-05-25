@@ -5,7 +5,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
 
-<div class="container-fuid" >
+<div class="row" >
     <div class="col-12 mt-0 d-flex justify-content-between ">
         @isset($status)			    
             <h3 class="card-title">Tickets {{$status->name}}</h3>         
@@ -15,24 +15,26 @@
         <a class="btn btn-primary" href="{{ route('ticket.create') }}">Crear Ticket <i class='far fa-file'></i></a>        
     </div>
     @if(Session::get('success'))
+    <div class="container-fluid">
         <div class="alert alert-success mt-2">
         <strong>{{Session::get('success')}} </strong><br>
+        </div>
         </div>
     @endif
     @include('partials.validation-errors')
 
+    
     <div class="col-12 mt-1">
         <div class="card fluid">   
             <div class="card-body">  
                 <div class="table-responsive ">
-                    <table id="tickets-table" class="table table-bordered shadow-sm mt-1 table-striped" >
+                    <table id="tickets-table" class="table table-striped table-bordered dt-responsive nowrap" style="width:98%" >
                         <thead  class="table-dark ">
                             <tr class="text-center">
                                 <th>ID</th>
                                 <th>TICKET</th>
                                 <th>CATEGORIA</th>
                                 <th>ASIGNADO</th>
-                                <!-- <th>TIPO</th> -->
                                 <th>SUCURSAL</th>
                                 <th>AREA</th>
                                 <th>ESTATUS</th>
@@ -47,6 +49,7 @@
         </div>
     </div>
 </div>
+
 @endsection
 
 @section('js')
@@ -85,7 +88,6 @@
                 { data: 'id' },
                 { data: 'title' },
                 { data: 'category' },
-                // { data: 'department' },
                 { data: 'type' },
                 { data: 'sucursal' },
                 { data: 'area' },
@@ -104,9 +106,7 @@
             
             },
             responsive: true,
-            scrollY: '650px', // Set the height of the scrollable area
-                scrollCollapse: true, // Enable scrolling
-                paging: true, // Enable pagination
+            paging: true, // Enable pagination
                 
         });
         

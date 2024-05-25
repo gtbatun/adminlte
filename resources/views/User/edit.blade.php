@@ -146,12 +146,13 @@
                     <label for="Role" class="col-md-4 col-lg-3 col-form-label">Role</label>
                     <div class="col-md-8 col-lg-9">
                         <select name="is_admin" class="form-control" id="Role">
-                            <option value="0" {{ $user->is_admin == 0 ? 'selected' : '' }}>Usuario estándar</option>
-                            <option value="10" {{ $user->is_admin == 10 ? 'selected' : '' }}>Administrador</option>
+                            <option title="Ver tickets creados y asignados al Dep" value="0" {{ $user->is_admin == 0 ? 'selected' : '' }}>Usuario estándar</option>
+                            <option title="Ver todos los ticket creados" value="5" value="5" {{ $user->is_admin == 5 ? 'selected' : '' }}>Supervisor</option>
+                            <option title="Ver todas la opciones y configuraciones" value="10" {{ $user->is_admin == 10 ? 'selected' : '' }}>Administrador</option>
                         </select>
                     </div>
                 </div>
-
+                
                     @endif
                     <div class="text-center">
                       <button type="submit" class="btn btn-primary">Guardar</button>
