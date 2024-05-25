@@ -85,88 +85,150 @@
         @endif
 
     </div>
-<!-- </div> -->
+</div>
 
 
 <!-- vista resumida -->
     <div class="container-fuid">
-        <div class="card direct-chat direct-chat-primary">           
-            <div class="card-body">
+        <div class="card direct-chat direct-chat-primary">
+            <!-- <div class="card-header"> -->
+                <!-- <h3 class="card-title">Historial</h3> -->
+                <!-- <div class="card-tools"> -->
+                    <!-- <span title="3 New Messages" class="badge badge-primary">3</span> -->
+                    <!-- <button type="button" class="btn btn-tool" data-card-widget="collapse"> -->
+                        <!-- <i class="fas fa-minus"></i> -->
+                    <!-- </button> -->
+                <!-- </div> -->
+            <!-- </div> -->
+            <!-- <div class="card-body"> -->
                 <div class="direct-chat-msg" id="gestiones-container1">
                     <!-- Messages will be appended here -->
                 </div>
-            </div>
-            <div>
-            </div>        
-            <div class="card-footer">
-                <form id="gestionform" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    <input type="hidden" name="ticket_id" class="form-control" value="{{$ticket->id}}" >
-                    <input type="hidden" name="user_id" class="form-control" value="{{auth()->user()->id}}" >
-                <div class="row">                    
-                    <!-- inicio seccion de area y categorias -->
-                    <div class="col-xs-12 col-sm-12 col-md-4 mt-2" >
-                        <div class="form-group">
-                            <strong>Area:</strong>
-                            <select name="area_id" id="area" class="form-control border-1 bg-light shadow-sm ">
-                            <option value="">Seleccionar un Area</option>
-                            @foreach($areas as  $id => $name)
-                            <option value="{{$id}}" @if($id == old('area_id' , $ticket->area_id)) selected @endif >{{$name}}</option>
-                            @endforeach
-                            </select>
-                        </div>
-                        </div>
-                        <div class="col-xs-12 col-sm-12 col-md-4 mt-2" >
-                            <div class="form-group">
-                                <strong>Categoria:</strong>
-                                <select name="category_id" id="category" class="form-control border-1 bg-light shadow-sm " >
-                                    <option value=""> Seleccionar categoria</option>
-                                    @foreach($category as $id => $name)
-                                    <option value="{{ $id }}" {{ $ticket->category_id == $id ? 'selected' : '' }} >{{ $name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-xs-12 col-sm-12 col-md-4 pb-2 d-flex justify-content-end" >               
-                    <!-- fin seccion de area y categorias -->
-                    <!-- seccion de botones de cerrar y reabrir ticket -->
-                        @if($ticket->status_id != 4) 
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="1" name="cerrar" {{ $ticket->status_id == 4 ? 'checked' : '' }}>
-                            <label class="form-check-label text-danger" for="status_id"><strong>Cerrar Ticket</strong></label>            
-                        </div>
-                        @endif
-                        @if($ticket->status_id == 4)
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="2" name="reopen" {{ $ticket->status_id == 4 ? 'checked' : '' }}>
-                            <label class="form-check-label text-success" for="status_id"><strong>Reabrir Ticket</strong></label>            
-                        </div>
-                        @endif
-                        </div> 
-                    </div> 
-                    <!-- fin de seccion de botones de cerrar y reabrir ticket -->
-                    <div class="input-group">
-                        <input type="text" name="coment" placeholder="Type Message ..." class="form-control" id="messageInput">
-                        <span class="input-group-append">
-                            <button type="button" class="btn btn-primary" id="sendMessageButton">Send</button>
-                            <button type="button" class="btn btn-secondary" id="addImageButton"><i class="fas fa-image"></i></button>
-                            <!-- <button type="button" class="btn btn-secondary" id="captureScreenButton"><i class="fas fa-camera"></i></button> -->
-                        </span>
-                    </div>
-                    <input type="file" id="fileInput" accept="image/*" multiple style="display: none;">
-                </form>
-                <div id="imagePreviewContainer" class="mt-3"></div>
-            </div>
-        </div>        
+            <!-- </div> -->
+        <!-- <div class="card-footer">
+            <form action="#" method="post">
+                <div class="input-group">
+                    <input class="form-group" type="file" id="fileInput"  accept="image/*" multiple>
+                    <input type="text" name="message" placeholder="Type Message ..." class="form-control">
+                    <span class="input-group-append">
+                    <button type="button" class="btn btn-primary">Send</button><span>add</span>
+                    </span>
+                </div>
+            </form>
+        </div> -->
+        <!-- <div class="card-footer">
+            <form action="#" method="post">
+                <div class="input-group">
+                    <input type="text" name="message" placeholder="Type Message ..." class="form-control">
+                    <span class="input-group-append">
+                        <button type="button" class="btn btn-primary">Send</button>
+                        <button type="button" class="btn btn-secondary" id="addImageButton"><i class="fas fa-image"></i></button>
+                        <button type="button" class="btn btn-secondary" id="captureScreenButton"><i class="fas fa-camera"></i></button>
+                    </span>
+                </div>
+            </form>
+            <input type="file" id="fileInput" accept="image/*" multiple style="display: none;">
+        </div> -->
+        <div class="card-footer">
+            <form id="messageForm">
+                <div class="input-group">
+                    <input type="text" name="message" placeholder="Type Message ..." class="form-control" id="messageInput">
+                    <span class="input-group-append">
+                        <button type="button" class="btn btn-primary" id="sendMessageButton">Send</button>
+                        <button type="button" class="btn btn-secondary" id="addImageButton"><i class="fas fa-image"></i></button>
+                        <button type="button" class="btn btn-secondary" id="captureScreenButton"><i class="fas fa-camera"></i></button>
+                    </span>
+                </div>
+                <input type="file" id="fileInput" accept="image/*" multiple style="display: none;">
+            </form>
+            <div id="imagePreviewContainer" class="mt-3"></div>
+        </div>
+
+        </div>
     </div>
 
 
 <!-- fin de la seccion del historico de gestiones -->
 
+<!-- -------------------------------------- -->
 
+<!-- ------------------------------------------ -->
+
+
+<form action="{{route('gestion.store')}}" id="gestion" method="POST" enctype="multipart/form-data" style=" padding: 1%; border: 1px solid #adb5bd47;" class=" container-fluid bg-white shadow rounded rounded" >
+    <!-- <h4>Gestionar</h4>  -->
+        @csrf
+        <input type="hidden" name="ticket_id" class="form-control" value="{{$ticket->id}}" >
+        <!-- <input type="text" name="staff" class="form-control" value="{{$ticket->user_id}}" > -->
+        <input type="hidden" name="user_id" class="form-control" value="{{auth()->user()->id}}" >
+        <input type="hidden" name="status1_id" class="form-control" value="{{$ticket->status_id}}" >
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 mt-2">
+                <div class="form-group">
+                    <strong>Agregar comentario:</strong>
+                    <textarea class="form-control" style="height:150px" name="coment" require></textarea>
+                    </div>
+            </div>
+            
+           <!--  -->
+            
+            <div class="col-xs-12 col-sm-12 col-md-4 mt-2">
+                <div class="form-group">
+                    <strong>Area:</strong>
+                    <select name="area_id" id="area" class="form-control border-0 bg-light shadow-sm ">
+                    <option value="">Seleccionar un Area</option>
+                    @foreach($areas as  $id => $name)
+                    <option value="{{$id}}" @if($id == old('area_id' , $ticket->area_id)) selected @endif >{{$name}}</option>
+                    @endforeach
+                    </select>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-4 mt-2">
+                <div class="form-group">
+                    <strong>Categoria:</strong>
+                    <select name="category_id" id="category" class="form-control border-0 bg-light shadow-sm " >
+                        <option value=""> Seleccionar categoria</option>
+                        @foreach($category as $id => $name)
+                        <option value="{{ $id }}" {{ $ticket->category_id == $id ? 'selected' : '' }} >{{ $name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            
+
+            <!--  -->
+            <div class="col-xs-12 col-sm-12 col-md-4 mt-2 d-flex justify-content-end">
+                @if($ticket->status_id != 4)            
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="1" name="cerrar" {{ $ticket->status_id == 4 ? 'checked' : '' }}>
+                    <label class="form-check-label text-danger" for="status_id"><strong>Cerrar Ticket</strong></label>            
+                </div>
+                @endif
+                @if($ticket->status_id == 4)            
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="2" name="reopen" {{ $ticket->status_id == 4 ? 'checked' : '' }}>
+                    <label class="form-check-label text-success" for="status_id"><strong>Reabrir Ticket</strong></label>            
+                </div>
+                @endif
+                
+            </div>           
+            <!--  seccion para insertar imagenes y visualizarlos-->
+
+            <!--  -->
+            <div  style="padding: 1%;">
+            <input class="form-group" type="file" id="fileInput" name="image[]" accept="image/*" multiple>
+            </div>
+            <div id="previewImages"></div>
+
+            
+            <div class="col-xs-12 col-sm-12 col-md-12 text-center mt-2">
+                <a  class="btn btn-primary" href="{{route('ticket.index')}}" >Cancelar</a>
+                <button type="submit" id="submitGt" class="btn btn-primary">Guardar</button>
+            </div>
         </div>
+    </form>
     </div>
-</div>
+    </div>
  @endsection
  
  @section('js')
@@ -184,18 +246,41 @@
                         $('#category').append('<option value="' + category.id + '">' + category.name + '</option>');
                     });
                 });
+                // console.log(category);
             });
-        });   
+        }); 
+        // 
+
+        const fileInput = document.getElementById('fileInput');
+        const previewImages = document.getElementById('previewImages');
+
+        fileInput.addEventListener('change', function() {
+            previewImages.innerHTML = ''; // Limpiar cualquier vista previa existente
+
+            const files = fileInput.files;
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.style.maxWidth = '200px';
+                    img.style.maxHeight = '200px';
+                    previewImages.appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
     </script>
     <!--  -->
 <!-- -------------------------------------------------------- -->
 
-    <!-- <script>
+    <script>
     document.getElementById('gestion').addEventListener('submit', function() {
         document.getElementById('submitGt').setAttribute('disabled', 'true');
     });
-    </script> -->
-<!-- script de ver gestiones almacenadas  -->
+    </script>
+<!--  -->
     
     <script>
         function formatDate(format, dateString) {
@@ -219,8 +304,10 @@
                 method: 'GET',
                 success: function(data) {
                     var gestionesHtml = '';
-                    // gestionesHtml += '<div class="card direct-chat direct-chat-primary">';
-                    var userId = {{ Auth::id() }}; // Obtiene el ID del usuario logueado                    
+                    gestionesHtml += '<div class="card direct-chat direct-chat-primary">';
+                    var userId = {{ Auth::id() }}; // Obtiene el ID del usuario logueado
+
+                    
 
                     gestionesHtml += '<div class="card-header">';
                     gestionesHtml += '<h3 class="card-title">Historial </h3>';
@@ -269,30 +356,51 @@
                     }
                     gestionesHtml += '</div>';
                     gestionesHtml += '</div>';
-                    // gestionesHtml += '</div>';
+                    gestionesHtml += '</div>';
 
                     $('#gestiones-container1').html(gestionesHtml);
                     // Reinicializar los componentes de AdminLTE
-                    $('[data-card-widget="collapse"]').CardWidget('init');
+                    // $('[data-card-widget="collapse"]').CardWidget('init');
                     // Colapsar la tarjeta si no hay gestiones
-                    // if (data.length === 0) {
-                    //     $('[data-card-widget="collapse"]').CardWidget('collapse');
-                    // }
+                    if (data.length === 0) {
+                        $('[data-card-widget="collapse"]').CardWidget('collapse');
+                    }
                 },
                 error: function(xhr, status, error) {
                     console.error('Error loading gestiones:', error);
                 }
             });            
                 // Configura el intervalo de actualización
-                // setInterval(function() {
-                // table.ajax.reload(null, false); // false para no resetear la posición de la paginación
-                // }, 10000); // 5000 ms = 5 segundos
+                setInterval(function() {
+                table.ajax.reload(null, false); // false para no resetear la posición de la paginación
+                }, 10000); // 5000 ms = 5 segundos
         });
     </script>
    
 
-<!-- Botones de guardado y envio de gestion nueva vista------------  -->
+<!-- ---------------------------------------------------------  -->
+<script>
+    $(document).ready(function() {
+        // Botón para agregar imágenes
+        $('#addImageButton').on('click', function() {
+            $('#fileInput').click();
+        });
 
+        // Botón para capturar pantalla (este es un ejemplo simple, puedes implementar una captura de pantalla más avanzada según tus necesidades)
+        $('#captureScreenButton').on('click', function() {
+            alert('Función de captura de pantalla no implementada');
+            // Aquí podrías implementar la lógica para capturar la pantalla
+            // Hay librerías como html2canvas que pueden ayudarte con esto
+        });
+
+        // Manejar el evento de selección de archivos
+        $('#fileInput').on('change', function() {
+            var files = $(this).prop('files');
+            // Aquí puedes manejar los archivos seleccionados
+            console.log(files);
+        });
+    });
+</script>
 <!-- @endcan     -->
 
 <script>
@@ -322,7 +430,6 @@ $(document).ready(function() {
     // Enviar el mensaje
     $('#sendMessageButton').on('click', function() {
         sendMessage();
-        // alert('Función de captura de pantalla no implementada');
     });
 
     function handleFiles(files) {
@@ -374,7 +481,7 @@ $(document).ready(function() {
             });
 
             $.ajax({
-                url: "{{route('gestion.store')}}", // Reemplaza con tu endpoint de servidor
+                url: 'your-server-endpoint', // Reemplaza con tu endpoint de servidor
                 method: 'POST',
                 data: formData,
                 processData: false,
@@ -384,9 +491,7 @@ $(document).ready(function() {
                     $('#fileInput').val('');
                     $('#imagePreviewContainer').empty();
                     // Aquí puedes manejar la respuesta del servidor
-                    console.log(response);
-                }
-                ,
+                },
                 error: function(xhr, status, error) {
                     console.error('Error sending message:', error);
                 }
@@ -411,8 +516,8 @@ $(document).ready(function() {
 @section('css')
 <style>
  #imagePreviewContainer img {
-    max-width: 200px;
-    max-height: 200px;
+    max-width: 100px;
+    max-height: 100px;
     margin: 5px;
 }   
 </style>

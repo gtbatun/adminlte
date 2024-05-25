@@ -125,7 +125,8 @@
                             </div>
                             <img class="direct-chat-img" src="dist/img/user1-128x128.jpg" alt="message user image">
                         <div class="direct-chat-text">
-                            Is this template really for free? That's unbelievable!
+                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati error animi perferendis similique? 
+                            Accusantium aspernatur maiores harum deserunt voluptas quisquam voluptatum magnam ducimus beatae itaque autem, quam, sit qui consequuntur!
                         </div>
                     </div>
                     <div class="direct-chat-msg right">

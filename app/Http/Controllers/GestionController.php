@@ -48,6 +48,55 @@ class GestionController extends Controller
             'image.*' => 'image|mimes:jpeg,png,jpg,gif' 
             //'image|mimes:jpeg,png,jpg,gif|max:2048' // Validar que cada archivo sea una imagen
         ]);
+        // $add_gestion = new Gestion($validatedData);
+        $add_gestion = new Gestion($request->all());
+        if ($request->hasFile('image')) {
+            $imageNames = [];    
+            foreach ($request->file('image') as $image) {
+                $imageName = time() . '_' . Str::random(10) . '.' . $image->getClientOriginalExtension();
+                $image->storeAs('images', $imageName);
+                $imageNames[] = $imageName;
+            }
+            $concatenatedNames = implode(',', $imageNames);
+            $add_gestion->image = $concatenatedNames;
+        }
+        
+        if(!isset($request->cerrar) && !isset($request->reopen)){
+            $add_gestion->status_id = 2; // 2 es el id del status en proceso
+        }elseif(isset($request->cerrar)){
+            $add_gestion->status_id = 4; //4 es el id del status Finalizado
+        }elseif(isset($request->reopen)){
+            $add_gestion->status_id = 5; //4 es el id del status Finalizado
+        }      
+        // return $request;  
+        $add_gestion->save();
+
+        if (isset($add_gestion->status_id)) {
+            $update_ticket = Ticket::find($request->ticket_id);
+            $update_ticket->status_id = $add_gestion->status_id;
+            $update_ticket->category_id = $request->category_id;
+            $update_ticket->area_id = $request->area_id;
+           $update_ticket->update();
+        }
+        
+        // return redirect()->route('ticket.index')->with('success','El ticket fue Gestionado con exito');
+        // return response()->json(['success' => 'Message sent successfully']);
+        return response()->json(['message' => 'Ticket created successfully'], 200);
+    }
+    // 
+    public function store1(Request $request)    
+    {
+        // dd( $request->all());
+        
+        $validatedData = $request->validate([
+            'ticket_id' => 'required', 
+            'coment' => 'required', 
+            'user_id' => 'required',
+            'area_id' => 'required',
+            'category_id' => 'required',              
+            'image.*' => 'image|mimes:jpeg,png,jpg,gif' 
+            //'image|mimes:jpeg,png,jpg,gif|max:2048' // Validar que cada archivo sea una imagen
+        ]);
         $add_gestion = new Gestion($validatedData);
         if ($request->hasFile('image')) {
             $imageNames = [];    
