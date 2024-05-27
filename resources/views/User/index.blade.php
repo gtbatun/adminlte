@@ -14,66 +14,61 @@
     </div>    
     @isset($users)  
     <div class="container-fluid">
-
-
-        <div class="row">
-            <div class="col-12">
+            <div class="col-12 mt-1">
                 <div class="card fluid">
-                <div class="card-body ">
-                    <table id="tb-users" class="table table-bordered shadow-lg mt-2 table-striped  ">
-                        <thead  class="table-dark ">
-                            <tr>
-                                <th>ID</th>
-                                <th>NOMBRE</th>
-                                <th>EMAIL</th>
-                                <th>VERIFICADO</th>
-                                <th>DEPARTAMENTO</th>
-                                <!-- <th>FECHA DE CREACION</th> -->
-                                <th>ACCION</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($users as $userItem)                    
-                            <tr>
-                                <td>{{$userItem->id}}</td>  
-                                <td>{{$userItem->name}}</td>
-                                <td>{{$userItem->email}}</td>
-                                <td>
-                                    @if (is_null($userItem->email_verified_at))
-                                        <a href="{{ route('admin.verify-email', $userItem->id) }}" class="btn btn-primary">Verificar Correo</a>
+                    <div class="card-body ">
+                        <div class="table-responsive" >
+                        <table id="tb-users" class="table table-bordered shadow-lg mt-2 table-striped  ">
+                            <thead  class="table-dark ">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>NOMBRE</th>
+                                    <th>EMAIL</th>
+                                    <th>VERIFICADO</th>
+                                    <th>DEPARTAMENTO</th>
+                                    <!-- <th>FECHA DE CREACION</th> -->
+                                    <th>ACCION</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($users as $userItem)                    
+                                <tr>
+                                    <td>{{$userItem->id}}</td>  
+                                    <td>{{$userItem->name}}</td>
+                                    <td>{{$userItem->email}}</td>
+                                    <td>
+                                        @if (is_null($userItem->email_verified_at))
+                                            <a href="{{ route('admin.verify-email', $userItem->id) }}" class="btn btn-primary">Verificar Correo</a>
+                                        @else
+                                            Verificado
+                                        @endif
+                                    </td>
+                                    @if(isset($userItem->department->name))
+                                        <td>{{$userItem->department->name }} </td>                    
                                     @else
-                                        Verificado
-                                    @endif
-                                </td>
-                                @if(isset($userItem->department->name))
-                                    <td>{{$userItem->department->name }} </td>                    
-                                @else
-                                    <td> </td>
-                                @endif                                    
-                                <!-- <td>{{$userItem->created_at->diffForHumans(null, false, false, 1)}}</td>              -->
-                                <td>
-                                <a href="{{route('user.edit',$userItem)}}" class="btn btn-info">Ed <i class='fas fa-edit'></i></a>
-                                <button type="button" class="btn btn-warning edit-password-btn" data-toggle="modal" data-target="#modal-update-password" data-user-id="{{ $userItem->id }}" data-user-name="{{ $userItem->name }}">Pass</button>            
-                                    <form action="{{route('user.destroy',$userItem)}}" method="post" class="d-inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger">Dell <i class='fas fa-eraser'></i></button>
-                                    </form>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                    
-                </div>
+                                        <td> </td>
+                                    @endif                                    
+                                    <!-- <td>{{$userItem->created_at->diffForHumans(null, false, false, 1)}}</td>              -->
+                                    <td>
+                                    <a href="{{route('user.edit',$userItem)}}" class="btn btn-info">Ed <i class='fas fa-edit'></i></a>
+                                    <button type="button" class="btn btn-warning edit-password-btn" data-toggle="modal" data-target="#modal-update-password" data-user-id="{{ $userItem->id }}" data-user-name="{{ $userItem->name }}">Pass</button>            
+                                        <form action="{{route('user.destroy',$userItem)}}" method="post" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger">Dell <i class='fas fa-eraser'></i></button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                        </div>
+                    </div>
                 <!-- /.card-body -->
                 </div>
                 <!-- /.card -->
             </div>
-            <!-- /.col -->
-        </div>
-        <!-- /.row -->
-</div>
+    </div>
        
     @else
     <p>No hay Usuarios creados</p>
@@ -136,11 +131,19 @@ $(document).ready(function() {
                         "first": "Primero",
                         "last": "Ultimo",
                         },
-            }
+            },
+            responsive: true,
+            "autoWidth": true,
+            "columnDefs": [
+                // { "width": "10%", "targets": 0 },
+                { "width": "20%", "targets": 1 },
+                { "width": "20%", "targets": 2 },
+                { "width": "5%", "targets": 3 }]
     } );
 } );
 </script>
 @endsection
+
 
 
 
