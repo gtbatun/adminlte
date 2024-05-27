@@ -380,8 +380,8 @@ return [
             // 'icon_color' => 'red',  
         ],
         // [
-        //     'text'   => 'Settings',
-        //     'route'  => 'setting.index',
+        //     'text'   => 'layout',
+        //     'route'  => 'inventory.create',
         //     'icon'   => 'far fa-fw fa-file',  
         // ],
         [

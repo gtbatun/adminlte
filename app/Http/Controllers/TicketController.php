@@ -113,8 +113,15 @@ class TicketController extends Controller
     /*** ontener las gestiones de lo cada ticket*/
     public function getGestiones(Ticket $ticket)
     {
-        $h_gestiones1 = Gestion::where('ticket_id', $ticket->id)->with('usuario')->orderby('created_at','asc')->get();
+        // $h_gestiones1 = Gestion::where('ticket_id', $ticket->id)->with('usuario')->orderby('created_at','asc')->get();
+
+        // $h_gestiones1 = Gestion::where('ticket_id',$ticket->id )->get();
+        $h_gestiones1 = Gestion::where('ticket_id', $ticket->id)
+                            ->with(['usuario:id,name,email,image'])
+                            ->select('id', 'ticket_id', 'coment', 'image', 'user_id', 'created_at', 'status_id')
+                            ->get();
         return response()->json($h_gestiones1);
+        
     }
 
     
@@ -282,15 +289,48 @@ class TicketController extends Controller
     /**
      * Display the specified resource.
      */
+    public function show2(Ticket $ticket)
+    {
+        $ticket = Ticket::with('department','category','area')->findOrFail($ticket->id);
+        //se agra la funcion o lo findorfail para que falle  en la busqueda de un ticket que no existe
+        
+        $h_gestiones = Gestion::where('ticket_id',$ticket->id )->get();
+        return view('Gestion.create',[
+            'areas' => Area::where('department_id',$ticket->department_id)->pluck('name','id'), 
+            'category' => Category::where('area_id',$ticket->area_id)->pluck('name','id'),
+            'h_gestiones' => $h_gestiones,
+            'ticket' => $ticket
+        ]);
+    }
     public function show(Ticket $ticket)
+    {
+        // Utiliza Eager Loading para cargar relaciones necesarias
+        $ticket = Ticket::with(['department:id,name', 'category:id,name', 'area:id,name'])
+                        ->select('id', 'department_id', 'category_id', 'area_id', 'user_id', 'title', 'description', 'created_at')
+                        ->findOrFail($ticket->id);
+
+        // Obtiene las áreas y categorías relacionadas con el departamento y área del ticket
+        $areas = Area::where('department_id', $ticket->department_id)
+                    ->pluck('name', 'id');
+        
+        $category = Category::where('area_id', $ticket->area_id)
+                            ->pluck('name', 'id');
+
+        // Retorna la vista con los datos necesarios
+        // return view('Gestion.create', compact('areas', 'category', 'h_gestiones', 'ticket'));
+        return view('Gestion.create', compact('areas', 'category', 'ticket'));
+    }
+    public function showtest(Ticket $ticket)
     {
         /**verificar que departamento tiene el ticket */
         $department_id = $ticket->department_id;
         $area_id = $ticket->area_id;
-        $ticket = Ticket::with('usuario','department','category','area')->findOrFail($ticket->id);
+        $ticket = Ticket::with('department','category','area')->findOrFail($ticket->id);
         //se agra la funcion o lo findorfail para que falle  en la busqueda de un ticket que no existe
         
-        $h_gestiones = Gestion::where('ticket_id',$ticket->id )->with('usuario')->get();
+        $h_gestiones = Gestion::where('ticket_id',$ticket->id )->get();
+        // $h_gestiones = Gestion::where('ticket_id',$ticket->id )->with('usuario')->get();        
+        // $ticket = Ticket::with('usuario','department','category','area')->findOrFail($ticket->id);
         // $h_gestiones = Gestion::where('ticket_id',$ticket->id )->with('usuario')->orderBy('created_at', 'desc')->get();
         //show para mostar el formulario de insert de gestiones de cada ticket
         // return $h_gestiones;
@@ -299,7 +339,8 @@ class TicketController extends Controller
             'category' => Category::where('area_id',$area_id)->pluck('name','id'),
             'department' => Department::pluck('name','id'),
             'status' => Status::pluck('name','id'),
-            'h_gestiones' => $h_gestiones,
+            'h_gestiones' => $h_gestiones
+            ,
             'ticket' => $ticket
         ]);
     }

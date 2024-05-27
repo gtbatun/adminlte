@@ -1,3 +1,4 @@
+<!-- codigo funcionando y con partes solamente comentadas -->
 @extends('adminlte::page')
 @section('content')
 
@@ -186,8 +187,13 @@
                     <div id="imagePreviewContainer" class="mt-3"></div>
                 </div>
             </div>        
-        </div> 
+        </div> <!-- container-fluid -->
 
+
+        <!-- fin de la seccion del historico de gestiones -->
+                <!-- ver de donde afecta estos div -->
+            <!-- </div>
+        </div> -->
     </div>
 </div>
  @endsection
@@ -248,7 +254,7 @@
 
         $(document).ready(function() {
             loadGestiones();             
-            setInterval(loadGestiones, 5000);  
+            // setInterval(loadGestiones, 5000);  
         });
 
             function loadGestiones() {
@@ -299,7 +305,10 @@
                     $('#gestiones-container1').html(gestionesHtml);
                     // Reinicializar los componentes de AdminLTE
                     // $('[data-card-widget="collapse"]').CardWidget('init');
-                    
+                    // Colapsar la tarjeta si no hay gestiones
+                    // if (data.length === 0) {
+                    //     $('[data-card-widget="collapse"]').CardWidget('collapse');
+                    // }
                 },
                 error: function(xhr, status, error) {
                     console.error('Error loading gestiones:', error);
@@ -434,10 +443,25 @@ $(document).ready(function() {
                     $('#fileInput').val('');
                     $('#imagePreviewContainer').empty();
                     loadGestiones();
+                    // Aquí puedes manejar la respuesta del servidor
+                    // Actualizar la vista con el nuevo contenido
+                    // const newMessage = `
+                    //     <div class="direct-chat-msg">
+                    //         <div class="direct-chat-infos clearfix">
+                    //             <span class="direct-chat-name float-right">{{ Auth::user()->name }}</span>
+                    //             <span class="direct-chat-timestamp float-left">${formatDate('hh:mm:ss', response.data.created_at)}</span>
+                    //         </div>
+                    //         <div class="direct-chat-text">${response.data.coment}</div>
+                    //     </div>
+                    // `;
+                    // $('#gestiones-container1').append(newMessage);
                     
                 },
                 error: function(xhr, status, error) {
                     console.error('Error sending message:', error);
+                    // console.error('Error sending message:', error);
+                    // // console.log(xhr.responseText);
+                    // // alert(`Error: ${xhr.status} - ${xhr.responseText}`);
                     $('#errores').append(error);
                 }
             });        

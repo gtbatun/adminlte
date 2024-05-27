@@ -56,7 +56,6 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
         Route::resource('area',AreaController::class);     
 
         Route::resource('department',DepartmentController::class);
-        Route::resource('inventory',InventoryController::class);
         Route::resource('status',StatusController::class); 
         Route::resource('category',CategoryController::class);
         Route::resource('sucursal',SucursalController::class);
@@ -92,6 +91,8 @@ Route::resource('user', UserController::class);
 Route::get('ticket/getCategory',[TicketController::class,'getCategory'])->name('ticket.getCategory');
 Route::resource('gestion',GestionController::class);
 Route::resource('ticket',TicketController::class);
+
+Route::resource('inventory',InventoryController::class);
 
 Route::get('/tickets/data', [TicketController::class, 'data'])->name('tickets.data');
 /** Consultar las gestiones de cada ticket */
