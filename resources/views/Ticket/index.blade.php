@@ -2,8 +2,6 @@
 @extends('adminlte::page')
 @section('content')
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
 
 <div class="row" >
     <div class="col-12 mt-0 d-flex justify-content-between ">
@@ -54,8 +52,11 @@
 
 @section('js')
 <script>
-    $(document).ready(function() {
-        var table = $('#tickets-table').DataTable({
+
+    document.addEventListener('DOMContentLoaded',function(){
+        var table;
+        function loadTickets(){
+        table = $('#tickets-table').DataTable({
             
             "order": [[ 0,"desc" ]],
             "language": {
@@ -102,25 +103,29 @@
 
             //var typeCell = $('td', row).eq(4); // 'eq(5)' es el índice de la columna 'type'
             var typeColorback = (data.type === 'Asignado') ? 'rgba(0, 0, 255)' : 'rgba(0, 255, 0, 0.2)';
-            
-            
             },
             responsive: true,
             paging: true, // Enable pagination
                 
         });
-        
-
-        // Configura el intervalo de actualización
-        setInterval(function() {
-            table.ajax.reload(null, false); // false para no resetear la posición de la paginación
-        }, 10000); // 5000 ms = 5 segundos
-    });
+    }
 
     $('#tickets-table').on('error.dt', function(e, settings, techNote, message) {
     console.log('DataTables error: ', message);
-    
     });
+
+    loadTickets();
+    
+    
+    // Configura el intervalo de actualización
+    setInterval(function() {
+        if (table) {
+            table.ajax.reload(null, false); // false para no resetear la posición de la paginación
+        }
+    }, 60000); // 5000 ms = 5 segundos
+
+});
+
 </script>
 
 @endsection

@@ -59,7 +59,7 @@ class TicketController extends Controller
                 ->get();
                 }
         // 
-
+        
         // $tickets = Ticket::with('area','category','status','department')->get();
         $tickets = $tickets->map(function($ticket){
             $userDepartmentId = auth()->user()->department_id;
@@ -90,11 +90,64 @@ class TicketController extends Controller
             $color1 = ($ticket->status->name == 'Nuevo') ? 'rgba(255, 0, 0, 0.2)' : 'rgba(0, 0, 0, 0.0)';
             $typeColorback = ($ticket->status->name == 'En proceso') ? 'rgba(255, 165, 0, 0.2)' : $color1;
 
+            /** script para seleccionar el o obtener la ultima persona que contesto el tikcet */
+            // Obtener el ticket
+                $ticket = Ticket::findOrFail($ticket->id);
+                // Obtener la última gestión del ticket
+                $latestGestion = Gestion::where('ticket_id', $ticket->id)
+                    ->orderBy('created_at', 'desc')
+                    ->first();
+                // Obtener el creador del ticket
+                $creatorId = $ticket->user_id;
+                // Obtener el departamento asignado
+                $assignedDepartment = $ticket->assigned_department;
+                // Obtener el usuario actual
+                $currentUser = Auth::user();
+                // Determinar el mensaje
+                $messageStatus = '';
+                if ($latestGestion) {
+                    // $gestionTime = $latestGestion->created_at->format('d/m/Y H:i'); // Formato de fecha y hora
+                    $gestionTime = $latestGestion->created_at; // Formato de fecha y hora        
+                    if ($latestGestion->user_id == $creatorId) {
+                        $messageStatus = 'Enviado';
+                        $gestionTime;
+                        $messageClass = 'status-enviado';
+                    } elseif ($latestGestion->department_id == $assignedDepartment) {
+                        $messageStatus = 'Contestado';
+                        $gestionTime;
+                        $messageClass = 'status-respondido';
+                    } else {
+                        $messageStatus = 'Pendiente';
+                        $gestionTime;
+                        $messageClass = 'status-pendiente';
+                    }
+                } else {
+                    $messageStatus = 'Sin respuesta';
+                    $messageClass = 'status-sin-respuesta';
+                }
+
+                $latestGestionUserFirstName = $latestGestion ? explode(' ', $latestGestion->usuario->name)[0] : '';
+
+                // Si el usuario actual no es el creador y no pertenece al departamento asignado
+                if ($currentUser->id != $creatorId && $currentUser->department_id != $assignedDepartment) {
+                    if ($latestGestion) {
+                        $messageStatus = 'Última gestión por: '. $latestGestionUserFirstName;
+                        $gestionTime;
+                        $messageClass = 'status-ultima-gestion';
+                    } else {
+                        $messageStatus = 'Sin respuesta';
+                        $messageClass = 'status-sin-respuesta';
+                    }
+                }
+            /**------------------------------------------------------------------------------------------------------------------------------- */
+       
+
             // $typeColorback = ($ticket->status == 'Nuevo') ? 'rgba(0, 0, 255, 0.2)' : 'rgba(0, 255, 0, 0.2)'; // Azul para Asignado, Verde para Creado
 
             return [
                 'id' => $ticket->id,
-                'title' => view('Ticket.Partials.title', ['ticket' => $ticket])->render(),
+                // 'id' => $messageStatus,
+                'title' => view('Ticket.Partials.title', ['ticket' => $ticket,'messageStatus' => $messageStatus,'gestionTime' => $gestionTime,'messageClass' => $messageClass])->render(),
                 'category' => $ticket->category->name,
                 'sucursal' => $ticket->usuario->sucursal->name,
                 // 'department' => $ticket->department->name,
@@ -104,11 +157,16 @@ class TicketController extends Controller
                 'typeColorback' => $typeColorback, // Include the color in the response
                 'area' => $ticket->area->name,
                 'status' => $ticket->status->name,
-                'created_at' => $ticket->created_at->diffForHumans(),
+                // 'created_at' => $ticket->created_at->diffForHumans(),
                 'actions' => view('Ticket.Partials.actions', ['ticket' => $ticket])->render()
             ];
+            // return $messageStatus;
         });
+        
+        /**Fucnion para retornar el ultimo gestion, si es tuyo o ya fue respondido */
+        
         return response()->json(['data' => $tickets]);
+        
     }
     /*** ontener las gestiones de lo cada ticket*/
     public function getGestiones(Ticket $ticket)
@@ -306,7 +364,7 @@ class TicketController extends Controller
     {
         // Utiliza Eager Loading para cargar relaciones necesarias
         $ticket = Ticket::with(['department:id,name', 'category:id,name', 'area:id,name'])
-                        ->select('id', 'department_id', 'category_id', 'area_id', 'user_id', 'title', 'description', 'created_at')
+                        ->select('id', 'department_id', 'category_id','status_id', 'area_id', 'user_id', 'title', 'description', 'created_at')
                         ->findOrFail($ticket->id);
 
         // Obtiene las áreas y categorías relacionadas con el departamento y área del ticket

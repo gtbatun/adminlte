@@ -21,13 +21,17 @@
 <div class="container-fluid bg-white shadow rounded" style="padding: 1%; border: 1px solid #adb5bd47;">
     <div class="row">
         <div class="col-md-12 mt-2">
-            <h3 class="text-leftb">Ticket # {{$ticket->id}}
+            <h3 class="text-leftb">Ticket # {{$ticket->id}} 
                 @if($ticket->status_id == 4)
-            <span class="position-relative top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                <span class="position-relative top-0 start-100 translate-middle badge rounded-pill bg-danger">
                 {{$ticket->status->name}}
+                </span>
+                @else
+                <span class="position-relative top-0 start-100 translate-middle badge rounded-pill bg-success">
+                {{$ticket->status->name}}
+                </span>
                 @endif
-
-            </span>
+            
             </h3>
         </div>
 
@@ -228,13 +232,15 @@
     <script>
             function formatDate(format, dateString) {
                 const date = new Date(dateString);
+                const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 
                 const map = {
                     'hh': String(date.getHours()).padStart(2, '0'),
                     'mm': String(date.getMinutes()).padStart(2, '0'),
                     'ss': String(date.getSeconds()).padStart(2, '0'),
                     'yyyy': date.getFullYear(),
-                    'MM': String(date.getMonth() + 1).padStart(2, '0'),
+                    'MM': monthNames[date.getMonth()],
+                    // 'MM': String(date.getMonth() + 1).padStart(2, '0'),
                     'dd': String(date.getDate()).padStart(2, '0')
                 };
 
@@ -248,7 +254,7 @@
 
         $(document).ready(function() {
             loadGestiones();             
-            setInterval(loadGestiones, 5000);  
+            setInterval(loadGestiones, 60000);  
         });
 
             function loadGestiones() {
@@ -269,12 +275,12 @@
                         gestionesHtml += '<div  class="direct-chat-msg ' + (isCurrentUser ? 'right' : '') + '">';
                         gestionesHtml += '<div class="direct-chat-infos clearfix">';
                         gestionesHtml += '<span class="direct-chat-name float-' + (isCurrentUser ? 'right' : 'left') + '">' + gestion.usuario.name + '</span>';
-                        gestionesHtml += '<span class="direct-chat-timestamp float-' + (isCurrentUser ? 'left' : 'right') + '">' + formatDate('hh:mm:ss',gestion.created_at) + '</span>';
+                        gestionesHtml += '<span class="direct-chat-timestamp float-' + (isCurrentUser ? 'left' : 'right') + '">' + formatDate('MM dd hh:mm:ss',gestion.created_at) + '</span>';
                         gestionesHtml += '</div>';
                         if(gestion.usuario.image){
                             gestionesHtml += '<img class="direct-chat-img" src="/storage/images/user/' + (gestion.usuario.image || 'default.png') + '" alt="' + gestion.usuario.id + '" onerror="this.src=\'/storage/images/user/default.PNG\'">';
                             } 
-                        gestionesHtml += '<div class="direct-chat-text">';
+                        gestionesHtml += '<div class="direct-chat-text float-' + (isCurrentUser ? 'right' : 'left') + '">';
                         gestionesHtml += gestion.coment;
                         gestionesHtml += '</div>';
                         gestionesHtml += '</div>';
