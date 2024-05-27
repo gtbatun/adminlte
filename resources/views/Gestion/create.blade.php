@@ -320,6 +320,9 @@
 
 <script>
 $(document).ready(function() {
+    // definir maximo de imagenes
+    const MAX_IMAGES = 4;
+    let totalImages = 0;
     // Botón para agregar imágenes
     $('#addImageButton').on('click', function() {
         $('#fileInput').click();
@@ -384,6 +387,55 @@ $(document).ready(function() {
             }
         }
     }
+    
+    /** seccion validar y limitar cantidad de imagenes */
+    function handleFiles2(files) {
+        const filesArray = Array.from(files);
+        if (totalImages + filesArray.length > MAX_IMAGES) {
+            alert('Solo puedes subir un maximo de ' + MAX_IMAGES + ' images en total, seleccione menos imagenes.');
+            $('#fileInput').val(''); // Clear the input
+            return;
+        }
+
+        totalImages += filesArray.length;
+        updateImagePreviews(filesArray);
+    }
+
+    function handlePaste2(event) {
+        const items = (event.clipboardData || event.originalEvent.clipboardData).items;
+        const images = [];
+
+        for (const item of items) {
+            if (item.kind === 'file' && item.type.startsWith('image/')) {
+                images.push(item.getAsFile());
+            }
+        }
+
+        if (totalImages + images.length > MAX_IMAGES) {
+            alert('Solo puedes subir un maximo de ' + MAX_IMAGES + ' images en total, seleccione menos imagenes.');
+            return;
+        }
+
+        totalImages += images.length;
+        updateImagePreviews(images);
+    }
+
+    function updateImagePreviews(files) {
+        const container = $('#imagePreviewContainer');
+        container.empty(); // Clear previous previews
+
+        files.forEach(file => {
+            if (file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = $('<img>').attr('src', e.target.result).addClass('img-thumbnail');
+                    container.append(img);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+
     /** secccion  de validacion del formulario */
     function validateForm() {
         var isValid = true;

@@ -15,8 +15,8 @@ class GestionController extends Controller
      */
     public function getGestiones(){
         // $gestiones = Gestion::where('ticket_id',$ticket->id )->with('usuario')->orderBy('created_at', 'desc')->get();
-        $gestiones = Gestion::where('ticket_id',61)->get();
-        return response()->json($gestiones);
+        // $gestiones = Gestion::where('ticket_id',61)->get();
+        // return response()->json($gestiones);
     }
 
     public function index()

@@ -105,9 +105,6 @@ Route::get('/get-category/{area_id}', [DepartmentController::class, 'getCategory
 /**ver tickets cerrados */
 Route::get('/ticket-closed',[TicketController::class,'closed'])->name('ticket.closed');
 
-/**Ver las gestiones que se tienen por ticket */
-Route::get('gestiones', [GestionController::class, 'getGestiones'])->name('gestion.ticket');
-
 
 Route::get('graf/', [ChartJSController::class, 'index']); 
 
