@@ -37,8 +37,7 @@
     <a href="{{ route('ticket.show', $ticket) }}" title="{{ $ticket->description }}">
         <span class="text-success float-left" >{{ $ticket->title }}</span>
     </a>
-    <!-- <span class="direct-chat-timestamp float-right">{{$messageStatus}}</span> -->
-    <span class="{{ $messageClass }} float-right">{{$messageStatus}}</span>   
+    <!-- <span class="{{ $messageClass }} float-right">{{$messageStatus}}</span>    -->
     </div>
     <div class="direct-chat-infos">    
         <span class="direct-chat-name float-left">{{$ticket->usuario->name}}</span>
