@@ -124,6 +124,7 @@ class TicketController extends Controller
                 } else {
                     $messageStatus = 'Sin respuesta';
                     $messageClass = 'status-sin-respuesta';
+                    $gestionTime = $ticket->created_at; // Formato de fecha y hora
                 }
 
                 $latestGestionUserFirstName = $latestGestion ? explode(' ', $latestGestion->usuario->name)[0] : '';
@@ -137,6 +138,7 @@ class TicketController extends Controller
                     } else {
                         $messageStatus = 'Sin respuesta';
                         $messageClass = 'status-sin-respuesta';
+                        $gestionTime = $ticket->created_at; // Formato de fecha y hora
                     }
                 }
             /**------------------------------------------------------------------------------------------------------------------------------- */
