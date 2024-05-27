@@ -147,6 +147,7 @@ class TicketController extends Controller
             return [
                 'id' => $ticket->id,
                 // 'id' => $messageStatus,
+                // 'title' => view('Ticket.Partials.title', ['ticket' => $ticket])->render(),
                 'title' => view('Ticket.Partials.title', ['ticket' => $ticket,'messageStatus' => $messageStatus,'gestionTime' => $gestionTime,'messageClass' => $messageClass])->render(),
                 'category' => $ticket->category->name,
                 'sucursal' => $ticket->usuario->sucursal->name,
