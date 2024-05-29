@@ -129,7 +129,7 @@
                             <!-- Messages will be appended here -->
                         </div>
                 </div>      
-                <div class="card-footer">
+                <div class="card-header">
                     <form id="gestionform" method="POST" enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" name="ticket_id" class="form-control" value="{{$ticket->id}}" >

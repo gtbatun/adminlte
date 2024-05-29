@@ -17,6 +17,9 @@ use Illuminate\Support\Facades\Auth;
 use App\Exports\TicketExport;
 use Maatwebsite\Excel\Facades\Excel;
 
+use App\Notifications\TicketNotification;
+
+use Illuminate\Support\Facades\Log;
  
 use Illuminate\Support\Facades\Gate;
 //
@@ -32,7 +35,17 @@ class TicketController extends Controller
         $this->middleware('auth');
     }
 
-    /** */   
+    /** */  
+    /**funcion para verificar si algun ticket ya se le modifico la fecha de update */
+    public function checkUpdates()
+    {
+        $userId = auth()->user()->department_id;
+        $latestUpdate = Ticket::where('department_id', $userId)
+                            ->orderBy('last_updated_at', 'desc')
+                            ->first();
+
+        return response()->json(['last_updated_at' => optional($latestUpdate)->last_updated_at]);
+    } 
 
     /*
     /** funcion para refrescar la tabla de tickets sin recargar la pagina */ 
@@ -307,8 +320,8 @@ class TicketController extends Controller
      */
     public function store(Request $request)
     {
-        // dd ($request->all());
-        // return $request->all();
+        try{
+        // Validar los datos del formulario
         $validatedData = $request->validate([
             'title' => 'required',
             'description' => 'required',
@@ -318,34 +331,46 @@ class TicketController extends Controller
             'status_id' => 'required',
             'user_id' => 'required',
             'image.*' => 'image|mimes:jpeg,png,jpg,gif' 
-            //'image|mimes:jpeg,png,jpg,gif|max:2048' // Validar que cada archivo sea una imagen
         ]);
-        $add_ticket = new Ticket($request->all());
-    
+
+        // Crear una nueva instancia de Ticket con los datos validados
+        $add_ticket = new Ticket($validatedData);
+
+        // Manejar la subida de imágenes si existen
         if ($request->hasFile('image')) {
             $imageNames = [];    
-            foreach ($request->file('image') as $image) {                
-                // $imageName = time() . '_' . Str::random(10) . '.' . $image->getClientOriginalExtension();                
-                // $imageName = time() . '_' . $image->getClientOriginalName() . '.' . $image->getClientOriginalExtension();
+            foreach ($request->file('image') as $image) {
                 $imageName = time() . '_' . $image->getClientOriginalName();
-                // $image = ImageManager::make($image)->resize(300, 200)->encode();
-
                 $image->storeAs('images', $imageName);
-                // $fullpach = storage_path('app/public/images/'. $pach);
-
-                
                 $imageNames[] = $imageName;
             }
             $concatenatedNames = implode(',', $imageNames);
             $add_ticket->image = $concatenatedNames;
         }
-      
 
-        
+        // Guardar el ticket en la base de datos
         $add_ticket->save();
-        return response()->json(['message' => 'Ticket created successfully','redirect_to' => route('ticket.index')], 200); 
-        
-   }
+
+        // Notificar al usuario asignado
+        $user = User::find($request->user_id);
+        if ($user) {
+            $user->notify(new TicketNotification($add_ticket));
+        } else {
+            Log::error('Usuario no encontrado: ' . $request->user_id);
+            return response()->json(['message' => 'Usuario no encontrado'], 404);
+        }
+        $user->notify(new TicketNotification($add_ticket));
+
+        // Retornar una respuesta exitosa
+        return response()->json(['message' => 'Ticket created successfully', 'redirect_to' => route('ticket.index')], 200);
+    } catch (\Exception $e) {
+        // Loguear el error
+        Log::error('Error al crear el ticket: ' . $e->getMessage());
+        return response()->json(['message' => 'Error al crear el ticket', 'error' => $e->getMessage()], 500);
+    }
+}
+    
+
 
     /**
      * Display the specified resource.

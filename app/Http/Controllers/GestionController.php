@@ -74,6 +74,7 @@ class GestionController extends Controller
             $update_ticket->status_id = $add_gestion->status_id;
             $update_ticket->category_id = $request->category_id;
             $update_ticket->area_id = $request->area_id;
+            $update_ticket->last_updated_at = now();
            $update_ticket->update();
         }
 

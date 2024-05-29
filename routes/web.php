@@ -104,7 +104,8 @@ Route::get('/get-category/{area_id}', [DepartmentController::class, 'getCategory
 
 /**ver tickets cerrados */
 Route::get('/ticket-closed',[TicketController::class,'closed'])->name('ticket.closed');
-
+/** Consultar los tickets cerrados */
+Route::get('/tickets/check-updates', [TicketController::class, 'checkUpdates'])->name('tickets.check-updates');
 
 Route::get('graf/', [ChartJSController::class, 'index']); 
 
