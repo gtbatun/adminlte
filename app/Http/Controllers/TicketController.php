@@ -330,6 +330,7 @@ class TicketController extends Controller
             'category_id' => 'required',
             'status_id' => 'required',
             'user_id' => 'required',
+            'type' => 'required',
             'image.*' => 'image|mimes:jpeg,png,jpg,gif' 
         ]);
 
@@ -351,15 +352,15 @@ class TicketController extends Controller
         // Guardar el ticket en la base de datos
         $add_ticket->save();
 
-        // Notificar al usuario asignado
-        $user = User::find($request->user_id);
-        if ($user) {
-            $user->notify(new TicketNotification($add_ticket));
+        // Notificar al departamento asignado
+        $department = Department::find($request->department_id);
+        if ($department) {
+            $department->notify(new TicketNotification($add_ticket));
         } else {
-            Log::error('Usuario no encontrado: ' . $request->user_id);
+            Log::error('Usuario no encontrado: ' . $request->department_id);
             return response()->json(['message' => 'Usuario no encontrado'], 404);
         }
-        $user->notify(new TicketNotification($add_ticket));
+        // $user->notify(new TicketNotification($add_ticket));
 
         // Retornar una respuesta exitosa
         return response()->json(['message' => 'Ticket created successfully', 'redirect_to' => route('ticket.index')], 200);

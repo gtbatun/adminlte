@@ -353,6 +353,7 @@ $(document).ready(function() {
                     });
                 }
             }
+            
 
             function habilitarEnvio() {
                     document.getElementById('submitBtn').removeAttribute('disabled');

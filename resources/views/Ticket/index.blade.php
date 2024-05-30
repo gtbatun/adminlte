@@ -140,7 +140,7 @@
         // Verificar si el usuario ya ha habilitado las notificaciones de sonido
         if (localStorage.getItem('soundNotificationsEnabled') === 'true') {
             $('#enable-sound-notifications').hide();
-            setInterval(checkForUpdates, 5000);
+            // setInterval(checkForUpdates, 5000);
         }
 
         $('#enable-sound-notifications').on('click', function() {
@@ -149,7 +149,7 @@
                 audio.currentTime = 0;
                 $('#enable-sound-notifications').hide();
                 localStorage.setItem('soundNotificationsEnabled', 'true');
-                setInterval(checkForUpdates, 5000);
+                // setInterval(checkForUpdates, 5000);
             }).catch(function(error) {
                 console.error('Error al iniciar el audio:', error);
             });
@@ -162,6 +162,7 @@
                 success: function(data) {
                     if (lastUpdateTime !== null && lastUpdateTime !== data.last_updated_at) {
                         sonido();
+                        alert('Función de captura de pantalla no implementada');
                     }
                     lastUpdateTime = data.last_updated_at;
                 },
