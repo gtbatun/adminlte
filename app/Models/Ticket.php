@@ -18,6 +18,8 @@ class Ticket extends Model
         return  $this->belongsTo(Category::class,'category_id');
     }
     public function department(){
+        // return  $this->belongsTo(Department::class);
+        
         return  $this->belongsTo(Department::class,'department_id');
     }
     public function status(){

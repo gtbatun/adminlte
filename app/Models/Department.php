@@ -11,6 +11,7 @@ use Illuminate\Notifications\Notifiable;
 class Department extends Model
 {
     use HasFactory, Notifiable;
+
     protected $table = 'department';
     protected $fillable =[
         'name',
@@ -29,5 +30,9 @@ class Department extends Model
         
         public function sucursal(){
             return  $this->belongsTo(Sucursal::class);
-        }     
+        }    
+        public function users()
+        {
+            return $this->hasMany(User::class);
+        } 
 }

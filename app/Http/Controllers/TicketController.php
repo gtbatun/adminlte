@@ -351,14 +351,18 @@ class TicketController extends Controller
 
         // Guardar el ticket en la base de datos
         $add_ticket->save();
-
-        // Notificar al departamento asignado
+        
+        // Obtener el departamento del ticket
         $department = Department::find($request->department_id);
+
+        // Notificar a todos los usuarios del departamento
         if ($department) {
-            $department->notify(new TicketNotification($add_ticket));
+            foreach ($department->users as $user) {
+                $user->notify(new TicketNotification($add_ticket));
+            }
         } else {
-            Log::error('Usuario no encontrado: ' . $request->department_id);
-            return response()->json(['message' => 'Usuario no encontrado'], 404);
+            Log::error('Departamento no encontrado: ' . $request->department_id);
+            return response()->json(['message' => 'Departamento no encontrado'], 404);
         }
         // $user->notify(new TicketNotification($add_ticket));
 

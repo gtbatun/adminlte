@@ -23,6 +23,7 @@ use App\Http\Controllers\ChartJSController;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Support\Facades\DB;
 
+use App\Http\Controllers\NotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -106,6 +107,9 @@ Route::get('/get-category/{area_id}', [DepartmentController::class, 'getCategory
 Route::get('/ticket-closed',[TicketController::class,'closed'])->name('ticket.closed');
 /** Consultar los tickets cerrados */
 Route::get('/tickets/check-updates', [TicketController::class, 'checkUpdates'])->name('tickets.check-updates');
+/** Consultar notificaciones de tickets */
+Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+Route::get('/notifications/mark-as-read/{id}', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
 
 Route::get('graf/', [ChartJSController::class, 'index']); 
 

@@ -4,6 +4,31 @@
 <span>inventario de sistemas</span>
 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius reprehenderit dolores ipsum ex vel nisi quae aut quo, architecto possimus nam officiis laudantium voluptatibus ratione exercitationem velit voluptates autem dolore.</p>
 
+<div class="row" >
+    
+<div class="container">
+    <h1>Notificaciones</h1>
+    
+    <h2>No leídas</h2>
+    <ul>
+        @foreach ($unreadNotifications as $notification)
+            <li>
+                {{ $notification->data['message'] }}
+                <a href="{{ route('notifications.markAsRead', $notification->id) }}">Marcar como leída</a>
+            </li>
+        @endforeach
+    </ul>
+
+    <h2>Todas</h2>
+    <ul>
+        @foreach ($notifications as $notification)
+            <li>{{ $notification->data['message'] }}</li>
+        @endforeach
+    </ul>
+</div>
+
+</div>
+
 <div class="card direct-chat direct-chat-primary">
     <div class="card-header">
     <h3 class="card-title">Historial</h3>
