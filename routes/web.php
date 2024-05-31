@@ -113,6 +113,10 @@ Route::get('/notifications/mark-as-read/{id}', [NotificationController::class, '
 
 Route::get('graf/', [ChartJSController::class, 'index']); 
 
+/** seccion para edicion de tickets */
+Route::get('/areas/{departmento}', [TicketController::class, 'getAreas']);
+Route::get('/categorias/{area}', [TicketController::class, 'getCategorias']);
+
 // Route::get('graf1', [ChartJSController::class, 'index']); 
 
 Route::post('graf/store',[ ChartJSController::class, 'store'])->name('reportessssss.store');

@@ -292,7 +292,7 @@
     }
 
     // Initial load
-    loadGestiones();
+    // loadGestiones();
 
     // Event handlers
     $('#sendMessageButton').on('click', function() {

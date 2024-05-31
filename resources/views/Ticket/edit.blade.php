@@ -1,6 +1,5 @@
 <!-- optimizar las consultas de las select options, se esta realizando 3 consultas una por cada opcion -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.122.1/jquery.min.js"></script>
-<script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
+
 @extends('adminlte::page')
 @section('content')
 
@@ -20,7 +19,8 @@
     <form action="{{route('ticket.update',$ticket)}}" method="POST" enctype="multipart/form-data" >
         @csrf
         @method('PUT')
-        <input type="hidden" name="user_id" class="form-control" value="{{auth()->user()->id}}" >
+        <!-- <input type="hidden" name="user_id" class="form-control" value="{{auth()->user()->id}}" > -->
+        <input type="hidden" name="user_id" class="form-control" value="{{$ticket->user_id}}" >
         <input type="hidden" name="status_id" class="form-control" value="1" >
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 mt-2">
@@ -35,45 +35,40 @@
                     <textarea class="form-control" style="height:150px" name="description" placeholder="Descripción...">{{old ('description', $ticket->description)}}</textarea>
                 </div>
             </div>
-            <div class="col-xs-12 col-sm-12 col-md-6 mt-2">
-                <div class="form-group">
-                    <strong>Asignar a:</strong>
-                    <!--  -->
-                    <select name="area_id" class="form-control border-0 bg-light shadow-sm " id="">
-                    <option value="">-- Elija un Area --</option>
-                    @foreach($areas as  $id => $name)
-                    <option value="{{$id}}"
-                    @if($id == old('area_id' , $ticket->area_id)) selected @endif >{{$name}}</option>
-                    @endforeach                    
-                    </select>
-                </div>
+           
+            <!-- ------------------------------------------------------------------------------------------ -->
+            <div class="col-xs-12 col-sm-4 col-md-4 mt-2">
+                <label for="country">Departamento</label>
+                <select name="department_id" id="departamento" class="form-control">
+                    @foreach($department as $departmentItem)
+                        <option value="{{ $departmentItem->id }}" {{ $ticket->department_id == $departmentItem->id ? 'selected' : '' }}>
+                            {{ $departmentItem->name }}
+                        </option>
+                    @endforeach
+                </select>
             </div>
-            <div class="col-xs-12 col-sm-12 col-md-6 mt-2">
-                <div class="form-group">
-                    <strong>Asignar a:</strong>
-                    <!--  -->
-                    <select name="department_id" class="form-control border-0 bg-light shadow-sm " id="">
-                    <option value="">-- Departamento --</option>
-                    @foreach($department as  $id => $name)
-                    <option value="{{$id}}"
-                    @if($id == old('department_id' , $ticket->department_id)) selected @endif >{{$name}}</option>
-                    @endforeach                    
-                    </select>
-                </div>
+            <div class="col-xs-12 col-sm-4 col-md-4 mt-2">
+                <label for="state">Areas</label>
+                <select name="area_id" id="area" class="form-control">
+                    @foreach($areas as $area)
+                        <option value="{{ $area->id }}" {{ $ticket->area_id == $area->id ? 'selected' : '' }}>
+                            {{ $area->name }}
+                        </option>
+                    @endforeach
+                </select>
             </div>
-            <div class="col-xs-12 col-sm-12 col-md-6 mt-2">
-                <div class="form-group">
-                    <strong>Asignar a:</strong>
-                    <!--  -->
-                    <select name="category_id" class="form-control border-0 bg-light shadow-sm " id="">
-                    <option value="">-- Categoria --</option>
-                    @foreach($category as  $id => $name)
-                    <option value="{{$id}}"
-                    @if($id == old('department_id' , $ticket->category_id)) selected @endif >{{$name}}</option>
-                    @endforeach                    
-                    </select>
-                </div>
+            <div class="col-xs-12 col-sm-4 col-md-4 mt-2">
+                <label for="city">Categoria</label>
+                <select name="category_id" id="categoria" class="form-control">
+                    @foreach($categorias as $category)
+                        <option value="{{ $category->id }}" {{ $ticket->category_id == $category->id ? 'selected' : '' }}>
+                            {{ $category->name }}
+                        </option>
+                    @endforeach
+                </select>
             </div>
+
+            <!-- ------------------------------------------------------------------------------------------ -->
             <!--  seccion para insertar imagenes y visualizarlos-->
             <div class="col-xs-12 col-sm-12 col-md-6 mt-2">
                     <strong>Adjuntos</strong>
@@ -120,33 +115,6 @@
                         }
                     });
                      
-
-                        // Script para eliminar la imagen
-                        $('.delete-image').click(function(e) {
-                            e.preventDefault();
-                            var imageUrlToDelete = $(this).data('image');
-
-                            // Confirmar antes de eliminar
-                            if (confirm("¿Estás seguro de que quieres eliminar esta imagen?")) {
-                                // Realizar una solicitud AJAX para eliminar la imagen
-                                $.ajax({
-                                    url: '/eliminar-imagen', // Ruta de la solicitud
-                                    method: 'POST', // Método de la solicitud
-                                    data: {
-                                        _token: '{{ csrf_token() }}', // Token CSRF para protección
-                                        image_url: imageUrlToDelete // URL de la imagen a eliminar
-                                    },
-                                    success: function(response) {
-                                        // Actualizar la vista después de eliminar la imagen
-                                        // Por ejemplo, puedes recargar la página o actualizar la lista de imágenes sin recargar la página
-                                    },
-                                    error: function(xhr, status, error) {
-                                        // Manejar errores si la solicitud falla
-                                        console.error(error);
-                                    }
-                                });
-                            }
-                        });
                 </script>
 
                     <!-- -------------------------------------------  -->
@@ -158,6 +126,39 @@
         </div>
     </form>
 </div>
-@endcan
 @endsection
 
+@section('js')
+<script>
+    document.getElementById('departamento').addEventListener('change', function() {
+        var departamentoId = this.value;
+        fetch('/areas/${departamentoId}')
+            .then(response => response.json())
+            .then(data => {
+                var areaSelect = document.getElementById('area');
+                areaSelect.innerHTML = '<option value="">Selecciona un área</option>';
+                data.forEach(area => {
+                    areaSelect.innerHTML += '<option value="${area.id}">${area.name}</option>';
+                });
+
+                // Clear categoria select when departamento changes
+                var categoriaSelect = document.getElementById('categoria');
+                categoriaSelect.innerHTML = '<option value="">Selecciona una categoría</option>';
+            });
+    });
+    document.getElementById('area').addEventListener('change', function() {
+        var areaId = this.value;
+        fetch('/categorias/${areaId}')
+            .then(response => response.json())
+            .then(data => {
+                var categoriaSelect = document.getElementById('categoria');
+                categoriaSelect.innerHTML = '<option value="">Selecciona una categoría</option>';
+                data.forEach(categoria => {
+                    categoriaSelect.innerHTML += '<option value="${categoria.id}">${categoria.name}</option>';
+                });
+            });
+    });
+</script>
+
+@endsection
+@endcan
