@@ -73,36 +73,24 @@
                 <h6><strong>Descripcion:</strong></h6>
                 <p class="rounded" style="background-color: #e9ecef3b;">{{$ticket->description}}</p>
             </div>
-        </div>
-
+        </div>   
         @if(!empty($ticket->image))
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="form-group">
                     <label for="image"><strong>Imágenes:</strong></label>
                     <br>
-                    <ul class="row " style="padding-right:40px ;">
+                    <ul class="row" style="padding-right:40px;">
                         @foreach(explode(',', $ticket->image) as $imageItem )
-                            <li class="list-group-item   border border-3 col-lg-3 col-md-6 col-sm-12 rounded">
-                                <a href="{{asset('storage/images/'. $imageItem)}}" target="_blank" alt="{{ $ticket->id }}">{{$imageItem}}</a>
+                            <li class="list-group-item border border-3 col-lg-3 col-md-6 col-sm-12 rounded">
+                                <a href="{{asset('storage/images/'. $imageItem)}}" target="_blank">{{$imageItem}}</a>
                             </li>
                         @endforeach
                     </ul>
-                    <!-- <div class="row">
-                    @foreach(explode(',', $ticket->image) as $imageItem )
-                        <div class="col-md-1 mb-1">
-                        <a href="{{asset('storage/images/'. $imageItem)}}" target="_blank">
-                            <img src="{{ asset('storage/images/' . $imageItem) }}" class="direct-chat-img" alt="Imagen">
-                        </a>                            
-                        </div>
-                    @endforeach
-                    </div> -->
                 </div>
             </div>
         @endif
-
         </div>
-
-
+<!-- {{$ticket}} -->
 
     <!-- vista resumida -->
         <div class="container-fuid">

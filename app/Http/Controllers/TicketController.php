@@ -396,7 +396,7 @@ class TicketController extends Controller
     {
         // Utiliza Eager Loading para cargar relaciones necesarias
         $ticket = Ticket::with(['department:id,name', 'category:id,name', 'area:id,name'])
-                        ->select('id', 'department_id', 'category_id','status_id', 'area_id', 'user_id', 'title', 'description', 'created_at')
+                        ->select('id', 'department_id', 'category_id','status_id', 'area_id', 'user_id', 'title', 'description', 'created_at','image')
                         ->findOrFail($ticket->id);
 
         // Obtiene las áreas y categorías relacionadas con el departamento y área del ticket

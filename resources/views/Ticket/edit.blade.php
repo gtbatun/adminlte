@@ -132,29 +132,29 @@
 <script>
     document.getElementById('departamento').addEventListener('change', function() {
         var departamentoId = this.value;
-        fetch('/areas/${departamentoId}')
+        fetch(`/areas/${departamentoId}`)
             .then(response => response.json())
             .then(data => {
                 var areaSelect = document.getElementById('area');
                 areaSelect.innerHTML = '<option value="">Selecciona un área</option>';
                 data.forEach(area => {
-                    areaSelect.innerHTML += '<option value="${area.id}">${area.name}</option>';
+                    areaSelect.innerHTML += `<option value="${area.id}">${area.name}</option>`;
                 });
 
                 // Clear categoria select when departamento changes
                 var categoriaSelect = document.getElementById('categoria');
-                categoriaSelect.innerHTML = '<option value="">Selecciona una categoría</option>';
+                categoriaSelect.innerHTML = `<option value="">Selecciona una categoría</option>`;
             });
     });
     document.getElementById('area').addEventListener('change', function() {
         var areaId = this.value;
-        fetch('/categorias/${areaId}')
+        fetch(`/categorias/${areaId}`)
             .then(response => response.json())
             .then(data => {
                 var categoriaSelect = document.getElementById('categoria');
                 categoriaSelect.innerHTML = '<option value="">Selecciona una categoría</option>';
                 data.forEach(categoria => {
-                    categoriaSelect.innerHTML += '<option value="${categoria.id}">${categoria.name}</option>';
+                    categoriaSelect.innerHTML += `<option value="${categoria.id}">${categoria.name}</option>`;
                 });
             });
     });
