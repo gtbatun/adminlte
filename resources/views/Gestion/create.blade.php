@@ -73,36 +73,24 @@
                 <h6><strong>Descripcion:</strong></h6>
                 <p class="rounded" style="background-color: #e9ecef3b;">{{$ticket->description}}</p>
             </div>
-        </div>
-
+        </div>   
         @if(!empty($ticket->image))
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="form-group">
                     <label for="image"><strong>Imágenes:</strong></label>
                     <br>
-                    <ul class="row " style="padding-right:40px ;">
+                    <ul class="row" style="padding-right:40px;">
                         @foreach(explode(',', $ticket->image) as $imageItem )
-                            <li class="list-group-item   border border-3 col-lg-3 col-md-6 col-sm-12 rounded">
-                                <a href="{{asset('storage/images/'. $imageItem)}}" target="_blank" alt="{{ $ticket->id }}">{{$imageItem}}</a>
+                            <li class="list-group-item border border-3 col-lg-3 col-md-6 col-sm-12 rounded">
+                                <a href="{{asset('storage/images/'. $imageItem)}}" target="_blank">{{$imageItem}}</a>
                             </li>
                         @endforeach
                     </ul>
-                    <!-- <div class="row">
-                    @foreach(explode(',', $ticket->image) as $imageItem )
-                        <div class="col-md-1 mb-1">
-                        <a href="{{asset('storage/images/'. $imageItem)}}" target="_blank">
-                            <img src="{{ asset('storage/images/' . $imageItem) }}" class="direct-chat-img" alt="Imagen">
-                        </a>                            
-                        </div>
-                    @endforeach
-                    </div> -->
                 </div>
             </div>
         @endif
-
         </div>
-
-
+<!-- {{$ticket}} -->
 
     <!-- vista resumida -->
         <div class="container-fuid">
@@ -213,7 +201,7 @@
         $(document).ready(function () {
             $('#area').change(function () {
                 var area_id = $(this).val();
-                // console.log(area_id);
+                console.log(area_id);
                 $.get("{{route('ticket.getCategory')}}", {area_id: area_id}, function (data) {
                     $('#category').empty();
                     $('#category').append('<option value="">Seleccionar una categoría</option>');
@@ -262,10 +250,11 @@
                 url: "{{ route('tickets.gestiones', ['ticket' => $ticket->id]) }}",
                 method: 'GET',
                 success: function(data) {
+                    console.log(data);
                     dataLength = data.length;
                     $('#data-length').text(dataLength);
                     var gestionesHtml = '';
-                    var userId = {{ Auth::id() }}; // Obtiene el ID del usuario logueado  
+                    var userId = {{Auth::id() }}; // Obtiene el ID del usuario logueado  
 
                     if (data.length > 0) {
 
@@ -300,11 +289,12 @@
                     
                     }else{
                         gestionesHtml += '<p class="text-center">No hay gestiones para mostrar</p>';
+                        $('[data-card-widget="collapse"]').CardWidget('init');
                     }
 
                     $('#gestiones-container1').html(gestionesHtml);
                     // Reinicializar los componentes de AdminLTE
-                    // $('[data-card-widget="collapse"]').CardWidget('init');
+                    $('[data-card-widget="collapse"]').CardWidget('init');
                     
                 },
                 error: function(xhr, status, error) {
@@ -330,8 +320,6 @@ $(document).ready(function() {
     // Botón para capturar pantalla (placeholder, puedes implementar según tus necesidades)
     $('#captureScreenButton').on('click', function() {
         alert('Función de captura de pantalla no implementada');
-        // Aquí podrías implementar la lógica para capturar la pantalla
-        // Librerías como html2canvas pueden ayudarte con esto
     });
 
     // Manejar el evento de selección de archivos
@@ -386,38 +374,6 @@ $(document).ready(function() {
                 reader.readAsDataURL(blob);
             }
         }
-    }
-    
-    /** seccion validar y limitar cantidad de imagenes */
-    function handleFiles2(files) {
-        const filesArray = Array.from(files);
-        if (totalImages + filesArray.length > MAX_IMAGES) {
-            alert('Solo puedes subir un maximo de ' + MAX_IMAGES + ' images en total, seleccione menos imagenes.');
-            $('#fileInput').val(''); // Clear the input
-            return;
-        }
-
-        totalImages += filesArray.length;
-        updateImagePreviews(filesArray);
-    }
-
-    function handlePaste2(event) {
-        const items = (event.clipboardData || event.originalEvent.clipboardData).items;
-        const images = [];
-
-        for (const item of items) {
-            if (item.kind === 'file' && item.type.startsWith('image/')) {
-                images.push(item.getAsFile());
-            }
-        }
-
-        if (totalImages + images.length > MAX_IMAGES) {
-            alert('Solo puedes subir un maximo de ' + MAX_IMAGES + ' images en total, seleccione menos imagenes.');
-            return;
-        }
-
-        totalImages += images.length;
-        updateImagePreviews(images);
     }
 
     function updateImagePreviews(files) {
@@ -488,14 +444,16 @@ $(document).ready(function() {
                 processData: false,
                 contentType: false,
                 success: function(response) {
+                    loadGestiones();
                     $('#messageInput').val('');
                     $('#fileInput').val('');
                     $('#imagePreviewContainer').empty();
-                    loadGestiones();
                     
                 },
                 error: function(xhr, status, error) {
                     console.error('Error sending message:', error);
+                    console.log(xhr.responseText);
+                    alert(`Error: ${xhr.status} - ${xhr.responseText}`);
                     $('#errores').append(error);
                 }
             });        

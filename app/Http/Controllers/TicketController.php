@@ -226,8 +226,7 @@ class TicketController extends Controller
         // return Excel::download(new TicketExport($fechaInicio, $fechaFin), 'tickets.xlsx');
         return Excel::download(new TicketExport('2024-04-15', '2024-04-19'), 'Tickets.xlsx');
         
-    }
-    
+    }    
 
     public function showReport(Request $request){
         $startDate = $request->input('start_date');
@@ -398,7 +397,7 @@ class TicketController extends Controller
     {
         // Utiliza Eager Loading para cargar relaciones necesarias
         $ticket = Ticket::with(['department:id,name', 'category:id,name', 'area:id,name'])
-                        ->select('id', 'department_id', 'category_id','status_id', 'area_id', 'user_id', 'title', 'description', 'created_at')
+                        ->select('id', 'department_id', 'category_id','status_id', 'area_id', 'user_id', 'title', 'description', 'created_at','image')
                         ->findOrFail($ticket->id);
 
         // Obtiene las áreas y categorías relacionadas con el departamento y área del ticket
@@ -440,17 +439,29 @@ class TicketController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
+    /** -------------------------------------------------------------------------------------- */
+    public function getAreas($departamentoId) {
+        $areas = Area::where('department_id', $departamentoId)->get();
+        return response()->json($areas);
+    }
+    
+    public function getCategorias($areaId) {
+        $categorias = Category::where('area_id', $areaId)->get();
+        return response()->json($categorias);
+    }
+
+    /** -------------------------------------------------------------------------------------- */
+
     public function edit(Ticket $ticket)
     {
-        // $this->authorize('update',$ticket);
-       
-        return view('Ticket.edit', [
-            'areas' => Area::pluck('name','id'),
-            'category' => Category::pluck('name','id'),
-            'department' => Department::pluck('name','id'),
-            'status' => Status::pluck('name','id'),
-            'ticket' => $ticket]);
+        $ticket = Ticket::find($ticket->id);
+        $department = Department::all();
+        $areas = $ticket->department  ? $ticket->department->areas : collect();
+        $categorias = $ticket->area ? $ticket->area->category : collect();
+    // return $categories;
+        return view('Ticket.edit', compact('ticket','department','areas','categorias'));
     }
+
 
     /**
      * Update the specified resource in storage.
