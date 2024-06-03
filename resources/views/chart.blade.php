@@ -1,6 +1,8 @@
 @extends('adminlte::page')
 @section('content')
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script src="{{asset('assets/js/plugins/chart-4.4.3.min.js')}}"></script>
+<script src="{{asset('assets/js/plugins/jquery-3.7.1.min.js')}}"></script>
 
 
 <!-- CSS Files -->
@@ -47,6 +49,13 @@
                         <div class="card-body">
                             <h3 class="text-center">Tickets por agente</h3>
                             <canvas id="agente" width="200" height="200"></canvas>
+                            <label for="interval">Intervalo:</label>
+                            <select id="interval">
+                                <option value="day">Día</option>
+                                <option value="week">Semana</option>
+                                <option value="month">Mes</option>
+                                <option value="year">Año</option>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -80,8 +89,36 @@
         </div>
     </div>
 <!-- </div> -->
+<!-- nueva grafica -->
+<form id="reportForm" method="GET" action="{{ route('report.getData') }}">
+    @csrf
+    <div class="container d-flex justify-content-between">
+        <div class="col-4 mb-1">
+            <label for="start_date">Fecha Inicio:</label>
+            <input type="date" id="start_date" name="start_date" required>
+        </div>
+        <div class="col-4 mb-1">
+            <label for="end_date">Fecha Fin:</label>
+            <input type="date" id="end_date" name="end_date" required>
+        </div>
+        <div class="col-4 mb-1">
+            <button class="btn btn-outline-primary mt-3" type="submit">Buscar</button>
+        </div>
+    </div>
+</form>
+<div class="col-md-4 col-xs-12">
+    <div class="row">
+        <div class="col-md-11">
+            <div class="card">
+                <div class="card-body">
+                <canvas id="nuevagrafica" width="400" height="400"></canvas>
+                <button id="loadMore">Cargar más datos</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <!--  -->
-
 
 
 <script>
@@ -184,46 +221,69 @@
     return color;
 }
 </script>
-
-<!-- ------------------------ -->
-
-@push('js')
 <script>
-
     $(document).ready(function() {
+        var ctx = document.getElementById('nuevagrafica').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Tickets por Agente',
+                    data: [],
+                    backgroundColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(54, 162, 235)',
+                        'rgb(255, 205, 86)',
+                        'rgb(255, 192, 203)',
+                    ],
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
 
-        let sBox = new _AdminLTE_SmallBox('sbUpdatable');
+        function updateChart(data) {
+            myChart.data.labels = [];
+            myChart.data.datasets[0].data = [];
+            data.forEach(function(item) {
+                myChart.data.labels.push(item.user_id); // Aquí deberías traducir user_id al nombre de usuario si es posible
+                myChart.data.datasets[0].data.push(item.ticket_count);
+            });
+            myChart.update();
+        }
 
-        let updateBox = () =>
-        {
-            // Stop loading animation.
-            sBox.toggleLoading();
+        $('#reportForm').on('submit', function(e) {
+            e.preventDefault();
 
-            // Update data.
-            let rep = Math.floor(1000 * Math.random());
-            let idx = rep < 100 ? 0 : (rep > 500 ? 2 : 1);
-            let text = 'Reputation - ' + ['Basic', 'Silver', 'Gold'][idx];
-            let icon = 'fas fa-medal ' + ['text-primary', 'text-light', 'text-warning'][idx];
-            let url = ['url1', 'url2', 'url3'][idx];
+            var startDate = $('#start_date').val();
+            var endDate = $('#end_date').val();
 
-            let data = {text, title: rep, icon, url};
-            sBox.update(data);
-        };
-
-        let startUpdateProcedure = () =>
-        {
-            // Simulate loading procedure.
-            sBox.toggleLoading();
-
-            // Wait and update the data.
-            setTimeout(updateBox, 2000);
-        };
-
-        setInterval(startUpdateProcedure, 10000);
-    })
-
+            $.ajax({
+                url: $(this).attr('action'),
+                method: 'GET',
+                data: {
+                    start_date: startDate,
+                    end_date: endDate,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    console.log(response.data); // Verifica que los datos están llegando correctamente
+                    updateChart(response.data);
+                },
+                error: function(xhr) {
+                    console.error('Error fetching data:', xhr);
+                    alert('Error fetching data. Please check the logs for more details.');
+                }
+            });
+        });
+    });
 </script>
-@endpush
-
-
 @endsection

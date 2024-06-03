@@ -67,9 +67,10 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
         Route::get('/reportes', [ReportController::class,'index'])->name('report.index');
         //Genera la previsualizacion de tickets a exportar segun las fechas 
         Route::post('/reportes/generar', [ReportController::class,'generar'])->name('reportes.generar');
+        Route::get('/report/search', [ReportController::class, 'search2'])->name('report.search'); ///**** */
         //Exporta a un documento excel los tickets seleccionados
         Route::get('report-export/{fechaInicio}/{fechaFin}', [ReportController::class, 'reportexport'])->name('report-export');
-        
+        Route::get('reporte-excel/{start_date}/{end_date}', [ReportController::class, 'reportexcel'])->name('reporte.excel');
         Route::get('setting', [SettingController::class,'index'])->name('setting.index');
         /**seccion para autorizar la verificacion de correo */
         Route::get('/admin/verify-email/{userId}', [UserController::class, 'verifyUserEmail'])->name('admin.verify-email');
@@ -112,22 +113,13 @@ Route::get('/notifications', [NotificationController::class, 'index'])->name('no
 Route::get('/notifications/mark-as-read/{id}', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
 
 Route::get('graf/', [ChartJSController::class, 'index']); 
-
-// Route::get('graf1', [ChartJSController::class, 'index']); 
-
 Route::post('graf/store',[ ChartJSController::class, 'store'])->name('reportessssss.store');
-// Route::get('/tickets-data', [ChartJSController::class, 'ticketsData'])->name('tickets.data');
-
-// Route::get('ticket-report',[TicketController::class,'showReport'])->name('ticket.report');
-
-
+/**nuevas graficas */
+Route::get('/data', [ChartJSController::class,'getData'])->name('chart.data');
+Route::get('/more-data',[ChartJSController::class,'getMoreData'])->name('chart.more-data');
+Route::get('/report/getData', [ChartJSController::class, 'getData'])->name('report.getData');
 
 Route::get('ticket-export/', [TicketController::class, 'export'])->name('ticket-export');
-
-// Route::get('report-export/', [ReportController::class, 'reportexport'])->name('report-export');
-
-// Route::get('ticket-export/', [TicketController::class, 'export']);
-// Route::get('ticket-export/{fechaInicio}/{fechaFin}', [TicketController::class, 'export'])->name('ticket-export');
 
 
 

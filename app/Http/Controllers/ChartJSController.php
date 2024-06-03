@@ -40,6 +40,44 @@ class ChartJSController extends Controller
 
         return response()->json(['data' => $data]);
     }
+    
+    
+    /** */
+
+    public function getData(Request $request)
+    {
+        /** */
+    // Obtener el recuento de gestiones por Agente
+    
+    // filtar la infoirmacion que pueda visualizar el emplea<do en el dashboard
+    
+
+        // Obtener los datos para la semana actual
+        $startDate = now()->startOfWeek()->format('Y-m-d');
+        $endDate = now()->endOfWeek()->format('Y-m-d');
+        // $data = Ticket::whereBetween('created_at', [$startDate, $endDate])->get();
+        
+        $data2 = Ticket::whereBetween('created_at', [$startDate, $endDate])
+        ->selectRaw('COUNT(*) AS ticket_suma,user_id')->groupby('user_id')
+        ->get();
+        $data = DB::table('ticket')
+            ->select('user_id', DB::raw('COUNT(*) as ticket_count'))
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->groupBy('user_id')
+            ->get();
+
+        return response()->json(['data' => $data]);
+    }
+
+    public function getMoreData(Request $request)
+    {
+        // Obtener más datos según los parámetros enviados por el cliente
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+        $data = Ticket::whereBetween('created_at', [$startDate, $endDate])->get();
+
+        return response()->json(['data' => $data]);
+    }
 
     
 }

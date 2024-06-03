@@ -49,4 +49,19 @@ class Ticket extends Model
     public function Usercreator(){
         return  $this->belongsTo(User::class,'user_id');
     }
+
+   /**Recien agregado par el area de reportes */
+   public function creatorDepartment()
+   {
+       return $this->belongsTo(Department::class, 'type');
+   }
+
+   public function assignedDepartment()
+   {
+       return $this->belongsTo(Department::class, 'department_id');
+   }
+   public function gestions()
+   {
+       return $this->hasMany(Gestion::class, 'ticket_id');
+   }
 }

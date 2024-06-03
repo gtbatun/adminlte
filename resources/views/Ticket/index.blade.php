@@ -1,11 +1,13 @@
 @extends('adminlte::page')
 
 @section('content')
-<!-- Incluye jQuery si aún no está incluido -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="{{asset('assets/js/plugins/jquery-3.7.1.min.js')}}"></script>
+<script src="{{asset('assets/js/plugins/toastr.min.js')}}"></script>
 <!-- Incluye Toastr si deseas notificaciones visuales -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+
 
 <div class="row">
     <div class="col-12 mt-0 d-flex justify-content-between ">
@@ -37,7 +39,7 @@
                                 <th>CATEGORIA</th>
                                 <th>ASIGNADO</th>
                                 <th>SUCURSAL</th>
-                                <th>AREA</th>
+                                <!-- <th>AREA</th> -->
                                 <th>ESTATUS</th>
                                 <th>ACCION</th>
                             </tr>
@@ -99,13 +101,13 @@
                     { data: 'category' },
                     { data: 'type' },
                     { data: 'sucursal' },
-                    { data: 'area' },
+                    // { data: 'area' },
                     { data: 'status' },
                     { data: 'actions', orderable: false, searchable: false }
                 ],
                 createdRow: function(row, data, dataIndex) {
                     $('td', row).eq(3).css('background-color', data.typeColor);
-                    $('td', row).eq(6).css('background-color', data.typeColorback);
+                    $('td', row).eq(5).css('background-color', data.typeColorback);
                 },
                 responsive: true,
                 paging: true
