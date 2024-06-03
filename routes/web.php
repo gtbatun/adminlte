@@ -113,16 +113,22 @@ Route::get('/notifications', [NotificationController::class, 'index'])->name('no
 Route::get('/notifications/mark-as-read/{id}', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
 
 Route::get('graf/', [ChartJSController::class, 'index']); 
-<<<<<<< HEAD
-=======
+
 
 /** seccion para edicion de tickets */
 Route::get('/areas/{departmento}', [TicketController::class, 'getAreas']);
 Route::get('/categorias/{area}', [TicketController::class, 'getCategorias']);
 
+//Exporta a un documento excel los tickets seleccionados
+Route::get('/report/search', [ReportController::class, 'search2'])->name('report.search'); ///**** */
+
+Route::get('reporte-excel/{start_date}/{end_date}', [ReportController::class, 'reportexcel'])->name('reporte.excel');
+
+
+
 // Route::get('graf1', [ChartJSController::class, 'index']); 
 
->>>>>>> 8957015133e6252a868cfaba5c004a747a777e12
+
 Route::post('graf/store',[ ChartJSController::class, 'store'])->name('reportessssss.store');
 /**nuevas graficas */
 Route::get('/data', [ChartJSController::class,'getData'])->name('chart.data');

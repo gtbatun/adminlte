@@ -111,10 +111,15 @@
             });
         });
     });
+
     $('#exportExcel').on('click', function() {
         var startDate = $('#start_date').val();
         var endDate = $('#end_date').val();
-        window.location.href = "{{ route('reporte.excel', ['start_date' => 'startDate', 'end_date' => 'endDate']) }}";
+        // console.log(startDate, endDate);
+        var url = "{{ route('reporte.excel', ['start_date' => ':startDate', 'end_date' => ':endDate']) }}";
+        url = url.replace(':startDate', startDate).replace(':endDate', endDate);
+        // console.log(url); // Verifica que la URL sea correcta
+        window.location.href = url;
 
     });
 

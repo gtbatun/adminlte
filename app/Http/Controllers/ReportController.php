@@ -26,38 +26,38 @@ class ReportController extends Controller
 
     public function generar(Request $request)    
     {
-        
         $fechaInicio = $request->fecha_inicio;
         $fechaFin = $request->fecha_fin;
         //  $tickets4 = Ticket::whereBetween('created_at', [$fechaInicio, $fechaFin])->get();
         $tickets = Ticket::whereBetween(DB::raw("DATE_FORMAT(created_at, '%Y-%m-%d')"),[$fechaInicio, $fechaFin])
-        ->get();
-
-        
-
-
+        ->get();  
         // return $tickets;
         // return response()->json(compact('tickets'));
         $fechaInicio = $request->fecha_inicio;
         $fechaFin = $request->fecha_fin;
         // return $tickets;
         return view('Report.previsualizacion', compact('tickets','fechaInicio','fechaFin')); 
-        
     }
 
 
+   
     public function reportexport($fechaInicio, $fechaFin){       
-        return Excel::download(new TicketExport($fechaInicio, $fechaFin), 'Reporte de tickets_'.$fechaInicio.'.xlsx', \Maatwebsite\Excel\Excel::XLSX);
-        
+        return Excel::download(new TicketExport($fechaInicio, $fechaFin), 'Reporte de tickets_'.$fechaInicio.'.xlsx', \Maatwebsite\Excel\Excel::XLSX);        
     }
 
-    public function reportexcel(Request $request)
+    public function reportexcel($start_date, $end_date)
     {
-        $startDate = $request->input('start_date');
-        $endDate = $request->input('end_date');
-
-        return Excel::download(new TicketExport($startDate, $endDate), 'tickets.xlsx');
+        // return $request;
+        $fechaInicio = $start_date;
+        $fechaFin = $end_date;
+        return Excel::download(new TicketExport($fechaInicio, $fechaFin), 'Reporte de tickets_'.$fechaInicio.'.xlsx', \Maatwebsite\Excel\Excel::XLSX);
+        // if (empty($fechaInicio) || empty($fechaFin)) {
+        //     return response()->json(['error' => 'Fechas no proporcionadas'], 400);
+        // }
+        // return response()->json(['start_date' => $fechaInicio, 'end_date' => $fechaFin]);
+    
     }
+
     /** secccion para visualizar los reportes los datos en la tabla */
     public function search(Request $request)
     {
@@ -90,6 +90,7 @@ class ReportController extends Controller
                 ")
             ])
             ->join('department', 'department.id', '=', 'ticket.type')
+            // ->join('department', 'department.id', '=', 'ticket.type')
             ->join('area', 'area.id', '=', 'ticket.area_id')
             ->join('category', 'category.id', '=', 'ticket.category_id')
             ->join('status', 'status.id', '=', 'ticket.status_id')
@@ -101,6 +102,7 @@ class ReportController extends Controller
             ->leftJoin('users', 'users.id', '=', 'gestion.user_id')
             ->whereBetween('ticket.created_at', [$startDate, $endDate])
             ->get();
+        
 
         return response()->json(['data' => $tickets]);
     }

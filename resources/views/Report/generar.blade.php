@@ -26,7 +26,6 @@
         
         } 
         echo $tickets;
-
        
 
         
