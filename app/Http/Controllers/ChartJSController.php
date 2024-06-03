@@ -46,13 +46,6 @@ class ChartJSController extends Controller
 
     public function getData(Request $request)
     {
-        /** */
-    // Obtener el recuento de gestiones por Agente
-    
-    // filtar la infoirmacion que pueda visualizar el emplea<do en el dashboard
-    
-
-        // Obtener los datos para la semana actual
         $startDate = now()->startOfWeek()->format('Y-m-d');
         $endDate = now()->endOfWeek()->format('Y-m-d');
         // $data = Ticket::whereBetween('created_at', [$startDate, $endDate])->get();

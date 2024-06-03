@@ -113,12 +113,43 @@
                 <div class="card-body">
                 <canvas id="nuevagrafica" width="400" height="400"></canvas>
                 <button id="loadMore">Cargar más datos</button>
+                <label for="interval">Intervalo:</label>
+                <select id="interval">
+                    <option value="day">Día</option>
+                    <option value="week">Semana</option>
+                    <option value="month">Mes</option>
+                    <option value="year">Año</option>
+                </select>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<!--  -->
+<!-- ----------------------------------------------------------------------------------------------------------------------- -->
+
+ 
+<div class="col-md-4 col-xs-12">
+    <div class="row">
+        <div class="col-md-11">
+            <div class="card">
+                <div class="card-body">
+                    <canvas id="nuevagrafica2" width="400" height="400"></canvas>
+                    <div class="col-4 mb-1">
+                        <label for="interval">Intervalo:</label>
+                        <select id="interval" name="interval">
+                            <option value="day">Día</option>
+                            <option value="week">Semana</option>
+                            <option value="month">Mes</option>
+                            <option value="year">Año</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ----------------------------------------------------------------------------------------------------------------------- -->
 
 
 <script>
@@ -285,5 +316,51 @@
             });
         });
     });
+</script>
+
+<script>
+ document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('reportForm2');
+    const intervalSelect = document.getElementById('interval');
+    const startDate = document.getElementById('start_date');
+    const endDate = document.getElementById('end_date');
+
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        fetchGraphData();
+    });
+
+    intervalSelect.addEventListener('change', fetchGraphData);
+
+    function fetchGraphData() {
+        const formData = new FormData(form);
+        const queryString = new URLSearchParams(formData).toString();
+        fetch(`{{ route('report.getData') }}?${queryString}`)
+            .then(response => response.json())
+            .then(data => {
+                updateGraph(data);
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    }
+
+    function updateGraph(data) {
+        // Aquí puedes usar la librería de gráficos que estés usando, por ejemplo Chart.js
+        const ctx = document.getElementById('nuevagrafica2').getContext('2d');
+        // Aquí debes crear o actualizar tu gráfico con los nuevos datos
+        const chart = new Chart(ctx, {
+            type: 'line', // o el tipo de gráfico que estés utilizando
+            data: {
+                labels: data.labels,
+                datasets: [{
+                    label: 'Datos',
+                    data: data.values
+                }]
+            },
+            options: {
+                // Opciones de tu gráfico
+            }
+        });
+    }
+});   
 </script>
 @endsection
