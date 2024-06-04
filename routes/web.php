@@ -123,8 +123,13 @@ Route::get('/categorias/{area}', [TicketController::class, 'getCategorias']);
 Route::get('/report/search', [ReportController::class, 'search2'])->name('report.search'); ///**** */
 
 Route::get('reporte-excel/{start_date}/{end_date}', [ReportController::class, 'reportexcel'])->name('reporte.excel');
-
-
+/**Ruta para nueva grafica */
+ /** tickets cerrados por personal de sistemas o agente*/
+Route::get('/chart-data', [ChartJSController::class, 'getChartData'])->name('chart.data');
+/** tickets por departamento */
+Route::get('/chart-by-department', [ChartJSController::class, 'getDatadepartment'])->name('ticketsByDepartment');
+/** tickets por dia */
+Route::get('/chart-per-day', [ChartJSController::class, 'getDataDay'])->name('ticketsPerDay');
 
 // Route::get('graf1', [ChartJSController::class, 'index']); 
 

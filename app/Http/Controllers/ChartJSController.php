@@ -5,7 +5,9 @@ use Illuminate\View\View;
 use App\Models\Ticket;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
-
+use Carbon\Carbon;
+use Log;
+use Illuminate\Support\Facades\Auth;
 class ChartJSController extends Controller
 {
     public function index(){
@@ -42,35 +44,198 @@ class ChartJSController extends Controller
     }
     
     
-    /** */
-
-    public function getData(Request $request)
+    /** ------------------------------------------------------------------------------------------------- */
+    public function getChartData(Request $request)
     {
-        $startDate = now()->startOfWeek()->format('Y-m-d');
-        $endDate = now()->endOfWeek()->format('Y-m-d');
-        // $data = Ticket::whereBetween('created_at', [$startDate, $endDate])->get();
+        $range = $request->input('range', 'day');     
+        $data = $this->getDataByRange($range);        
+        return response()->json($data);
+    }    
+    private function getDataByRange($range)
+    {
+        $now = Carbon::now();
+        $startDate = null;
+
+        switch ($range) {
+            case 'day':
+                $startDate = $now->startOfDay();
+                break;
+            case 'week':
+                $startDate = $now->startOfWeek();
+                break;
+            case 'month':
+                $startDate = $now->startOfMonth();
+                break;
+            case 'year':
+                $startDate = $now->startOfYear();
+                break;
+        }
+        // Aquí puedes llamar a métodos específicos para obtener los datos
+        $data = $this->getDataFromDate($startDate, $range);
+        return $data;
+    }
+    
+    private function getDataFromDate($startDate, $range)
+    {       
+    $user = Auth::user();
+    $agente = collect();   
+
+    if($user->is_admin == 10){
+    $agente = Ticket::where('ticket.created_at','>=', $startDate)
+    ->where('gestion.status_id', '=', '4')
+    ->where('users.is_admin', '=', '10')
+    ->join('gestion', 'gestion.ticket_id', '=', 'ticket.id')
+    ->join('users', 'users.id', '=', 'gestion.user_id')
+    ->selectRaw('COUNT(*) as count, users.name as user_name')
+    ->groupBy('users.name')
+    ->pluck('count', 'user_name');
+    }else{
+    $agente = Ticket::where('ticket.created_at','>=', $startDate)
+    ->where('ticket.department_id', '=', auth()->user()->department_id)
+    ->join('users', 'users.id', '=', 'ticket.user_id')
+    ->selectRaw('COUNT(*) as count, users.name as user_name')
+    ->groupBy('user_id')
+    ->pluck('count', 'user_name');
+    }
+    // Convertir los datos en un array para ser utilizados en la gráfica
+        $a_labels = $agente->keys()->toArray();
+        $a_data = $agente->values()->toArray();
+
+        return [
+            'labels' => $a_labels,
+            'data' => $a_data
+        ];
         
-        $data2 = Ticket::whereBetween('created_at', [$startDate, $endDate])
-        ->selectRaw('COUNT(*) AS ticket_suma,user_id')->groupby('user_id')
-        ->get();
-        $data = DB::table('ticket')
-            ->select('user_id', DB::raw('COUNT(*) as ticket_count'))
-            ->whereBetween('created_at', [$startDate, $endDate])
-            ->groupBy('user_id')
-            ->get();
-
-        return response()->json(['data' => $data]);
     }
-
-    public function getMoreData(Request $request)
+/**--------------------------------------------------------------------------------------- */
+    public function getDatadepartment(Request $request)
     {
-        // Obtener más datos según los parámetros enviados por el cliente
-        $startDate = $request->input('start_date');
-        $endDate = $request->input('end_date');
-        $data = Ticket::whereBetween('created_at', [$startDate, $endDate])->get();
+        $range = $request->input('range', 'day');     
+        $data = $this->getDataByRange1($range);        
+        return response()->json($data);
+    }    
+    private function getDataByRange1($range)
+    {
+        $now = Carbon::now();
+        $startDate = null;
 
-        return response()->json(['data' => $data]);
+        switch ($range) {
+            case 'day':
+                $startDate = $now->startOfDay();
+                break;
+            case 'week':
+                $startDate = $now->startOfWeek();
+                break;
+            case 'month':
+                $startDate = $now->startOfMonth();
+                break;
+            case 'year':
+                $startDate = $now->startOfYear();
+                break;
+        }
+        // Aquí puedes llamar a métodos específicos para obtener los datos
+        $data = $this->getDataFromDate1($startDate, $range);
+        return $data;
     }
+    
+    private function getDataFromDate1($startDate, $range)
+    {       
+            $user = Auth::user();
+            $agente = collect();   
+            // Obtener el recuento de Tickets por Departamento
+            if($user->is_admin == 10){
+                $department = Ticket::where('ticket.created_at','>=', $startDate)                
+                ->whereMonth('ticket.created_at', '=', date('m'))
+                ->join('department', 'ticket.department_id', '=', 'department.id')
+                ->selectRaw('COUNT(*) as count, department.name as department_name')
+                ->groupBy('department.name')
+                ->pluck('count', 'department_name');
+        }else{
+            $department = Ticket::where('ticket.created_at','>=', $startDate)
+                ->whereMonth('ticket.created_at', '=', date('m'))                
+                ->where('ticket.department_id', '=', auth()->user()->department_id)
+                ->join('area', 'ticket.area_id', '=', 'area.id')
+                ->selectRaw('COUNT(*) as count, area.name as area_name')
+                ->groupBy('area.name')
+                ->pluck('count', 'area_name');
+        }
+        // Convertir los datos en un array para ser utilizados en la gráfica
+        $d_labels = $department->keys()->toArray();
+        $d_data = $department->values()->toArray();
+
+        return [
+            'labels' => $d_labels,
+            'data' => $d_data
+        ];        
+    }
+/** -----------------------------------------------------------------------------------------------  */
+public function getDataDay(Request $request)
+{
+    $range = $request->input('range', 'day');     
+    $data = $this->getDataByRangeDay($range);        
+    return response()->json($data);
+}    
+private function getDataByRangeDay($range)
+{
+    $now = Carbon::now();
+    $startDate = null;
+
+    switch ($range) {
+        case 'day':
+            $startDate = $now->startOfDay();
+            break;
+        case 'week':
+            $startDate = $now->startOfWeek();
+            break;
+        case 'month':
+            $startDate = $now->startOfMonth();
+            break;
+        case 'year':
+            $startDate = $now->startOfYear();
+            break;
+    }
+    // Aquí puedes llamar a métodos específicos para obtener los datos
+    $data = $this->getDataFromDay($startDate, $range);
+    return $data;
+}
+
+private function getDataFromDay($startDate, $range)
+{       
+        $user = Auth::user();
+        $day = collect();   
+        // Obtener el recuento de tickets por día para el año actual
+        if($user->is_admin == 10){
+            $t_dia1 = Ticket::whereYear('created_at', date('Y'))
+            ->whereMonth('ticket.created_at', '=', date('m'))
+            ->selectRaw('COUNT(*) as count, DAY(created_at) as day')
+            ->groupBy('day')
+            ->pluck('count', 'day');
+        }else{
+            $t_dia1 = Ticket::whereYear('created_at', date('Y'))
+                ->whereMonth('ticket.created_at', '=', date('m'))
+                ->where('ticket.department_id', '=', auth()->user()->department_id)
+                ->selectRaw('COUNT(*) as count, DAY(created_at) as day')
+                ->groupBy('day')
+                ->pluck('count', 'day');
+
+        }
+
+    // Llenar los datos para todos los días del mes actual
+    for ($i = 1; $i <= 31; $i++) {
+    $labels1[] = $i;
+    $data1[] = isset($t_dia1[$i]) ? $t_dia1[$i] : 0;
+    }
+
+    // Convertir los datos en un array para ser utilizados en la gráfica
+    $labels1 = array_values($labels1);
+    $data1 = array_values($data1);
+        
+
+    return [
+        'labels' => $labels1,
+        'data' => $data1
+    ];        
+}
 
     
 }
