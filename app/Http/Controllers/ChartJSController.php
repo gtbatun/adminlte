@@ -42,8 +42,75 @@ class ChartJSController extends Controller
 
         return response()->json(['data' => $data]);
     }
+    /** ------------------------------------------------------------------------------------------------------------ */
+
+    /*** -----------------------------------------------------------------------------------------------------------  */
     
+    public function getDataMonth(Request $request)
+    {
+        $month = $request->input('month');
+        if (!$month) {
+            return response()->json(['error' => 'Month is required'], 400);
+        }
+
+        $data = $this->getDataMonth1($month);        
+        return response()->json($data);
+    } 
     
+    private function getDataMonth1($startDate)
+    {
+        $user = Auth::user();
+
+        // Datos de prueba
+        $agente = collect([
+            'User1' => 10,
+            'User2' => 15,
+            'User3' => 5
+        ]);
+
+        $a_labels = $agente->keys()->toArray();
+        $a_data = $agente->values()->toArray();
+
+        return [
+            'labels' => $a_labels,
+            'data' => $a_data
+        ];
+    }
+    private function getDataMonth12($startDate)
+    {   
+           
+    $user = Auth::user();
+    $agente = collect();   
+
+    if($user->is_admin == 10){
+    $agente = Ticket::where('ticket.created_at','>=', $startDate)
+    ->where('gestion.status_id', '=', '4')
+    ->where('users.is_admin', '=', '10')
+    ->join('gestion', 'gestion.ticket_id', '=', 'ticket.id')
+    ->join('users', 'users.id', '=', 'gestion.user_id')
+    ->selectRaw('COUNT(*) as count, users.name as user_name')
+    ->groupBy('users.name')
+    ->pluck('count', 'user_name');
+    }else{
+    $agente = Ticket::where('ticket.created_at','>=', $startDate)
+    ->where('ticket.department_id', '=', auth()->user()->department_id)
+    ->join('users', 'users.id', '=', 'ticket.user_id')
+    ->selectRaw('COUNT(*) as count, users.name as user_name')
+    ->groupBy('user_id')
+    ->pluck('count', 'user_name');
+    }
+    // Convertir los datos en un array para ser utilizados en la gráfica
+        $a_labels = $agente->keys()->toArray();
+        $a_data = $agente->values()->toArray();
+
+        return [
+            'labels' => $a_labels,
+            'data' => $a_data
+        ];
+        
+    }
+    /** ------------------------------------------------------------------------------------------------- */
+
     /** ------------------------------------------------------------------------------------------------- */
     public function getChartData(Request $request)
     {

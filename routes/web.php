@@ -130,6 +130,8 @@ Route::get('/chart-data', [ChartJSController::class, 'getChartData'])->name('cha
 Route::get('/chart-by-department', [ChartJSController::class, 'getDatadepartment'])->name('ticketsByDepartment');
 /** tickets por dia */
 Route::get('/chart-per-day', [ChartJSController::class, 'getDataDay'])->name('ticketsPerDay');
+/**solicitar los tickets creados o cerrado de un determinado mes, segun el mes seleccionado */
+Route::get('/chart-per-month', [ChartJSController::class, 'getDataMonth'])->name('ticketsPerMonth');
 
 // Route::get('graf1', [ChartJSController::class, 'index']); 
 

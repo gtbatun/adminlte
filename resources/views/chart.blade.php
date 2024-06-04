@@ -35,7 +35,34 @@
     
     </div>
     <!-- </div> -->
-
+<div class="row">
+<div class="col-md-4 col-xs-12">
+    <div class="row">
+        <div class="col-md-11">
+            <div class="card">
+                <div class="card-body">
+                <h3 class="text-center">Tickets por agente/meses</h3>
+                <select id="s_month" >
+                    <option value="0">January</option>
+                    <option value="1">February</option>
+                    <option value="2">March</option>
+                    <option value="3">April</option>
+                    <option value="4">May</option>
+                    <option value="5">June</option>
+                    <option value="6">July</option>
+                    <option value="7">August</option>
+                    <option value="8">September</option>
+                    <option value="9">October</option>
+                    <option value="10">November</option>
+                    <option value="11">December</option>
+                </select>
+                </div>
+                <canvas id="agentmonth" width="400" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
 
 <div class="row mt-2">
 <!-- ----------------------------------------------------------------------------------------------------------------------- -->
@@ -101,6 +128,49 @@
 
 @section('js')
 <script>
+    /** ------------------------------------------------------------------------------- */
+            document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('agentmonth').getContext('2d');
+            var chart;
+            function fetchData(month){
+                fetch(`/chart-per-month?month=${month}`)
+                .then(response => response.json())
+                .then(data => {
+                    updateChart(data);
+                });
+            }
+            function updateChart(data){
+                if(chart){
+                    chart.destroy();
+                }           
+                chart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: data.labels, 
+                            datasets: [{
+                            label: 'Tickets',
+                            data: data.data,
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+
+            document.getElementById('s_month').addEventListener('change', function() {
+            fetchData(this.value);
+            });
+            fetchData('month');
+        });
+    /**------------------------------------------------------------------------------------- */
     /**seccion de la grafica de tickets resuletos por agente de sistemas o por agente */
     document.addEventListener('DOMContentLoaded', function() {
         var ctx = document.getElementById('chartdsm').getContext('2d');

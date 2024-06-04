@@ -30,46 +30,38 @@ class HomeController extends Controller
     {
          
 
-// Obtener el recuento de gestiones por Agente, si el agente es admin, mostrar los que el cerro, si es user normal, mostrar el que creo 
-/** crear una consullta para mostrar los tickets cerrados por el agente, encaso de necesitarse mostara los creados o cerrados */
-/** Crear una grafica donde se pueda ver todos los tickets cerrados por mes, esto lo ven los supervisores o odministradores */
-/** Los Usuarios solo podran ver los tickets que ellos cerraron( que les habian asignado a su dep) */
-
-/**Grafica 1 Tickets Cerrados por agente
- * Admin y supervisor: ver todos los tickets cerrados(ver si se puede clasificar o agrupar por departamento)
- * User staandar: Ver los tickets que el finalizo, unicamnete los que tiene asignado a su departamento.
- */
-
+// Obtener el recuento de gestiones por Agente
 $user = Auth::user();
-if($user->is_admin == 10 || $user->is_admin == 5){
-// $agente = Gestion::where('gestion.status_id', '=', '4')
-// ->whereMonth('gestion.created_at', '=', date('m'))
-// ->join('users', 'users.id', '=', 'gestion.user_id')
-// ->selectRaw('COUNT(*) as count, users.name as user_name')
-// ->groupBy('users.name')
-// ->pluck('count', 'user_name');
-    $agente = Gestion::where('gestion.status_id', '=', '4')
-    ->whereMonth('gestion.created_at', '=', date('m'))
-    ->join('users', 'users.id', '=', 'gestion.user_id')
-    ->selectRaw('COUNT(*) as count, users.name as user_name')
-    ->groupBy('users.name')
-    ->pluck('count', 'user_name');
-    }else{
-        // echo "hola";
-    $agente = Ticket::where('ticket.type', '=', auth()->user()->department_id)
-    ->whereMonth('ticket.created_at', '=', date('m'))
-    ->join('users', 'users.id', '=', 'ticket.user_id')
-    ->selectRaw('COUNT(*) as count, users.name as user_name')
-    ->groupBy('user_id')
-    ->pluck('count', 'user_name');
-    }
+if($user->is_admin == 10){
+// filtar la infoirmacion que pueda visualizar el emplea<do en el dashboard
+$agente = Ticket::whereYear('ticket.created_at', date('Y'))
+->where('gestion.status_id', '=', '4')
+->where('users.is_admin', '=', '10')
+->join('gestion', 'gestion.ticket_id', '=', 'ticket.id')
+->join('users', 'users.id', '=', 'gestion.user_id')
+->selectRaw('COUNT(*) as count, users.name as user_name')
+->groupBy('users.name')
+->pluck('count', 'user_name');
+}else{
+    // echo "hola";
+    $agente = Ticket::whereYear('ticket.created_at', date('Y'))
+            // ->where('ticket.status_id', '=', '4')
+                ->where('ticket.type', '=', auth()->user()->department_id)
+            // ->where('gestion.status_id', '=', '4')
+            // ->where('users.is_admin', '=', '10')
+            // ->join('gestion', 'gestion.ticket_id', '=', 'ticket.id')
+            ->join('users', 'users.id', '=', 'ticket.user_id')
+            ->selectRaw('COUNT(*) as count, users.name as user_name')
+            ->groupBy('user_id')
+            ->pluck('count', 'user_name');
+}
 // Convertir los datos en un array para ser utilizados en la gráfica
 
 $a_labels = $agente->keys();
 $a_data = $agente->values();
 
 // Obtener el recuento de Tickets por Departamento
-        if($user->is_admin == 10 || $user->is_admin == 5){
+        if($user->is_admin == 10){
                 $department = Ticket::whereYear('ticket.created_at', date('Y'))                
                 ->whereMonth('ticket.created_at', '=', date('m'))
                 ->join('department', 'ticket.department_id', '=', 'department.id')
@@ -93,13 +85,13 @@ $a_data = $agente->values();
 // Obtener el recuento de tickets por día para el año actual
         if($user->is_admin == 10){
                 $t_dia1 = Ticket::whereYear('created_at', date('Y'))
-                // ->whereMonth('ticket.created_at', '=', date('m'))
+                ->whereMonth('ticket.created_at', '=', date('m'))
                 ->selectRaw('COUNT(*) as count, DAY(created_at) as day')
                 ->groupBy('day')
                 ->pluck('count', 'day');
         }else{
             $t_dia1 = Ticket::whereYear('created_at', date('Y'))
-                // ->whereMonth('ticket.created_at', '=', date('m'))
+                ->whereMonth('ticket.created_at', '=', date('m'))
                 ->where('ticket.type', '=', auth()->user()->department_id)
                 ->selectRaw('COUNT(*) as count, DAY(created_at) as day')
                 ->groupBy('day')
@@ -120,7 +112,7 @@ $a_data = $agente->values();
 
 
         /// recien agregado para poner datos en el dashboard
-        if($user->is_admin == 10 || $user->is_admin == 5){
+        if($user->is_admin == 10){
         $ticketCounts = DB::table('ticket')
             ->select('status_id', DB::raw('COUNT(*) as total'),'status.name')
             ->whereMonth('ticket.created_at', '=', date('m'))
@@ -143,7 +135,7 @@ $a_data = $agente->values();
 
    
         // return view('home', compact('a_labels', 'a_data','d_labels', 'd_data','labels1', 'data1'));
-        return view('chart', compact('a_labels', 'a_data','d_labels', 'd_data','labels1', 'data1','ticketCounts'));
+        return view('chart1', compact('a_labels', 'a_data','d_labels', 'd_data','labels1', 'data1','ticketCounts'));
        
         // return view('home');
     }
