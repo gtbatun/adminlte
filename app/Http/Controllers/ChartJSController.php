@@ -48,10 +48,12 @@ class ChartJSController extends Controller
     
     public function getDataMonth(Request $request)
     {
-        $month = $request->input('month');
+        // Obtener el mes actual si no se proporciona uno
+        $month = $request->input('month',date('m'));// date('m') devuelve el mes actual en formato de dos dígitos
         if (!$month) {
             return response()->json(['error' => 'Month is required'], 400);
         }
+        Log::info('Mes recibido: ' . $month);
 
         $data = $this->getDataMonth1($month);        
         return response()->json($data);
