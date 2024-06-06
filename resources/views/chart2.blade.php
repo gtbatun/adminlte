@@ -41,7 +41,7 @@
             <div class="col-md-11">
                 <div class="card">
                     <div class="card-body">
-                    <h3 class="text-center">Tickets por agente</h3>
+                    <h3 class="text-center">Tickets por agente/meses</h3>
                     <select id="s_month" >
                         <option value="1">Enero</option>
                         <option value="2">Febrero</option>
@@ -67,7 +67,7 @@
             <div class="col-md-11">
                 <div class="card">
                     <div class="card-body">
-                    <h3 class="text-center">Tickets por Departamento</h3>
+                    <h3 class="text-center">Tickets por Departamento/meses</h3>
                     <select id="d_month" >
                         <option value="1">Enero</option>
                         <option value="2">Febrero</option>
@@ -93,7 +93,7 @@
             <div class="col-md-11">
                 <div class="card">
                     <div class="card-body">
-                    <h3 class="text-center">Tickets creados por dia</h3>
+                    <h3 class="text-center">Tickets por Departamento/meses</h3>
                     <select id="day_month" >
                         <option value="1">Enero</option>
                         <option value="2">Febrero</option>
@@ -117,7 +117,64 @@
 </div>
 
 <div class="row mt-2">
-
+<!-- ----------------------------------------------------------------------------------------------------------------------- -->
+<!-- Grafica de tickets por agente, con opcion de vista por dia, semana, mes -->
+<!-- <div class="col-md-4 col-xs-12">
+    <div class="row">
+        <div class="col-md-11">
+            <div class="card">
+                <div class="card-body">
+                <h3 class="text-center">Tickets por agente</h3>
+                <select id="timeRange">
+                    <option value="day">Día</option>
+                    <option value="week">Semana</option>
+                    <option value="month">Mes</option>
+                    <option value="year">Año</option>
+                </select>
+                <canvas id="chartdsm"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> -->
+<!-- grafica de ticket por departamento -->
+<!-- <div class="col-md-4 col-xs-12">
+    <div class="row">
+        <div class="col-md-11">
+            <div class="card">
+                <div class="card-body">
+                <h3 class="text-center">Tickets por Departamento</h3>
+                <select id="timeRangedep">
+                    <option value="day">Día</option>
+                    <option value="week">Semana</option>
+                    <option value="month">Mes</option>
+                    <option value="year">Año</option>
+                </select>
+                <canvas id="deptdsm"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> -->
+<!-- grafica de tickets por dia -->
+<!-- <div class="col-md-4 col-xs-12">
+    <div class="row">
+        <div class="col-md-11">
+            <div class="card">
+                <div class="card-body">
+                <h3 class="text-center">Tickets por Departamento</h3>
+                <select id="timeRangedxm">
+                    <option value="day">Día</option>
+                    <option value="week">Semana</option>
+                    <option value="month">Mes</option>
+                    <option value="year">Año</option>
+                </select>
+                <canvas id="dxmtdsm"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> -->
 </div>
 @endsection
 
@@ -285,5 +342,145 @@
             });
         });
     /**------------------------------------------------------------------------------------- */
-  </script>
+    /**seccion de la grafica de tickets resuletos por agente de sistemas o por agente */
+    document.addEventListener('DOMContentLoaded', function() {
+        var ctx = document.getElementById('chartdsm').getContext('2d');
+        var chart;
+        function fetchData(range) {
+            fetch(`/chart-data?range=${range}`)
+                .then(response => response.json())
+                .then(data => {
+                    updateChart(data);
+                });
+        }
+        function updateChart(data) {
+            if (chart) {
+                chart.destroy();
+            }
+            chart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: 'Tickets',
+                        data: data.data,
+                        backgroundColor:[
+                            'rgb(255, 99, 132)',
+                            'rgb(205, 199, 32)',
+                            'rgb(54, 162, 235)',
+                            'rgb(255, 205, 86)',
+                            'rgb(255, 192, 203)',],
+                        borderColor: 'rgba(255, 255, 255, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+        document.getElementById('timeRange').addEventListener('change', function() {
+            fetchData(this.value);
+        });
+        // Cargar datos iniciales
+        fetchData('day');
+    });
+
+/** ------------------- seccion de tickets creados por departamento ---------------------------------------- */
+    document.addEventListener('DOMContentLoaded', function() {
+        var ctx = document.getElementById('deptdsm').getContext('2d');
+        var chart;
+        function fetchData(range) {
+            fetch(`/chart-by-department?range=${range}`)
+                .then(response => response.json())
+                .then(data => {
+                    updateChart(data);
+                });
+        }
+        function updateChart(data) {
+            if (chart) {
+                chart.destroy();
+            }
+            chart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: 'Tickets',
+                        data: data.data,
+                        backgroundColor:[
+                        'rgb(255, 99, 132)',
+                        'rgb(54, 162, 235)',
+                        'rgb(255, 205, 86)',
+                        'rgb(255, 192, 203)',],
+                        borderColor: 'rgba(255, 255, 255, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+        document.getElementById('timeRangedep').addEventListener('change', function() {
+            fetchData(this.value);
+        });
+        // Cargar datos iniciales
+        fetchData('day');
+    });
+/** ------------------- seccion de tickets creados por dia en todo el mes presente ---------------------------------------- */
+document.addEventListener('DOMContentLoaded', function() {
+        var ctx = document.getElementById('dxmtdsm').getContext('2d');
+        var chart;
+        function fetchData(range) {
+            fetch(`/chart-per-day?range=${range}`)
+                .then(response => response.json())
+                .then(data => {
+                    updateChart(data);
+                });
+        }
+        function updateChart(data) {
+            if (chart) {
+                chart.destroy();
+            }
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: 'Tickets',
+                        data: data.data,
+                        backgroundColor:[
+                        'rgb(255, 99, 132)',
+                        'rgb(54, 162, 235)',
+                        'rgb(255, 205, 86)',
+                        'rgb(255, 192, 203)',],
+                        borderColor: 'rgba(255, 255, 255, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+        document.getElementById('timeRangedxm').addEventListener('change', function() {
+            fetchData(this.value);
+        });
+        // Cargar datos iniciales
+        fetchData('day');
+    });
+</script>
 @endsection

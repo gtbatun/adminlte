@@ -27,7 +27,7 @@
                 <div class="table-responsive" >
                 <table id="reportTableone" class="table table-striped table-bordered dt-responsive nowrap" style="width:98%">
                     <thead>
-                        <tr>
+                        <tr> 
                             <th>ID</th>
                             <th>Creado por</th>
                             <th>Asignado a</th>
@@ -92,14 +92,19 @@
                     response.data.forEach(function(ticket) {                            
                         table.row.add([
                             ticket.id,
-                            ticket.creator_department ? ticket.creator_department.name : '',
-                            ticket.assigned_department ? ticket.assigned_department.name : '',
-                            ticket.area ? ticket.area.name : '',
-                            ticket.category ? ticket.category.name : '',
+                            // ticket.creator_department ? ticket.creator_department.name : '',
+                            ticket.creador,
+                            // ticket.assigned_department ? ticket.assigned_department.name : '',
+                            ticket.asignado,
+                            // ticket.area ? ticket.area.name : '',
+                            ticket.concepto,
+                            // ticket.category ? ticket.category.name : '',
+                            ticket.categoria,
                             ticket.title,
                             // ticket.created_at,
                             moment(ticket.created_at).format('YYYY-MM-DD'), // Formatear la fecha
-                            ticket.status ? ticket.status.name : '',
+                            // ticket.status ? ticket.status.name : '',
+                            ticket.estado,
                             ticket.personal_sistemas ? ticket.personal_sistemas : ''
                         ]).draw(false);
                     });

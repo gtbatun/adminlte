@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 class ChartJSController extends Controller
 {
     public function index(){
-        return view('Report.generar');
+        //
     }
 
     public function store(Request $request){
@@ -68,7 +68,7 @@ class ChartJSController extends Controller
         $user = Auth::user();
         $agente = collect();
 
-        if ($user->is_admin == 10) {
+        if ($user->is_admin == 10 || $user->is_admin == 5) {
             $agente = Ticket::whereYear('ticket.created_at', $year)
                 ->whereMonth('ticket.created_at', $month)
                 ->where('gestion.status_id', '=', '4')
@@ -107,7 +107,7 @@ class ChartJSController extends Controller
         if (!$month) {
             return response()->json(['error' => 'Month is required'], 400);
         }
-        Log::info('Mes recibido: ' . $month);
+        // Log::info('Mes recibido: ' . $month);
 
         $data = $this->getDepartmentDataMonth1($month);        
         return response()->json($data);
@@ -120,16 +120,16 @@ class ChartJSController extends Controller
         $user = Auth::user();
         $department = collect();
 
-        if ($user->is_admin == 10) {
-            $department = Ticket::whereYear('ticket.created_at', date('Y'))                
-                ->whereMonth('ticket.created_at', '=', date('m'))
+        if ($user->is_admin == 10 || $user->is_admin == 5) {
+            $department = Ticket::whereYear('ticket.created_at',$year)                
+                ->whereMonth('ticket.created_at', '=', $month)
                 ->join('department', 'ticket.department_id', '=', 'department.id')
                 ->selectRaw('COUNT(*) as count, department.name as department_name')
                 ->groupBy('department.name')
                 ->pluck('count', 'department_name');
         } else {
-            $department = Ticket::whereYear('ticket.created_at', date('Y'))
-                ->whereMonth('ticket.created_at', '=', date('m'))                
+            $department = Ticket::whereYear('ticket.created_at', $year)
+                ->whereMonth('ticket.created_at', '=', $month)                
                 ->where('ticket.type', '=', auth()->user()->department_id)
                 ->join('area', 'ticket.area_id', '=', 'area.id')
                 ->selectRaw('COUNT(*) as count, area.name as area_name')
@@ -146,6 +146,58 @@ class ChartJSController extends Controller
             'data' => $d_data
         ];
     }        
+    /** --------------------------------Tickets creados al dia -------------------------------- */
+    public function getDayDataMonth(Request $request)
+    {
+        // Obtener el mes actual si no se proporciona uno
+        $month = $request->input('month',date('m'));// date('m') devuelve el mes actual en formato de dos dígitos
+        if (!$month) {
+            return response()->json(['error' => 'Month is required'], 400);
+        }
+        // Log::info('Mes recibido: ' . $month);
+
+        $data = $this->getDayDataMonth1($month);        
+        return response()->json($data);
+    } 
+    
+    private function getDayDataMonth1($month)
+    {
+        $year = date('Y'); // Puedes cambiar esto si necesitas un año específico
+
+        $user = Auth::user();
+        $t_dia1 = collect();
+
+         if ($user->is_admin == 10 || $user->is_admin == 5) {
+             $t_dia1 = Ticket::whereYear('ticket.created_at', $year)
+             ->whereMonth('ticket.created_at', $month)
+            ->selectRaw('COUNT(*) as count, DAY(created_at) as day')
+            ->groupBy('day')
+            ->pluck('count', 'day');
+        }else {            
+             $t_dia1 = Ticket::whereYear('ticket.created_at', $year)
+             ->whereMonth('ticket.created_at', $month)
+             ->where('ticket.type',auth()->user()->department_id)
+                ->selectRaw('COUNT(*) as count, DAY(created_at) as day')
+                ->groupBy('day')
+                ->pluck('count', 'day');
+
+        }
+        
+        // Llenar los datos para todos los días del mes actual
+        for ($i = 1; $i <= 31; $i++) {
+        $labels1[] = $i;
+        $data1[] = isset($t_dia1[$i]) ? $t_dia1[$i] : 0;
+        }
+        // Convertir los datos en un array para ser utilizados en la gráfica
+        $labels1 = array_values($labels1);
+        $data1 = array_values($data1);
+
+        return [
+            'labels' => $labels1,
+            'data' => $data1
+        ];
+    }  
+
     
 /** ------------------------------------------------------------------------------------------------- */
                         /**Consultar tickets o datos por mes y filtrarlos */

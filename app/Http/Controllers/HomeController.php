@@ -143,7 +143,8 @@ $a_data = $agente->values();
 
    
         // return view('home', compact('a_labels', 'a_data','d_labels', 'd_data','labels1', 'data1'));
-        return view('chart', compact('a_labels', 'a_data','d_labels', 'd_data','labels1', 'data1','ticketCounts'));
+        // return view('chart', compact('a_labels', 'a_data','d_labels', 'd_data','labels1', 'data1','ticketCounts'));
+        return view('chart', compact('ticketCounts'));
        
         // return view('home');
     }

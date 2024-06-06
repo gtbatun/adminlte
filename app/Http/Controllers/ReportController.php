@@ -63,12 +63,12 @@ class ReportController extends Controller
     {
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
-
+// WHERE department.id IN (20, 21) AND gestion.ticket_id = ticket.id /** parte quitado de l espacio vacion de la consulta de a bajo */
         $tickets = DB::table('ticket')
             ->select([
                 'ticket.id',
-                'department.name AS creador',
-                'ticket.department_id',
+                'department_creador.name AS creador',
+                'department_asignado.name as asignado',
                 'area.name as concepto',
                 'category.name as categoria',
                 'ticket.title',
@@ -80,8 +80,9 @@ class ReportController extends Controller
                             SELECT users.name 
                             FROM gestion 
                             INNER JOIN users ON users.id = gestion.user_id
-                            INNER JOIN department ON users.department_id = department.id
-                            WHERE department.id IN (20, 21) AND gestion.ticket_id = ticket.id
+                            inner JOIN department ON users.department_id = department.id
+                            
+                            WHERE department.id = ticket.department_id and gestion.ticket_id = ticket.id
                             ORDER BY gestion.id DESC
                             LIMIT 1
                         )
@@ -89,8 +90,9 @@ class ReportController extends Controller
                     END AS personal_sistemas
                 ")
             ])
-            ->join('department', 'department.id', '=', 'ticket.type')
-            // ->join('department', 'department.id', '=', 'ticket.type')
+            // ->join('department', 'department.id', '=', 'ticket.department_id')
+            ->join('department as department_creador', 'department_creador.id', '=', 'ticket.type')
+            ->join('department as department_asignado', 'department_asignado.id', '=', 'ticket.department_id')
             ->join('area', 'area.id', '=', 'ticket.area_id')
             ->join('category', 'category.id', '=', 'ticket.category_id')
             ->join('status', 'status.id', '=', 'ticket.status_id')

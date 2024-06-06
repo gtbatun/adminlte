@@ -100,51 +100,53 @@ Route::get('/tickets/data', [TicketController::class, 'data'])->name('tickets.da
 /** Consultar las gestiones de cada ticket */
 Route::get('/tickets/{ticket}/gestiones', [TicketController::class, 'getGestiones'])->name('tickets.gestiones');
 
-/**Consultar category asignada a un area y que pertenecen a un departamento */
+/**Consultar category asignada a un area y que pertenecen a un departamento 
+ * en vista crear tickets
+*/
 Route::get('/get-area/{department_id}', [DepartmentController::class, 'getArea']);
 Route::get('/get-category/{area_id}', [DepartmentController::class, 'getCategory']);
-
-/**ver tickets cerrados */
-Route::get('/ticket-closed',[TicketController::class,'closed'])->name('ticket.closed');
-/** Consultar los tickets cerrados */
-Route::get('/tickets/check-updates', [TicketController::class, 'checkUpdates'])->name('tickets.check-updates');
-/** Consultar notificaciones de tickets */
-Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
-Route::get('/notifications/mark-as-read/{id}', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
-
-Route::get('graf/', [ChartJSController::class, 'index']); 
-
 
 /** seccion para edicion de tickets */
 Route::get('/areas/{departmento}', [TicketController::class, 'getAreas']);
 Route::get('/categorias/{area}', [TicketController::class, 'getCategorias']);
 
-//Exporta a un documento excel los tickets seleccionados
-Route::get('/report/search', [ReportController::class, 'search2'])->name('report.search'); ///**** */
 
+/**ver tickets cerrados */
+Route::get('/ticket-closed',[TicketController::class,'closed'])->name('ticket.closed');
+/** Consultar los tickets cerrados */
+Route::get('/tickets/check-updates', [TicketController::class, 'checkUpdates'])->name('tickets.check-updates');
+
+/** Consultar notificaciones de tickets */
+Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+Route::get('/notifications/mark-as-read/{id}', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
+
+
+//Exporta a un documento excel los tickets seleccionados
+Route::get('/report/search', [ReportController::class, 'search'])->name('report.search'); ///**** */
 Route::get('reporte-excel/{start_date}/{end_date}', [ReportController::class, 'reportexcel'])->name('reporte.excel');
+
 /**Ruta para nueva grafica */
- /** tickets cerrados por personal de sistemas o agente*/
-Route::get('/chart-data', [ChartJSController::class, 'getChartData'])->name('chart.data');
-/** tickets por departamento */
-Route::get('/chart-by-department', [ChartJSController::class, 'getDatadepartment'])->name('ticketsByDepartment');
-/** tickets por dia */
-Route::get('/chart-per-day', [ChartJSController::class, 'getDataDay'])->name('ticketsPerDay');
 /**solicitar los tickets creados o cerrado de un determinado mes, segun el mes seleccionado */
 Route::get('/chart-per-month', [ChartJSController::class, 'getDataMonth'])->name('ticketsPerMonth'); /**Agente */
 Route::get('/chart-per-month-department', [ChartJSController::class, 'getDepartmentDataMonth'])->name('ticketsDepartmentPerMonth'); /**Departamento */
 Route::get('/chart-per-month-day', [ChartJSController::class, 'getDayDataMonth'])->name('ticketsDayPerMonth');/**Dia por dep */
 
-// Route::get('graf1', [ChartJSController::class, 'index']); 
 
 
-Route::post('graf/store',[ ChartJSController::class, 'store'])->name('reportessssss.store');
-/**nuevas graficas */
-Route::get('/data', [ChartJSController::class,'getData'])->name('chart.data');
-Route::get('/more-data',[ChartJSController::class,'getMoreData'])->name('chart.more-data');
-Route::get('/report/getData', [ChartJSController::class, 'getData'])->name('report.getData');
 
-Route::get('ticket-export/', [TicketController::class, 'export'])->name('ticket-export');
+
+/** tickets por dia */
+// Route::get('/chart-per-day', [ChartJSController::class, 'getDataDay'])->name('ticketsPerDay');
+// /** tickets cerrados por personal de sistemas o agente*/
+// Route::get('/chart-data', [ChartJSController::class, 'getChartData'])->name('chart.data');
+// /** tickets por departamento */
+// Route::get('/chart-by-department', [ChartJSController::class, 'getDatadepartment'])->name('ticketsByDepartment');
+// /**nuevas graficas, las funciones estan en la doc chart3.js */
+// Route::get('/data', [ChartJSController::class,'getData'])->name('chart.data');
+// Route::get('/more-data',[ChartJSController::class,'getMoreData'])->name('chart.more-data');
+// Route::get('/report/getData', [ChartJSController::class, 'getData'])->name('report.getData');
+
+// Route::get('ticket-export/', [TicketController::class, 'export'])->name('ticket-export');
 
 
 

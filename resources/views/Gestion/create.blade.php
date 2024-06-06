@@ -147,22 +147,24 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-xs-12 col-sm-12 col-md-4 pb-2 d-flex justify-content-end" >               
-                        <!-- fin seccion de area y categorias -->
-                        <!-- seccion de botones de cerrar y reabrir ticket -->
-                            @if($ticket->status_id != 4) 
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="1" name="cerrar" {{ $ticket->status_id == 4 ? 'checked' : '' }}>
-                                <label class="form-check-label text-danger" for="status_id"><strong>Cerrar Ticket</strong></label>            
-                            </div>
-                            @endif
-                            @if($ticket->status_id == 4)
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="2" name="reopen" {{ $ticket->status_id == 4 ? 'checked' : '' }}>
-                                <label class="form-check-label text-success" for="status_id"><strong>Reabrir Ticket</strong></label>            
-                            </div>
-                            @endif
-                            </div> 
+                            
+                                <div class="col-xs-12 col-sm-12 col-md-4 pb-2 d-flex justify-content-end" > 
+                                @if(auth()->user()->is_admin == 10 || auth()->user()->department_id == $ticket->department_id )
+                                @if($ticket->status_id != 4) 
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="1" name="cerrar" {{ $ticket->status_id == 4 ? 'checked' : '' }}>
+                                    <label class="form-check-label text-danger" for="status_id"><strong>Cerrar Ticket</strong></label>            
+                                </div>
+                                @endif
+                                @endif 
+                                @if($ticket->status_id == 4)
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="2" name="reopen" {{ $ticket->status_id == 4 ? 'checked' : '' }}>
+                                    <label class="form-check-label text-success" for="status_id"><strong>Reabrir Ticket</strong></label>            
+                                </div>
+                                @endif
+                                </div>
+                            
                         </div> 
                         <!-- fin de seccion de botones de cerrar y reabrir ticket -->
                         <div class="input-group">
