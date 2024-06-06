@@ -1,9 +1,7 @@
 @extends('adminlte::page')
 @section('content')
-
 <script src="{{asset('assets/js/plugins/chart-4.4.3.min.js')}}"></script>
 <script src="{{asset('assets/js/plugins/jquery-3.7.1.min.js')}}"></script>
-
 <!-- <div class="container"> -->
     <!-- <div class="row"> -->
   @if($ticketCounts)

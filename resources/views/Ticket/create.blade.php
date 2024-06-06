@@ -204,22 +204,24 @@ $(document).ready(function() {
     @endif
   });
 
+    /** ------------------------------------------------------------------------------------------------------------------- */
     // funcion para capturar el area y clasifar las categorias pertenecientes a las areas
     
     $(document).ready(function () {
         $('#area').change(function () {
             var area_id = $(this).val();
-            // console.log(area_id);
-            $.get("{{route('ticket.getCategory')}}", {area_id: area_id}, function (data) {
+            console.log(area_id);
+            $.get("{{route('ticket.getCategory')}}", {area_id: area_id}, function (data) { //
                 $('#category').empty();
                 $('#category').append('<option value="">Seleccionar una categoría</option>');
                 $.each(data, function (index, category) {
                     $('#category').append('<option value="' + category.id + '">' + category.name + '</option>');
                 });
             });
-            // console.log(category);
+            console.log('route.ticket.getCategory' + category);
         });
     }); 
+    /** ------------------------------------------------------------------------------------------------------------------- */
     //  
             let files = []; // Array para almacenar los archivos seleccionados
 

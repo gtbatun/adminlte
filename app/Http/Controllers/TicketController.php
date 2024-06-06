@@ -73,19 +73,7 @@ class TicketController extends Controller
                     $query->where('sucursal_id', auth()->user()->sucursal_id);
                 })
                 ->get();}
-            // }elseif($user->sucursal_id == 2) { 
-            //         $tickets = Ticket::with(['area', 'category', 'status', 'department'])
-            //             ->where(function($query) {
-            //                 $query->where('department_id', auth()->user()->department_id)
-            //                       ->orWhere('type', auth()->user()->department_id);
-            //             })
-            //             ->where('status_id', '!=', 4)
-            //             ->whereHas('user', function($query) {
-            //                 $query->where('sucursal_id', 2);
-            //             })
-            //             ->get();
-            //     }
-        // 
+
         
         // $tickets = Ticket::with('area','category','status','department')->get();
         $tickets = $tickets->map(function($ticket){
@@ -95,11 +83,7 @@ class TicketController extends Controller
 
             $user = auth()->user();
 
-            // if($ticket->user_id = $user->id){
-            //     $typeString = 'Creado';
-            // }elseif($ticket->department_id == $user->department_id){
-            //     $typeString = 'Creado';
-            // }
+           
             if ($ticket->user_id == $user->id) {
                 $type = '<strong>Creado</strong>'; 
                 
@@ -214,22 +198,6 @@ class TicketController extends Controller
     }
 
     
-    /* **/
-
-    public function getCategory(Request $request)
-    {
-        $area_id = $request->area_id;
-        $area = Area::find($area_id);
-
-        if (!$area) {
-            return response()->json(['error' => 'Area not found'], 404);
-        }
-
-        $category = $area->category;
-
-        return response()->json($category);
-    }
-    
 
     /**
      * Display a listing of the resource.
@@ -254,15 +222,7 @@ class TicketController extends Controller
             $ticket_clo = Ticket::with('area','category','status','department')
                 ->where('status_id', '=', 4 )
                 ->get();
-        }else{            
-                // $ticket_clo1 = Ticket::with('area','category','status','department')
-                // ->where(function($query) {
-                //     $query->where('department_id', auth()->user()->department_id)
-                //         ->orWhere('type','=', auth()->user()->department_id);
-                // })
-                // ->where('status_id', '=', 4)
-                // ->get();
-
+        }else{ 
                 $ticket_clo = Ticket::with(['area', 'category', 'status', 'department'])
                 ->where(function($query) {
                     $query->where('department_id', auth()->user()->department_id)
@@ -504,6 +464,18 @@ class TicketController extends Controller
     public function getCategorias($areaId) {
         $categorias = Category::where('area_id', $areaId)->get();
         return response()->json($categorias);
+    }    
+    
+    /* **/
+    public function getCategory(Request $request)
+    {
+        $area_id = $request->area_id;
+        $area = Area::find($area_id);
+        if (!$area) {
+            return response()->json(['error' => 'Area not found'], 404);
+        }
+        $category = $area->category;
+        return response()->json($category);
     }
 
     /** -------------------------------------------------------------------------------------- */

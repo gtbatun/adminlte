@@ -90,25 +90,38 @@ Route::get('storage/{archivo}', function ($archivo) {
 
 //Ruta GRUD para los usuarios
 Route::resource('user', UserController::class);
-Route::get('ticket/getCategory',[TicketController::class,'getCategory'])->name('ticket.getCategory');
 Route::resource('gestion',GestionController::class);
 Route::resource('ticket',TicketController::class);
-
 Route::resource('inventory',InventoryController::class);
-
 Route::get('/tickets/data', [TicketController::class, 'data'])->name('tickets.data');
 /** Consultar las gestiones de cada ticket */
 Route::get('/tickets/{ticket}/gestiones', [TicketController::class, 'getGestiones'])->name('tickets.gestiones');
 
-/**Consultar category asignada a un area y que pertenecen a un departamento 
- * en vista crear tickets
-*/
-Route::get('/get-area/{department_id}', [DepartmentController::class, 'getArea']);
-Route::get('/get-category/{area_id}', [DepartmentController::class, 'getCategory']);
 
-/** seccion para edicion de tickets */
+
+
+
+                /**-------------------------------------------**/
+                /**              -- Crear ticket --           **/
+                /**-------------------------------------------**/
+/** Consultar category asignada a un area y que pertenecen a un departamento */
+// Route::get('/get-area/{department_id}', [DepartmentController::class, 'getArea']);
+// Route::get('/get-category/{area_id}', [DepartmentController::class, 'getCategory']);
+
+                /**-------------------------------------------**/
+                /**                Editar de tickets          **/
+                /**-------------------------------------------**/
+/** Esta seccion funciona con la seleccion de l departmanto, se filtra las areas y los departamentos que contiene cada dep */
 Route::get('/areas/{departmento}', [TicketController::class, 'getAreas']);
 Route::get('/categorias/{area}', [TicketController::class, 'getCategorias']);
+Route::get('ticket/getCategory',[TicketController::class,'getCategory'])->name('ticket.getCategory');
+
+
+
+
+
+
+
 
 
 /**ver tickets cerrados */
