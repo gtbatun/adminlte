@@ -42,9 +42,11 @@ class ChartJSController extends Controller
 
         return response()->json(['data' => $data]);
     }
-    /** ------------------------------------------------------------------------------------------------------------ */
+/** ------------------------------------------------------------------------------------------------------------ */
+                        /**Consultar tickets o datos por mes y filtrarlos */
+/*** -----------------------------------------------------------------------------------------------------------  */
 
-    /*** -----------------------------------------------------------------------------------------------------------  */
+/** ---------------------------------  consulta para agentes ----------------------------- */
     
     public function getDataMonth(Request $request)
     {
@@ -79,7 +81,7 @@ class ChartJSController extends Controller
         } else {
             $agente = Ticket::whereYear('ticket.created_at', $year)
                 ->whereMonth('ticket.created_at', $month)
-                ->where('ticket.department_id', '=', auth()->user()->department_id)
+                ->where('ticket.type', '=', auth()->user()->department_id)
                 ->join('users', 'users.id', '=', 'ticket.user_id')
                 ->selectRaw('COUNT(*) as count, users.name as user_name')
                 ->groupBy('users.name')
@@ -96,12 +98,58 @@ class ChartJSController extends Controller
         ];
     }
     
-    
-        
-    
-    /** ------------------------------------------------------------------------------------------------- */
+    /** ------------------------------------------------ PerDEpartment --------------------------------------------------------------------- */
 
-    /** ------------------------------------------------------------------------------------------------- */
+    public function getDepartmentDataMonth(Request $request)
+    {
+        // Obtener el mes actual si no se proporciona uno
+        $month = $request->input('month',date('m'));// date('m') devuelve el mes actual en formato de dos dígitos
+        if (!$month) {
+            return response()->json(['error' => 'Month is required'], 400);
+        }
+        Log::info('Mes recibido: ' . $month);
+
+        $data = $this->getDepartmentDataMonth1($month);        
+        return response()->json($data);
+    } 
+    
+    private function getDepartmentDataMonth1($month)
+    {
+        $year = date('Y'); // Puedes cambiar esto si necesitas un año específico
+
+        $user = Auth::user();
+        $department = collect();
+
+        if ($user->is_admin == 10) {
+            $department = Ticket::whereYear('ticket.created_at', date('Y'))                
+                ->whereMonth('ticket.created_at', '=', date('m'))
+                ->join('department', 'ticket.department_id', '=', 'department.id')
+                ->selectRaw('COUNT(*) as count, department.name as department_name')
+                ->groupBy('department.name')
+                ->pluck('count', 'department_name');
+        } else {
+            $department = Ticket::whereYear('ticket.created_at', date('Y'))
+                ->whereMonth('ticket.created_at', '=', date('m'))                
+                ->where('ticket.type', '=', auth()->user()->department_id)
+                ->join('area', 'ticket.area_id', '=', 'area.id')
+                ->selectRaw('COUNT(*) as count, area.name as area_name')
+                ->groupBy('area.name')
+                ->pluck('count', 'area_name');
+        }
+
+        // Convertir los datos en un array para ser utilizados en la gráfica
+        $d_labels = $department->keys()->toArray();
+        $d_data = $department->values()->toArray();
+
+        return [
+            'labels' => $d_labels,
+            'data' => $d_data
+        ];
+    }        
+    
+/** ------------------------------------------------------------------------------------------------- */
+                        /**Consultar tickets o datos por mes y filtrarlos */
+/** ------------------------------------------------------------------------------------------------- */
     public function getChartData(Request $request)
     {
         $range = $request->input('range', 'day');     

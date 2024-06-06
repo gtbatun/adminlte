@@ -131,7 +131,9 @@ Route::get('/chart-by-department', [ChartJSController::class, 'getDatadepartment
 /** tickets por dia */
 Route::get('/chart-per-day', [ChartJSController::class, 'getDataDay'])->name('ticketsPerDay');
 /**solicitar los tickets creados o cerrado de un determinado mes, segun el mes seleccionado */
-Route::get('/chart-per-month', [ChartJSController::class, 'getDataMonth'])->name('ticketsPerMonth');
+Route::get('/chart-per-month', [ChartJSController::class, 'getDataMonth'])->name('ticketsPerMonth'); /**Agente */
+Route::get('/chart-per-month-department', [ChartJSController::class, 'getDepartmentDataMonth'])->name('ticketsDepartmentPerMonth'); /**Departamento */
+Route::get('/chart-per-month-day', [ChartJSController::class, 'getDayDataMonth'])->name('ticketsDayPerMonth');/**Dia por dep */
 
 // Route::get('graf1', [ChartJSController::class, 'index']); 
 

@@ -63,14 +63,28 @@ class TicketController extends Controller
             ->where('status_id', '!=', 4 )
             ->get();
         }else{ 
-            $tickets = Ticket::with('area','category','status','department')
+            $tickets = Ticket::with(['area', 'category', 'status', 'department'])
                 ->where(function($query) {
                     $query->where('department_id', auth()->user()->department_id)
-                        ->orWhere('type','=', auth()->user()->department_id);
+                        ->orWhere('type', auth()->user()->department_id);
                 })
                 ->where('status_id', '!=', 4)
-                ->get();
-                }
+                ->whereHas('user', function($query) {
+                    $query->where('sucursal_id', auth()->user()->sucursal_id);
+                })
+                ->get();}
+            // }elseif($user->sucursal_id == 2) { 
+            //         $tickets = Ticket::with(['area', 'category', 'status', 'department'])
+            //             ->where(function($query) {
+            //                 $query->where('department_id', auth()->user()->department_id)
+            //                       ->orWhere('type', auth()->user()->department_id);
+            //             })
+            //             ->where('status_id', '!=', 4)
+            //             ->whereHas('user', function($query) {
+            //                 $query->where('sucursal_id', 2);
+            //             })
+            //             ->get();
+            //     }
         // 
         
         // $tickets = Ticket::with('area','category','status','department')->get();
@@ -222,8 +236,6 @@ class TicketController extends Controller
      */
     // public function export($fechaInicio, $fechaFin){
         public function export(){
-        // return Excel::download(new TicketExport($fechaInicio, $fechaFin), 'Tickets.xlsx');        
-        // return Excel::download(new TicketExport($fechaInicio, $fechaFin), 'tickets.xlsx');
         return Excel::download(new TicketExport('2024-04-15', '2024-04-19'), 'Tickets.xlsx');
         
     }    
@@ -243,13 +255,24 @@ class TicketController extends Controller
                 ->where('status_id', '=', 4 )
                 ->get();
         }else{            
-                $ticket_clo = Ticket::with('area','category','status','department')
+                // $ticket_clo1 = Ticket::with('area','category','status','department')
+                // ->where(function($query) {
+                //     $query->where('department_id', auth()->user()->department_id)
+                //         ->orWhere('type','=', auth()->user()->department_id);
+                // })
+                // ->where('status_id', '=', 4)
+                // ->get();
+
+                $ticket_clo = Ticket::with(['area', 'category', 'status', 'department'])
                 ->where(function($query) {
                     $query->where('department_id', auth()->user()->department_id)
-                        ->orWhere('type','=', auth()->user()->department_id);
+                        ->orWhere('type', auth()->user()->department_id);
                 })
                 ->where('status_id', '=', 4)
-                ->get();    
+                ->whereHas('user', function($query) {
+                    $query->where('sucursal_id', auth()->user()->sucursal_id);
+                })
+                ->get();  
         }
         
 
@@ -289,18 +312,50 @@ class TicketController extends Controller
      */
     public function create()
     {
+        if(auth()->user()->sucursal_id == 1){
+            // $departamento = Department::where('enableforticket','!=','null')
+            $additionalDepartmentIds = [18,20,21,23];
+            $departamento = Department::whereIn('id',$additionalDepartmentIds)
+            ->pluck('name', 'id');
+        }else{
+            // $departamento = Department::where('multi','!=','null')
+            $additionalDepartmentIds = [20,21];
+            $departamento = Department::whereIn('id',$additionalDepartmentIds)
+            ->pluck('name', 'id');
+        }
+
+
+
+        $ticket = new Ticket;
+        return view('Ticket.create',
+        [
+            'areas' => Area::pluck('name','id'),
+            'category' => Category::pluck('name','id','area_id'),
+            'department' => $departamento,
+            'status' => Status::pluck('name','id'),
+            'ticket' => $ticket
+        ]);
+    }
+
+    /** 
+     * 
+     * 
+     * 
+     * 
+     * */
+    public function create1()
+    {
         // excluir sistemas y soporte, todos lo pueden ver sin excepcion
         $additionalDepartmentIds = [20,21]; // agregar en esta seccion los departamento que se desean visualizar
         $departamento1 = Department::whereIn('id', $additionalDepartmentIds)
-                        // ->orWhereIn('id',$additionalDepartmentIds)
                         ->pluck('name', 'id');
                         
                         // $departamento = Department::where('sucursal_id', auth()->user()->sucursal_id)
                         // ->orWhereIn('id',$additionalDepartmentIds)
                         // ->pluck('name', 'id');
-        
+        $dep_enable_ticket= [18,23]; 
         $departamento = Department::where('sucursal_id', auth()->user()->sucursal_id)
-        ->where('id',18) // poner un array si se desa poner mas departamentos
+        ->whereIn('id',$dep_enable_ticket) // poner un array si se desa poner mas departamentos
         ->orWhereIn('id',$additionalDepartmentIds)
             ->pluck('name', 'id');
         $ticket = new Ticket;
@@ -314,6 +369,7 @@ class TicketController extends Controller
             'ticket' => $ticket
         ]);
     }
+ 
 
     /**
      * Store a newly created resource in storage.
