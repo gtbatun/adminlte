@@ -67,7 +67,6 @@
                     @endforeach
                 </select>
             </div>
-
             <!-- ------------------------------------------------------------------------------------------ -->
             <!--  seccion para insertar imagenes y visualizarlos-->
             <div class="col-xs-12 col-sm-12 col-md-6 mt-2">
@@ -132,7 +131,7 @@
 <script>
     document.getElementById('departamento').addEventListener('change', function() {
         var departamentoId = this.value;
-        fetch(`/areas/${departamentoId}`)
+        fetch(`/get-area/${departamentoId}`)
             .then(response => response.json())
             .then(data => {
                 var areaSelect = document.getElementById('area');
@@ -148,7 +147,7 @@
     });
     document.getElementById('area').addEventListener('change', function() {
         var areaId = this.value;
-        fetch(`/categorias/${areaId}`)
+        fetch(`/get-category/${areaId}`)
             .then(response => response.json())
             .then(data => {
                 var categoriaSelect = document.getElementById('categoria');

@@ -8,24 +8,18 @@ use App\Models\Category;
 use App\Models\Department;
 use App\Models\Gestion;
 use App\Models\Status;
-use App\Models\User;
-use App\Models\Sucursal;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
-// se agregan para que funcione la opcion exportar
 use App\Exports\TicketExport;
 use Maatwebsite\Excel\Facades\Excel;
-
 use App\Notifications\TicketNotification;
-
 use Illuminate\Support\Facades\Log;
- 
+
+use App\Models\User;
+use App\Models\Sucursal;
+use Illuminate\Support\Str; 
 use Illuminate\Support\Facades\Gate;
-//
-
 use Illuminate\Support\Facades\Storage;
-
 use Illuminate\Support\Facades\DB;
 
 class TicketController extends Controller
@@ -54,10 +48,8 @@ class TicketController extends Controller
     {
         if (!auth()->check()) {
             return response()->json(['error' => 'Unauthorized'], 401);
-        }
-        
-        $user = Auth::user();
-        
+        }        
+        $user = Auth::user();        
         if($user->is_admin == 10 || $user->is_admin == 5){
             $tickets = Ticket::with('area','category','status','department')
             ->where('status_id', '!=', 4 )
@@ -72,18 +64,15 @@ class TicketController extends Controller
                 ->whereHas('user', function($query) {
                     $query->where('sucursal_id', auth()->user()->sucursal_id);
                 })
-                ->get();}
-
-        
+                ->get();
+            }        
         // $tickets = Ticket::with('area','category','status','department')->get();
         $tickets = $tickets->map(function($ticket){
             $userDepartmentId = auth()->user()->department_id;
             // $typeString = ($ticket->department_id == $userDepartmentId) ?  'Asignado':'Creado'; // En este caso, ambos retornos son 'creado'
             // $typeColor = ($ticket->department_id == $userDepartmentId) ?  'rgba(209, 90, 13)' : 'rgba(5, 47, 233)' ;
 
-            $user = auth()->user();
-
-           
+            $user = auth()->user();           
             if ($ticket->user_id == $user->id) {
                 $type = '<strong>Creado</strong>'; 
                 
@@ -95,8 +84,7 @@ class TicketController extends Controller
                 $type = '<strong>'.$ticket->department->name.'</strong>';
                 // $color = 'rgba(147, 149, 179,0.4)'; // Gris
                 $color = '';
-            }
-            
+            }            
             
             $color1 = ($ticket->status->name == 'Nuevo') ? 'rgba(255, 0, 0, 0.2)' : 'rgba(0, 0, 0, 0.0)';
             $typeColorback = ($ticket->status->name == 'En proceso') ? 'rgba(255, 165, 0, 0.2)' : $color1;
@@ -152,10 +140,8 @@ class TicketController extends Controller
                         $gestionTime = $ticket->created_at; // Formato de fecha y hora
                     }
                 }
-            /**------------------------------------------------------------------------------------------------------------------------------- */
-       
-
-            // $typeColorback = ($ticket->status == 'Nuevo') ? 'rgba(0, 0, 255, 0.2)' : 'rgba(0, 255, 0, 0.2)'; // Azul para Asignado, Verde para Creado
+/**------------------------------------------------------------------------------------------------------------------------------- */
+       // $typeColorback = ($ticket->status == 'Nuevo') ? 'rgba(0, 0, 255, 0.2)' : 'rgba(0, 255, 0, 0.2)'; // Azul para Asignado, Verde para Creado
 
             return [
                 'id' => $ticket->id,
@@ -180,8 +166,7 @@ class TicketController extends Controller
         
         /**Fucnion para retornar el ultimo gestion, si es tuyo o ya fue respondido */
         
-        return response()->json(['data' => $tickets]);
-        
+        return response()->json(['data' => $tickets]);        
     }
     /*** ontener las gestiones de lo cada ticket*/
     public function getGestiones(Ticket $ticket)
@@ -193,11 +178,8 @@ class TicketController extends Controller
                             ->with(['usuario:id,name,email,image'])
                             ->select('id', 'ticket_id', 'coment', 'image', 'user_id', 'created_at', 'status_id')
                             ->get();
-        return response()->json($h_gestiones1);
-        
-    }
-
-    
+        return response()->json($h_gestiones1);        
+    }    
 
     /**
      * Display a listing of the resource.
@@ -206,7 +188,7 @@ class TicketController extends Controller
         public function export(){
         return Excel::download(new TicketExport('2024-04-15', '2024-04-19'), 'Tickets.xlsx');
         
-    }    
+        }    
 
     public function showReport(Request $request){
         $startDate = $request->input('start_date');
@@ -233,8 +215,7 @@ class TicketController extends Controller
                     $query->where('sucursal_id', auth()->user()->sucursal_id);
                 })
                 ->get();  
-        }
-        
+        }       
 
         return view('Ticket.closed',[
             'ticket' => $ticket_clo           
@@ -283,9 +264,6 @@ class TicketController extends Controller
             $departamento = Department::whereIn('id',$additionalDepartmentIds)
             ->pluck('name', 'id');
         }
-
-
-
         $ticket = new Ticket;
         return view('Ticket.create',
         [
@@ -296,13 +274,6 @@ class TicketController extends Controller
             'ticket' => $ticket
         ]);
     }
-
-    /** 
-     * 
-     * 
-     * 
-     * 
-     * */
     public function create1()
     {
         // excluir sistemas y soporte, todos lo pueden ver sin excepcion
@@ -482,11 +453,20 @@ class TicketController extends Controller
 
     public function edit(Ticket $ticket)
     {
+        if(auth()->user()->sucursal_id == 1){
+            // $departamento = Department::where('enableforticket','!=','null')
+            $additionalDepartmentIds = [18,20,21,23];
+            $departamento = Department::whereIn('id',$additionalDepartmentIds)->get();
+        }else{
+            // $departamento = Department::where('multi','!=','null')
+            $additionalDepartmentIds = [20,21];
+            $departamento = Department::whereIn('id',$additionalDepartmentIds)->get();
+        }
         $ticket = Ticket::find($ticket->id);
-        $department = Department::all();
+        $department = $departamento;
         $areas = $ticket->department  ? $ticket->department->areas : collect();
         $categorias = $ticket->area ? $ticket->area->category : collect();
-    // return $categories;
+        // return $department;
         return view('Ticket.edit', compact('ticket','department','areas','categorias'));
     }
 
