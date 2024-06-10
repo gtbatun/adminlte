@@ -438,14 +438,22 @@ class TicketController extends Controller
     }    
     
     /* **/
-    public function getCategory(Request $request)
+    public function getCategory1(Request $request)
     {
+        return $request;
         $area_id = $request->area_id;
         $area = Area::find($area_id);
         if (!$area) {
             return response()->json(['error' => 'Area not found'], 404);
         }
         $category = $area->category;
+        
+        // return response()->json($category);
+    }
+    public function getCategory(Request $request)
+    {
+        $area_id = $request->input('area_id');
+        $category = Category::where('area_id', $area_id)->get();
         return response()->json($category);
     }
 

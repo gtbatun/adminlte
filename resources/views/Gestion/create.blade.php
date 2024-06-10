@@ -1,7 +1,7 @@
 @extends('adminlte::page')
 @section('content')
 
-
+<script src="{{asset('assets/js/plugins/jquery.min.js')}}"></script>
 
 <div class="container">
         @if ($errors->any())
@@ -125,16 +125,16 @@
                     <div id="errorContainer" ></div>
                     <div class="row">                    
                         <!-- inicio seccion de area y categorias -->
-                        <div class="col-xs-12 col-sm-12 col-md-4 mt-2" >
-                            <div class="form-group">
-                                <strong>Area:</strong>
-                                <select name="area_id" id="area" class="form-control border-1 bg-light shadow-sm ">
-                                <option value="">Seleccionar un Area</option>
-                                @foreach($areas as  $id => $name)
-                                <option value="{{$id}}" @if($id == old('area_id' , $ticket->area_id)) selected @endif >{{$name}}</option>
-                                @endforeach
-                                </select>
-                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-4 mt-2" >
+                                <div class="form-group">
+                                    <strong>Area:</strong>
+                                    <select name="area_id" id="area" class="form-control border-1 bg-light shadow-sm ">
+                                    <option value="">Seleccionar un Area</option>
+                                    @foreach($areas as  $id => $name)
+                                    <option value="{{$id}}" @if($id == old('area_id' , $ticket->area_id)) selected @endif >{{$name}}</option>
+                                    @endforeach
+                                    </select>
+                                </div>
                             </div>
                             <div class="col-xs-12 col-sm-12 col-md-4 mt-2" >
                                 <div class="form-group">
@@ -199,22 +199,20 @@
  </script>
 <!-- ---------------------------------------------------- -->
 <script>
-        // 
-        $(document).ready(function () {
-            $('#area').change(function () {
-                var area_id = $(this).val();
-                console.log(area_id);
-                $.get("{{route('ticket.getCategory')}}", {area_id: area_id}, function (data) {
-                    $('#category').empty();
-                    $('#category').append('<option value="">Seleccionar una categoría</option>');
-                    $.each(data, function (index, category) {
-                        $('#category').append('<option value="' + category.id + '">' + category.name + '</option>');
-                    });
+    $(document).ready(function () {
+        $('#area').change(function () {
+            var area_id = $(this).val();
+            console.log(area_id);
+            $.get("{{route('ticket.getCategory')}}", {area_id: area_id}, function (data) {
+                $('#category').empty();
+                $('#category').append('<option value="">Seleccionar una categoría</option>');
+                $.each(data, function (index, category) {
+                    $('#category').append('<option value="' + category.id + '">' + category.name + '</option>');
                 });
             });
-        });   
-    </script>
-    <!--  -->
+        });
+    });
+</script>
 <!-- -------------------------------------------------------- -->
 
 <!-- script de ver gestiones almacenadas  -->

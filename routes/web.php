@@ -100,7 +100,6 @@ Route::get('/tickets/{ticket}/gestiones', [TicketController::class, 'getGestione
 
 
 
-
                 /**-------------------------------------------**/
                 /**              -- Crear ticket --           **/
                 /**-------------------------------------------**/
@@ -114,8 +113,11 @@ Route::get('/get-category/{area_id}', [DepartmentController::class, 'getCategory
 /** Esta seccion funciona con la seleccion de l departmanto, se filtra las areas y los departamentos que contiene cada dep */
 // Route::get('/areas/{departmento}', [TicketController::class, 'getAreas']);
 // Route::get('/categorias/{area}', [TicketController::class, 'getCategorias']);
-/** seccion de gestion */
-Route::get('ticket/getCategory',[TicketController::class,'getCategory'])->name('ticket.getCategory');
+
+/** seccion de gestion
+ * Ruta para editar el area y la categoria segun sea o decida el elcreador o al que se le asigno el ticket
+ */
+Route::get('getCategory',[TicketController::class,'getCategory'])->name('ticket.getCategory');
 
 
 

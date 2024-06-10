@@ -51,13 +51,49 @@
         </div>
     </div>
 </div>
-
 <button id="enable-sound-notifications" class="btn btn-warning">Habilitar notificaciones de sonido</button>
+
+
+<!-- Modal de reasignar ticket  -->
+<div class="modal" id="modal-reasig-ticket">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal-titulo">Usuario: <strong class="text-danger"><span id="user-name-title"></span></strong></h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ route('user.update.password') }}" method="post">
+                    @csrf
+                    <input type="hidden" name="user_id" id="user-id">
+                    <div class="form-group">
+                        <label for="password">Nueva Contraseña</label>
+                        <input type="password" name="password" id="password" class="form-control">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 @endsection
 
 @section('js')
 <script>
+/** Scrip para habilitar las funciones del boton modal para la reasignacion del ticket */
+$(document).ready(function() {
+        $('.reasig-ticket-btn').click(function() {
+            var userId = $(this).data('user-id');
+            var userName = $(this).data('user-name');
+            $('#modal-update-password').find('#user-id').val(userId);
+
+            $('#modal-update-password').find('#user-name-title').text(userName);
+
+        });  
+     });
+/**Fin de script */
+
     $(document).ready(function() {
         var table;
         let audio = new Audio('/storage/images/user/notification-sound.mp3');

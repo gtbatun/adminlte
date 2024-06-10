@@ -137,11 +137,15 @@
         </div>
     </form>
 </div>
+
+
+
 @endsection
 @section('js')
-
-<!-- scrip para el nuevo select option -->
 <script type="text/javascript">
+    
+<!-- scrip para el nuevo select option -->
+
 $(document).ready(function() {
     $('#country').on('change', function() {
         var countryID = $(this).val();
@@ -152,8 +156,7 @@ $(document).ready(function() {
                 dataType: "json",
                 success: function(data) {
                     $('#state').empty();
-                    $('#state').append('<option value="">Seleccione un area</option>');
-                    
+                    $('#state').append('<option value="">Seleccione un area</option>');                    
                     $('#city').empty();
                     $('#city').append('<option value="">Seleccione una categoria</option>');
                     $.each(data, function(key, value) {
