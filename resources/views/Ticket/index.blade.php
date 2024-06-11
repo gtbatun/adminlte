@@ -54,23 +54,23 @@
 <button id="enable-sound-notifications" class="btn btn-warning">Habilitar notificaciones de sonido</button>
 
 
-<!-- Modal de reasignar ticket  -->
+<!---------------------------------- Modal de reasignar ticket  ---------------------->
 <div class="modal" id="modal-reasig-ticket">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modal-titulo">Usuario: <strong class="text-danger"><span id="user-name-title"></span></strong></h5>
+                <h5 class="modal-title" id="modal-titulo">Reasignar ticket<strong class="text-danger"><span id="ticket-name-title"></span></strong></h5>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
-                <form action="{{ route('user.update.password') }}" method="post">
+                <form action="" method="post">
                     @csrf
-                    <input type="hidden" name="user_id" id="user-id">
+                    <input type="text" name="ticket_id" id="ticket-id">
                     <div class="form-group">
-                        <label for="password">Nueva Contraseña</label>
-                        <input type="password" name="password" id="password" class="form-control">
+                        <label for="Departamento">Nuevo Departamento</label>
+                        <input type="text" name="department_id" id="department_id" class="form-control">
                     </div>
-                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
                 </form>
             </div>
         </div>
@@ -81,19 +81,6 @@
 
 @section('js')
 <script>
-/** Scrip para habilitar las funciones del boton modal para la reasignacion del ticket */
-$(document).ready(function() {
-        $('.reasig-ticket-btn').click(function() {
-            var userId = $(this).data('user-id');
-            var userName = $(this).data('user-name');
-            $('#modal-update-password').find('#user-id').val(userId);
-
-            $('#modal-update-password').find('#user-name-title').text(userName);
-
-        });  
-     });
-/**Fin de script */
-
     $(document).ready(function() {
         var table;
         let audio = new Audio('/storage/images/user/notification-sound.mp3');
@@ -139,7 +126,7 @@ $(document).ready(function() {
                     { data: 'sucursal' },
                     // { data: 'area' },
                     { data: 'status' },
-                    { data: 'actions', orderable: false, searchable: false }
+                    { data: 'actions', orderable: false, searchable: false}
                 ],
                 createdRow: function(row, data, dataIndex) {
                     $('td', row).eq(3).css('background-color', data.typeColor);
@@ -214,7 +201,17 @@ $(document).ready(function() {
             audio.play().catch(function(error) {
                 console.error('Error al reproducir el sonido de notificación:', error);
             });
-        }
+        }        
+        /** Scrip para habilitar las funciones del boton modal para la reasignacion del ticket */
+        // Manejar el clic en el botón de reasignar
+        $(document).on('click', '.modal-reasig-btn', function() {
+            var ticketId = $(this).data('ticket-id');
+            var ticketTitle = $(this).data('ticket-title');
+
+            $('#modal-reasig-ticket').find('#ticket-id').val(ticketId);
+            $('#modal-reasig-ticket').find('#ticket-name-title').text(ticketTitle);
+        });
+        /**Fin de script */
     });
 </script>
 @endsection
