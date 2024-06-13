@@ -63,28 +63,28 @@
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
-                <form id="reasign-form" method="post">
+                <form id="reasign-formticket" action="{{route('ticket.reasig')}}" method="post">
                     @csrf
                     <input type="hidden" name="ticket_id" id="ticket-id">
                     <div class="col-xs-12 col-sm-4 col-md-12 mt-2">
                     <label for="departamento">Departamento</label>
-                    <select name="department_id" id="departamento" class="form-control" required>
+                    <select name="department_id" id="departamento" class="form-control" >
                         <option value="">Seleccionar Departamento</option>
                     </select>
                     </div>
                     <div class="col-xs-12 col-sm-4 col-md-12 mt-2">
                         <label for="area">Areas</label>
-                        <select name="area_id" id="area" class="form-control" required>
+                        <select name="area_id" id="area" class="form-control" >
                             <option value="">Seleccionar Área</option>
                         </select>
                     </div>
                     <div class="col-xs-12 col-sm-4 col-md-12 mt-2">
                         <label for="category">Categoria</label>
-                        <select name="category_id" id="categoria" class="form-control" required>
+                        <select name="category_id" id="categoria" class="form-control" >
                             <option value="">Seleccionar Categoría</option>
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-primary mt-3">Guardar</button>
+                    <button type="submit" id="submit-reasign-ticket" class="btn btn-primary mt-3">Guardar</button>
                 </form>
             </div>
         </div>
@@ -256,9 +256,7 @@
         /** Script para notificar los cambio en los tickets con sonido */
         // let lastUpdateTime = null;
 
-        
-
-            // Manejar el clic en el botón de reasignar
+        // Manejar el clic en el botón de reasignar
         $(document).on('click', '.modal-reasig-btn', function() {
             var ticketId = $(this).data('ticket-id');
             var ticketTitle = $(this).data('ticket-title');
@@ -270,6 +268,8 @@
 
             $('#modal-reasig-ticket').modal('show');
         });
+
+            
 
         // Manejar el cambio de departamento
         $('#departamento').change(function() {
@@ -283,30 +283,8 @@
             var areaId = $(this).val();
             loadCategories(areaId);
         });
-            // Manejar el envío del formulario de reasignación
-        $('#reasign-form').click(function() {
-            var formData = {
-                _token: $('input[name="_token"]').val(),
-                ticket_id: $('#ticket-id').val(),
-                department_id: $('#departamento').val(),
-                area_id: $('#area').val(),
-                category_id: $('#categoria').val()
-            };
 
-            $.ajax({
-                url: "{{ route('ticket.reasig') }}",
-                type: 'POST',
-                data: formData,
-                success: function(response) {
-                    alert(response.message);
-                    window.location.href = response.redirect_to;
-                },
-                error: function(xhr) {
-                    console.log('Error:', xhr);
-                    alert('Hubo un error al reasignar el ticket.');
-                }
-            });
-        });
+      
                 
 
     });

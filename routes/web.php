@@ -122,7 +122,7 @@ Route::get('getCategory',[TicketController::class,'getCategory'])->name('ticket.
 /**traer los departamento para el model de reasignacion de tickets */
 Route::get('/departments/data', [DepartmentController::class, 'getDepartments'])->name('departments.data');
 
-Route::post('/ticket-reasig', [TicketController::class, 'reasigticket'])->name('ticket.reasig');
+Route::post('/reasig', [TicketController::class, 'reasigticket'])->name('ticket.reasig');
 
 
 

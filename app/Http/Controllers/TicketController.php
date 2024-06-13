@@ -518,20 +518,47 @@ class TicketController extends Controller
         return redirect()->route('ticket.index', $ticket)->with('success','El ticket fue actualizado con exito');
     }
     public function reasigticket1(Request $request){
-        // $reaticket = Ticket::find($request->ticket_id);
-        return $request;
-        // if ($reaticket) {
-        //     $reaticket->department_id = $request->department_id;
-        //     $reaticket->area_id = $request->area_id;
-        //     $reaticket->category_id = $request->category_id;
-        //     $reaticket->status_id = 6;
-        //     $reaticket->update();
+        $reaticket = Ticket::find($request->ticket_id);
+        // return $request;
+        if ($reaticket) {
+            $reaticket->department_id = $request->department_id;
+            $reaticket->area_id = $request->area_id;
+            $reaticket->category_id = $request->category_id;
+            $reaticket->status_id = 5;
+            $reaticket->save();
 
-        //     return response()->json(['message' => 'Ticket reasignado exitosamente', 'redirect_to' => route('ticket.index')], 200);
-        // } else {
-        //     return response()->json(['message' => 'Ticket no encontrado'], 404);
-        // }
+            return response()->json(['message' => 'Ticket reasignado exitosamente', 'redirect_to' => route('ticket.index')], 200);
+        } else {
+            return response()->json(['message' => 'Ticket no encontrado'], 404);
+        }
     }
+    public function reasigticket(Request $request)
+{
+    $request->validate([
+        'ticket_id' => 'required|exists:ticket,id',
+        'department_id' => 'required|exists:department,id',
+        'area_id' => 'required|exists:area,id',
+        'category_id' => 'required|exists:category,id',
+    ]);
+
+    try {
+        $reaticket = Ticket::find($request->ticket_id);
+        if ($reaticket) {
+            $reaticket->department_id = $request->department_id;
+            $reaticket->area_id = $request->area_id;
+            $reaticket->category_id = $request->category_id;
+            $reaticket->status_id = 6; // Asegúrate de que el status_id 6 es el correcto
+            $reaticket->save();
+
+            return redirect()->route('ticket.index')->with('success', 'Ticket reasignado exitosamente');
+        } else {
+            return redirect()->back()->withErrors(['message' => 'Ticket no encontrado']);
+        }
+    } catch (\Exception $e) {
+        Log::error('Error al reasignar el ticket: ' . $e->getMessage());
+        return redirect()->back()->withErrors(['message' => 'Error al reasignar el ticket']);
+    }
+}
 
     /**
      * Remove the specified resource from storage.
