@@ -10,11 +10,20 @@ use Illuminate\Http\Request;
 
 class DepartmentController extends Controller
 {
+    
+    public function getDepartments()
+    {
+        $departments = Department::all();
+
+        return response()->json($departments);
+    }
+
     /**solicitudes para las departamento dividir areas y categorias(select option anidado) */
     public function getArea($department_id)
     {
         $areas = Area::where('department_id', $department_id)->get();
         return response()->json($areas);
+        // return response()->json(['data' => $areas]);
     }
 
     public function getCategory($area_id)
@@ -69,8 +78,8 @@ class DepartmentController extends Controller
             'department' => $department,
             'ticket' => $department->ticket()->with('department')->latest()->paginate()
         ]);
+       
     }
-
     /**
      * Show the form for editing the specified resource.
      */

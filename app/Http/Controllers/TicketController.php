@@ -427,6 +427,7 @@ class TicketController extends Controller
      * Show the form for editing the specified resource.
      */
     /** -------------------------------------------------------------------------------------- */
+    
     public function getAreas($departamentoId) {
         $areas = Area::where('department_id', $departamentoId)->get();
         return response()->json($areas);
@@ -515,6 +516,21 @@ class TicketController extends Controller
         // fin de seccion de lamacenamiento y procesado de imagenes
         $ticket->save();
         return redirect()->route('ticket.index', $ticket)->with('success','El ticket fue actualizado con exito');
+    }
+    public function reasigticket1(Request $request){
+        // $reaticket = Ticket::find($request->ticket_id);
+        return $request;
+        // if ($reaticket) {
+        //     $reaticket->department_id = $request->department_id;
+        //     $reaticket->area_id = $request->area_id;
+        //     $reaticket->category_id = $request->category_id;
+        //     $reaticket->status_id = 6;
+        //     $reaticket->update();
+
+        //     return response()->json(['message' => 'Ticket reasignado exitosamente', 'redirect_to' => route('ticket.index')], 200);
+        // } else {
+        //     return response()->json(['message' => 'Ticket no encontrado'], 404);
+        // }
     }
 
     /**

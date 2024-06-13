@@ -24,6 +24,7 @@ use Illuminate\Auth\Events\Verified;
 use Illuminate\Support\Facades\DB;
 
 use App\Http\Controllers\NotificationController;
+use App\Models\Ticket;
 
 /*
 |--------------------------------------------------------------------------
@@ -118,9 +119,10 @@ Route::get('/get-category/{area_id}', [DepartmentController::class, 'getCategory
  * Ruta para editar el area y la categoria segun sea o decida el elcreador o al que se le asigno el ticket
  */
 Route::get('getCategory',[TicketController::class,'getCategory'])->name('ticket.getCategory');
+/**traer los departamento para el model de reasignacion de tickets */
+Route::get('/departments/data', [DepartmentController::class, 'getDepartments'])->name('departments.data');
 
-
-
+Route::post('/ticket-reasig', [TicketController::class, 'reasigticket'])->name('ticket.reasig');
 
 
 
