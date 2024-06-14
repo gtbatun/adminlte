@@ -533,32 +533,32 @@ class TicketController extends Controller
         }
     }
     public function reasigticket(Request $request)
-{
-    $request->validate([
-        'ticket_id' => 'required|exists:ticket,id',
-        'department_id' => 'required|exists:department,id',
-        'area_id' => 'required|exists:area,id',
-        'category_id' => 'required|exists:category,id',
-    ]);
+    {
+        $request->validate([
+            'ticket_id' => 'required|exists:ticket,id',
+            'department_id' => 'required|exists:department,id',
+            'area_id' => 'required|exists:area,id',
+            'category_id' => 'required|exists:category,id',
+        ]);
 
-    try {
-        $reaticket = Ticket::find($request->ticket_id);
-        if ($reaticket) {
-            $reaticket->department_id = $request->department_id;
-            $reaticket->area_id = $request->area_id;
-            $reaticket->category_id = $request->category_id;
-            $reaticket->status_id = 6; // Asegúrate de que el status_id 6 es el correcto
-            $reaticket->save();
+        try {
+            $reaticket = Ticket::find($request->ticket_id);
+            if ($reaticket) {
+                $reaticket->department_id = $request->department_id;
+                $reaticket->area_id = $request->area_id;
+                $reaticket->category_id = $request->category_id;
+                $reaticket->status_id = 6; // Asegúrate de que el status_id 6 es el correcto
+               
 
-            return redirect()->route('ticket.index')->with('success', 'Ticket reasignado exitosamente');
-        } else {
-            return redirect()->back()->withErrors(['message' => 'Ticket no encontrado']);
+                return redirect()->route('ticket.index')->with('success', 'Ticket reasignado exitosamente');
+            } else {
+                return redirect()->back()->withErrors(['message' => 'Ticket no encontrado']);
+            }
+        } catch (\Exception $e) {
+            Log::error('Error al reasignar el ticket: ' . $e->getMessage());
+            return redirect()->back()->withErrors(['message' => 'Error al reasignar el ticket']);
         }
-    } catch (\Exception $e) {
-        Log::error('Error al reasignar el ticket: ' . $e->getMessage());
-        return redirect()->back()->withErrors(['message' => 'Error al reasignar el ticket']);
     }
-}
 
     /**
      * Remove the specified resource from storage.

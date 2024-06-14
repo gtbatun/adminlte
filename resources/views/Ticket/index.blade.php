@@ -1,8 +1,8 @@
 @extends('adminlte::page')
 
 @section('content')
-<!-- <script src="{{asset('assets/js/plugins/jquery.min.js')}}"></script> -->
-<!-- <script src="{{asset('assets/js/plugins/jquery-3.7.1.min.js')}}"></script> -->
+
+<script src="{{asset('assets/js/plugins/jquery-3.7.1.min.js')}}"></script>
 <script src="{{asset('assets/js/plugins/toastr.min.js')}}"></script>
 <!-- Incluye Toastr si deseas notificaciones visuales -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
@@ -60,10 +60,11 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Reasignar ticket <strong class="text-danger"><span id="ticket-name-title"></span></strong></h5>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <button type="button" class="close" data-dismiss="modalreasig">&times;</button>
             </div>
             <div class="modal-body">
-                <form id="reasign-formticket" action="{{route('ticket.reasig')}}" method="post">
+            <!-- -->
+                <form id="reasignticket" action="{{route('ticket.reasig')}}"  method="post">
                     @csrf
                     <input type="hidden" name="ticket_id" id="ticket-id">
                     <div class="col-xs-12 col-sm-4 col-md-12 mt-2">
@@ -244,10 +245,7 @@
             }).catch(function(error) {
                 console.error('Error al iniciar el audio:', error);
             });
-        });
-        
-
-
+        });      
 
         // $('#tickets-table').on('error.dt', function(e, settings, techNote, message) {
         //     console.log('DataTables error: ', message);
@@ -268,7 +266,6 @@
 
             $('#modal-reasig-ticket').modal('show');
         });
-
             
 
         // Manejar el cambio de departamento
@@ -283,9 +280,6 @@
             var areaId = $(this).val();
             loadCategories(areaId);
         });
-
-      
-                
 
     });
 </script>
