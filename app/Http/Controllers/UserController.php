@@ -33,7 +33,7 @@ class UserController extends Controller
     
     public function index(){
         
-        $users = User::all();
+        $users = User::with('department')->get();
         return view('User.index',['users' => $users]);
     }
     public function create(){

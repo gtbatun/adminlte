@@ -201,11 +201,11 @@ class TicketController extends Controller
         $user = Auth::user();
         
         if($user->is_admin == 10 || $user->is_admin == 5){
-            $ticket_clo = Ticket::with('area','category','status','department')
+            $ticket_clo = Ticket::with('area','category','status','department','usuario')
                 ->where('status_id', '=', 4 )
                 ->get();
         }else{ 
-                $ticket_clo = Ticket::with(['area', 'category', 'status', 'department'])
+                $ticket_clo = Ticket::with(['area', 'category', 'status', 'department','usuario'])
                 ->where(function($query) {
                     $query->where('department_id', auth()->user()->department_id)
                         ->orWhere('type', auth()->user()->department_id);

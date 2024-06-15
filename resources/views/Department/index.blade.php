@@ -24,6 +24,7 @@
                                     <th>ID</th>
                                     <th>Sucursal</th>
                                     <th>Departamento</th>
+                                    <th>Tickets</th>
                                     <th>Descripcion</th>
                                     <th>Acción</th>
                                 </tr>
@@ -32,8 +33,23 @@
                                 @foreach($departments as $department)
                                 <tr>
                                     <td class="fw-bold">{{$department->id}}</td>
-                                    <td class="fw-bold">{{$department->sucursal->name}}</td>
+                                    <td class="fw-bold">
+                                        @if(!empty($department->sucursal_names))
+                                            @foreach($department->sucursal_names as $sucursal)
+                                                {{ $sucursal }}@if(!$loop->last), @endif
+                                            @endforeach
+                                        @else
+                                            No asignadas
+                                        @endif
+                                    </td>
                                     <td class="fw-bold">{{$department->name}}</td>
+                                    <td>
+                                        @if(!empty($department->enableforticket))
+                                            Acepta tickets
+                                        @else
+                                            No Acepta
+                                        @endif
+                                    </td>
                                     <td class="fw-bold">{{$department->description}}</td>
                                     <td>
                                         <a href="{{route('department.edit',$department)}}" class="btn btn-warning">Editar</a>

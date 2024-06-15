@@ -60,7 +60,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Reasignar ticket <strong class="text-danger"><span id="ticket-name-title"></span></strong></h5>
-                <button type="button" class="close" data-dismiss="modalreasig">&times;</button>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
             <!-- -->
@@ -69,19 +69,19 @@
                     <input type="hidden" name="ticket_id" id="ticket-id">
                     <div class="col-xs-12 col-sm-4 col-md-12 mt-2">
                     <label for="departamento">Departamento</label>
-                    <select name="department_id" id="departamento" class="form-control" >
+                    <select name="department_id" id="departamento" class="form-control" required>
                         <option value="">Seleccionar Departamento</option>
                     </select>
                     </div>
                     <div class="col-xs-12 col-sm-4 col-md-12 mt-2">
                         <label for="area">Areas</label>
-                        <select name="area_id" id="area" class="form-control" >
+                        <select name="area_id" id="area" class="form-control" required>
                             <option value="">Seleccionar Área</option>
                         </select>
                     </div>
                     <div class="col-xs-12 col-sm-4 col-md-12 mt-2">
                         <label for="category">Categoria</label>
-                        <select name="category_id" id="categoria" class="form-control" >
+                        <select name="category_id" id="categoria" class="form-control" required>
                             <option value="">Seleccionar Categoría</option>
                         </select>
                     </div>
