@@ -70,8 +70,8 @@
             <!-- <div class="container"> --> 
                 <div class="col-xs-12 col-sm-12 col-md-4 mt-2">            
                     <div class="form-group">
-                        <label for="country">Departamento:</label>
-                        <select class="form-control" id="country" name="department_id">
+                        <label for="department">Departamento:</label>
+                        <select class="form-control" id="department" name="department_id">
                             <option value="">Seleccione un Departamento</option>
                             @foreach($department as $id => $name)
                                 <option value="{{ $id }}">{{ $name }}</option>
@@ -81,19 +81,16 @@
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-4 mt-2"> 
                     <div class="form-group">
-                        <label for="state">Area:</label>
-                        <select class="form-control" id="state" name="area_id">
+                        <label for="area">Area:</label>
+                        <select class="form-control" id="area" name="area_id">
                             <option value="">Seleccione un Area</option>
-                            @foreach($areas as  $id => $name)
-                                <option value="{{$id}}" @if($id == old('area_id' , $ticket->area_id)) selected @endif >{{$name}}</option>
-                                @endforeach
                         </select>
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-4 mt-2"> 
                     <div class="form-group">
-                        <label for="city">Categoria:</label>
-                        <select class="form-control" id="city" name="category_id" >
+                        <label for="category">Categoria:</label>
+                        <select class="form-control" id="category" name="category_id" >
                             <option value="">Seleccione una categoria</option>
                         </select>
                     </div>
@@ -147,7 +144,7 @@
 <!-- scrip para el nuevo select option -->
 
 $(document).ready(function() {
-    $('#country').on('change', function() {
+    $('#department').on('change', function() {
         var countryID = $(this).val();
         if (countryID) {
             $.ajax({
@@ -155,24 +152,24 @@ $(document).ready(function() {
                 type: "GET",
                 dataType: "json",
                 success: function(data) {
-                    $('#state').empty();
-                    $('#state').append('<option value="">Seleccione un area</option>');                    
-                    $('#city').empty();
-                    $('#city').append('<option value="">Seleccione una categoria</option>');
+                    $('#area').empty();
+                    $('#area').append('<option value="">Seleccione un area</option>');                    
+                    $('#category').empty();
+                    $('#category').append('<option value="">Seleccione una categoria</option>');
                     $.each(data, function(key, value) {
-                        $('#state').append('<option value="'+ value.id +'">'+ value.name +'</option>');
+                        $('#area').append('<option value="'+ value.id +'">'+ value.name +'</option>');
                     });
                 }
             });
         } else {
-            $('#state').empty();
-            $('#state').append('<option value="">Select Area</option>');
-            $('#city').empty();
-            $('#city').append('<option value="">Select Category1</option>');
+            $('#area').empty();
+            $('#area').append('<option value="">Select Area</option>');
+            $('#category').empty();
+            $('#category').append('<option value="">Select Category1</option>');
         }
     });
 
-    $('#state').on('change', function() {
+    $('#area').on('change', function() {
         var stateID = $(this).val();
         if (stateID) {
             $.ajax({
@@ -180,16 +177,16 @@ $(document).ready(function() {
                 type: "GET",
                 dataType: "json",
                 success: function(data) {
-                    $('#city').empty();
-                    $('#city').append('<option value="">Selecionar categoria</option>');
+                    $('#category').empty();
+                    $('#category').append('<option value="">Selecionar categoria</option>');
                     $.each(data, function(key, value) {
-                        $('#city').append('<option value="'+ value.id +'" title="Solicité Agregar mas opciones si es necesario" >'+ value.name +'</option>');
+                        $('#category').append('<option value="'+ value.id +'" title="Solicité Agregar mas opciones si es necesario" >'+ value.name +'</option>');
                     });
                 }
             });
         } else {
-            $('#city').empty();
-            $('#city').append('<option value="">Seleccionar </option>');
+            $('#category').empty();
+            $('#category').append('<option value="">Seleccionar </option>');
         }
     });
 });

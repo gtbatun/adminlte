@@ -24,9 +24,9 @@
                                     <th>ID</th>
                                     <th>NOMBRE</th>
                                     <th>EMAIL</th>
+                                    <th>SUCURSAL</th>
                                     <th>VERIFICADO</th>
                                     <th>DEPARTAMENTO</th>
-                                    <!-- <th>FECHA DE CREACION</th> -->
                                     <th>ACCION</th>
                                 </tr>
                             </thead>
@@ -37,18 +37,26 @@
                                     <td>{{$userItem->name}}</td>
                                     <td>{{$userItem->email}}</td>
                                     <td>
+                                    @if (is_null($userItem->sucursal_id))                                        
+                                            Sin sucursal
+                                        @else
+                                            {{$userItem->sucursal->name}}
+                                        @endif
+                                    </td>
+                                    <td>
                                         @if (is_null($userItem->email_verified_at))
                                             <a href="{{ route('admin.verify-email', $userItem->id) }}" class="btn btn-primary">Verificar Correo</a>
                                         @else
                                             Verificado
                                         @endif
                                     </td>
-                                    @if(isset($userItem->department->name))
-                                        <td>{{$userItem->department->name }} </td>                    
-                                    @else
-                                        <td> </td>
-                                    @endif                                    
-                                    <!-- <td>{{$userItem->created_at->diffForHumans(null, false, false, 1)}}</td>              -->
+                                    <td>
+                                        @if(isset($userItem->department->name))
+                                            {{$userItem->department->name }}                   
+                                        @else
+                                            Sin Departamento
+                                        @endif 
+                                    </td>
                                     <td>
                                     <a href="{{route('user.edit',$userItem)}}" class="btn btn-info">Ed <i class='fas fa-edit'></i></a>
                                     <button type="button" class="btn btn-warning edit-password-btn" data-toggle="modal" data-target="#modal-update-password" data-user-id="{{ $userItem->id }}" data-user-name="{{ $userItem->name }}">Pass</button>            

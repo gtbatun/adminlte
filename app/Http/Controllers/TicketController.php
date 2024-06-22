@@ -66,7 +66,7 @@ class TicketController extends Controller
                 })
                 ->get();
             }        
-        // $tickets = Ticket::with('area','category','status','department')->get();
+        
         $tickets = $tickets->map(function($ticket){
             $userDepartmentId = auth()->user()->department_id;
             // $typeString = ($ticket->department_id == $userDepartmentId) ?  'Asignado':'Creado'; // En este caso, ambos retornos son 'creado'
@@ -162,25 +162,21 @@ class TicketController extends Controller
                 'actions' => view('Ticket.Partials.actions', ['ticket' => $ticket])->render()
             ];
             // return $messageStatus;
-        });
-        
-        /**Fucnion para retornar el ultimo gestion, si es tuyo o ya fue respondido */
-        
+        });        
+        /**Fucnion para retornar el ultimo gestion, si es tuyo o ya fue respondido */        
         return response()->json(['data' => $tickets]);        
     }
     /*** ontener las gestiones de lo cada ticket*/
     public function getGestiones(Ticket $ticket)
     {
         // $h_gestiones1 = Gestion::where('ticket_id', $ticket->id)->with('usuario')->orderby('created_at','asc')->get();
-
         // $h_gestiones1 = Gestion::where('ticket_id',$ticket->id )->get();
         $h_gestiones1 = Gestion::where('ticket_id', $ticket->id)
                             ->with(['usuario:id,name,email,image'])
                             ->select('id', 'ticket_id', 'coment', 'image', 'user_id', 'created_at', 'status_id')
                             ->get();
         return response()->json($h_gestiones1);        
-    }    
-
+    } 
     /**
      * Display a listing of the resource.
      */
@@ -224,27 +220,6 @@ class TicketController extends Controller
 
     public function index()
     { 
-        $user = Auth::user();
-        
-        if($user->is_admin == 10){
-            $ticket = Ticket::with('area','category','status','department')
-                ->latest()
-                ->paginate();
-        }else{
-            $ticket = Ticket::with('area','category','status','department')
-               // ->where('user_id', $user->id) // Filtrar por el ID del usuario actual                
-                ->where('department_id', '=', $user->department_id )
-                ->where('status_id', '!=', 4 )
-                ->latest()
-                ->paginate();
-        }
-        
-
-        // return view('Ticket.index',[
-        //     'newTicket'=> new Ticket,
-        //     'ticket' => $ticket
-            
-        // ]);
         return view('Ticket.index');
     }
 
@@ -253,49 +228,20 @@ class TicketController extends Controller
      */
     public function create()
     {
-        if(auth()->user()->sucursal_id == 1){
-            // $departamento = Department::where('enableforticket','!=','null')
-            $additionalDepartmentIds = [18,20,21,23];
-            $departamento = Department::whereIn('id',$additionalDepartmentIds)
-            ->pluck('name', 'id');
-        }else{
-            // $departamento = Department::where('multi','!=','null')
-            $additionalDepartmentIds = [20,21];
-            $departamento = Department::whereIn('id',$additionalDepartmentIds)
-            ->pluck('name', 'id');
-        }
+        
+        $sucursalId = auth()->user()->sucursal_id;
+        $departamento = Department::where(function($query) use ($sucursalId) {
+            $query->whereJsonContains('sucursal_ids', (string) $sucursalId);
+        })
+        ->where('enableforticket', 1)
+        ->pluck('name', 'id');
+
         $ticket = new Ticket;
         return view('Ticket.create',
         [
             'areas' => Area::pluck('name','id'),
             'category' => Category::pluck('name','id','area_id'),
             'department' => $departamento,
-            'status' => Status::pluck('name','id'),
-            'ticket' => $ticket
-        ]);
-    }
-    public function create1()
-    {
-        // excluir sistemas y soporte, todos lo pueden ver sin excepcion
-        $additionalDepartmentIds = [20,21]; // agregar en esta seccion los departamento que se desean visualizar
-        $departamento1 = Department::whereIn('id', $additionalDepartmentIds)
-                        ->pluck('name', 'id');
-                        
-                        // $departamento = Department::where('sucursal_id', auth()->user()->sucursal_id)
-                        // ->orWhereIn('id',$additionalDepartmentIds)
-                        // ->pluck('name', 'id');
-        $dep_enable_ticket= [18,23]; 
-        $departamento = Department::where('sucursal_id', auth()->user()->sucursal_id)
-        ->whereIn('id',$dep_enable_ticket) // poner un array si se desa poner mas departamentos
-        ->orWhereIn('id',$additionalDepartmentIds)
-            ->pluck('name', 'id');
-        $ticket = new Ticket;
-        return view('Ticket.create',
-        [
-            'areas' => Area::pluck('name','id'),
-            'category' => Category::pluck('name','id','area_id'),
-            'department' => $departamento,
-            // 'department' => Department::pluck('name','id'),
             'status' => Status::pluck('name','id'),
             'ticket' => $ticket
         ]);
@@ -517,21 +463,7 @@ class TicketController extends Controller
         $ticket->save();
         return redirect()->route('ticket.index', $ticket)->with('success','El ticket fue actualizado con exito');
     }
-    public function reasigticket1(Request $request){
-        $reaticket = Ticket::find($request->ticket_id);
-        // return $request;
-        if ($reaticket) {
-            $reaticket->department_id = $request->department_id;
-            $reaticket->area_id = $request->area_id;
-            $reaticket->category_id = $request->category_id;
-            $reaticket->status_id = 5;
-            $reaticket->save();
 
-            return response()->json(['message' => 'Ticket reasignado exitosamente', 'redirect_to' => route('ticket.index')], 200);
-        } else {
-            return response()->json(['message' => 'Ticket no encontrado'], 404);
-        }
-    }
     public function reasigticket(Request $request)
     {
         $request->validate([
@@ -548,7 +480,7 @@ class TicketController extends Controller
                 $reaticket->area_id = $request->area_id;
                 $reaticket->category_id = $request->category_id;
                 $reaticket->status_id = 6; // Asegúrate de que el status_id 6 es el correcto
-               
+                $reaticket->save();               
 
                 return redirect()->route('ticket.index')->with('success', 'Ticket reasignado exitosamente');
             } else {

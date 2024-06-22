@@ -10,17 +10,6 @@
 	<textarea class="form-control border-0 bg-light shadow-sm" placeholder="Descripcion" name="description">{{ old('description',$department->description)}}</textarea>
 	<!-- <textarea name="" id="" cols="30" rows="10"></textarea> -->
 </div>
-           
-<div class="form-group">
-	<label for="sucursal">Sucursal:</label>
-	<select name="sucursal_ids[]" class="form-control" multiple required>
-		<option value="">Seleccione una sucursal</option>
-		@foreach($sucursal as $id =>$name)
-			<!-- <option value="{{ $id }}" @if($id == old('sucursal_ids' , $department->sucursal_ids)) selected @endif >{{$name}}</option> -->
-			<option value="{{ $id }}" @if(in_array($id, old('sucursal_ids', json_decode($department->sucursal_ids, true) ?? []))) selected @endif>{{ $name }}</option>
-		@endforeach
-	</select>
-</div>
 
 <div class="form-group">
 	<label for="enableforticket">Aceptar tickets:</label>
@@ -29,6 +18,23 @@
 	<option value="1" {{ old('enableforticket', $department->enableforticket) == 1 ? 'selected' : '' }}>Sí</option>	
 	</select>
 </div>
+           
+<div class="form-group">
+	<label for="sucursal">Sucursal donde acepta ticket:</label>
+	<select name="sucursal_ids[]" class="form-control" multiple required>
+		<!-- <option value="">Seleccione una sucursal</option> -->
+		@foreach($sucursal as $id =>$name)
+			<!-- <option value="{{ $id }}" @if($id == old('sucursal_ids' , $department->sucursal_ids)) selected @endif >{{$name}}</option> -->
+			<option value="{{ $id }}" @if(in_array($id, old('sucursal_ids', json_decode($department->sucursal_ids, true) ?? []))) selected @endif>{{ $name }}</option>
+		@endforeach
+	</select>
+</div>
+
+<div class="form-check">
+	<input class="form-check-input" type="checkbox" value="1" name="multi" {{ $department->multi == 1 ? 'checked' : '' }}>
+	<label class="form-check-label text-success" for="status_id"><strong>Multi sucursal</strong></label>            
+</div>
+
 
 <button class="btn btn-primary btn-lg btn-block">{{$btnText}}</button>
 <a class="btn btn-link btn-block"

@@ -9,7 +9,22 @@ use App\Models\Sucursal;
 use Illuminate\Http\Request;
 
 class DepartmentController extends Controller
-{    
+{        
+    /** Solcitar todo los departamento pertenecientes a una sucursal */
+    public function getAllDepartments(Request $request)
+    {
+        $sucursalId = $request->sucursal_id;
+        $departments = Department::where(function($query) use ($sucursalId) {
+            $query->whereJsonContains('sucursal_ids', (string) $sucursalId);
+        })->get();
+
+        if ($departments->isEmpty()) {
+            dd('No se encontraron departamentos', Department::all());
+        }   
+                          
+       return response()->json($departments);
+    }
+    /** Selecciona todos los departamentos habilitados para recibir tickets */
     public function getDepartments()
     {
         $sucursalId = auth()->user()->sucursal_id;
@@ -26,6 +41,8 @@ class DepartmentController extends Controller
                           
        return response()->json($departments);
     }
+
+
     /**solicitudes para las departamento dividir areas y categorias(select option anidado) */
     public function getArea($department_id)
     {
@@ -100,6 +117,7 @@ class DepartmentController extends Controller
             'description' => $request->input('description'),
             'sucursal_ids' => json_encode($request->input('sucursal_ids')),
             'enableforticket' => $request->input('enableforticket'),
+            'multi' => $request->multi,
         ]);
         return redirect()->route('department.index')->with('success', 'Nuevo Departamento creado exitosamente');
     

@@ -1,5 +1,6 @@
 @extends('adminlte::page')
 @section('content')
+<script src="{{asset('assets/js/plugins/jquery.min.js')}}"></script>
 <!--  -->
 @can('update', $user)
 <div class="container">
@@ -99,7 +100,7 @@
                     <div class="row mb-3">
                       <label for="Job" class="col-md-4 col-lg-3 col-form-label">Sucursal</label>
                       <div class="col-md-8 col-lg-9">
-                        <select name="sucursal_id" class="form-control border-0 bg-light shadow-sm @error('department_id') is-invalid @enderror">
+                        <select name="sucursal_id" id="sucursal" class="form-control border-0 bg-light shadow-sm @error('department_id') is-invalid @enderror">
                           <option value="">-- Sucursal --</option>
                           @foreach($sucursal as  $id => $name)
                           <option value="{{$id}}"
@@ -115,17 +116,23 @@
                     <div class="row mb-3">
                       <label for="Job" class="col-md-4 col-lg-3 col-form-label">Departamento</label>
                       <div class="col-md-8 col-lg-9">
-                        <select name="department_id" class="form-control border-0 bg-light shadow-sm @error('department_id') is-invalid @enderror">
-                          <option value="">-- Departamento --</option>
-                          @foreach($department as  $id => $name)
-                          <option value="{{$id}}"
-                          @if($id == old('department_id' , $user->department_id)) selected @endif  >{{$name}}</option>
-                          @endforeach                    
+                        <select id="department" name="department_id" class="form-control border-0 bg-light shadow-sm @error('department_id') is-invalid @enderror">
+                        <option value="">Seleccione un departamento</option>                 
                           </select>
                       </div>
                     </div>
-                    @endif
-                    
+                    <div class="row mb-3">
+                    <label class="col-md-4 col-lg-3 col-form-label" for="sucursal">Dep extra(solo ver tickets):</label>
+                    <div class="col-md-8 col-lg-9">
+                    <select name="ver_ticket[]" class="form-control" multiple required>
+                      
+                      @foreach($department as $department)
+                          <option value="{{ $department->id }}" @if(in_array($department->id, $userDepartments)) selected @endif>{{ $department->name }}</option>
+                      @endforeach
+                    </select>
+                  </div>
+                  </div>
+                    @endif     
 
                     <div class="row mb-3">
                       <label for="Phone" class="col-md-4 col-lg-3 col-form-label">Extension</label>
@@ -169,4 +176,41 @@
 
 <!--  -->
 @endcan
+@endsection
+@section('js')
+<script>
+  $(document).ready(function() {
+     // Inicializar el select de departamentos si ya hay una sucursal seleccionada
+     var initialSucursalID = $('#sucursal').val();
+
+     if (initialSucursalID) {
+      updateDepartments(initialSucursalID, {{$user->department_id}});
+      }    
+
+    $('#sucursal').on('change', function() {
+        var sucursalID = $(this).val();
+        updateDepartments(sucursalID, null);
+    });
+
+    function updateDepartments(sucursalID, selectedDepartmentID) {
+        if (sucursalID) {
+            $.ajax({
+                url: '/department/data/' + sucursalID,
+                type: "GET",
+                dataType: "json",
+                success: function(data) {
+                    $('#department').empty();
+                    $('#department').append('<option value="">Seleccione un departamento</option>'); 
+                    $.each(data, function(key, value) {
+                        $('#department').append('<option value="'+ value.id +'"'+ (selectedDepartmentID == value.id ? ' selected' : '') +'>'+ value.name +'</option>');
+                    });
+                }
+            });
+        } else {
+            $('#department').empty();
+            $('#department').append('<option value="">Seleccione un departamento</option>');
+        }
+    }
+  });
+</script>
 @endsection

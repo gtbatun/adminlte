@@ -57,9 +57,7 @@ class UserController extends Controller
             $imageName = time() . ' - ' . $request->image->getClientOriginalName();
             $request->file('image')->storeAs('images/user', $imageName);
             $user->image = $imageName;
-        }
-
-        
+        }        
         $user->name = $request->name;
         $user->email = $request->email;
         $user->department_id = $request->department_id;
@@ -68,7 +66,6 @@ class UserController extends Controller
         $user->is_admin = $request->is_admin; 
         $user->save();
 
-
         // Area::create($request->all());
         return redirect()->route('user.index')->with('success', 'Nuevo Usuario creado exitosamente');
 
@@ -76,9 +73,13 @@ class UserController extends Controller
 
     public function edit(User $user){
         // $this->authorize('update', $user);
+        // $enableforticket = Department::where('enableforticket',1)->pluck('name','id');
+        $userDepartments = json_decode($user->ver_ticket, true) ?? [$user->department_id];
         return view('User.edit',
         [
-            'user' => $user, 
+            'user' => $user,
+            // 'enableforticket' => $enableforticket,
+            'userDepartments' => $userDepartments,
             'department' => Department::pluck('name','id'),
             'sucursal' => Sucursal::pluck('name','id'),
         ]);
@@ -88,6 +89,7 @@ class UserController extends Controller
     public function show(){
         //
     }
+
     public function updatepassword(Request $request){
         $request->validate([
             'user_id' => 'required|exists:users,id',
@@ -118,7 +120,10 @@ class UserController extends Controller
             'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Asegúrate de validar también la imagen
         ]);
 
-        $user->fill($validatedData);       
+        $user->fill($validatedData);  
+        if($request->ver_ticket){
+            $user->ver_ticket = json_encode($request->input('ver_ticket'));
+        }     
 
         if ($request->file('image')) {
             if ($oldImage) {
@@ -129,11 +134,6 @@ class UserController extends Controller
             
             $user->image = $imageName;
         }
-
-        
-        // $user->save();
-
-        // return redirect()->route('user.index')->with('success', 'El Usuario fue actualizado con éxito');
 
         $user->save();
         $user_log = Auth::user();

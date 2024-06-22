@@ -123,7 +123,8 @@ Route::get('getCategory',[TicketController::class,'getCategory'])->name('ticket.
 Route::get('/departments/data', [DepartmentController::class, 'getDepartments'])->name('departments.data');
 
 Route::post('/reasigticket', [TicketController::class, 'reasigticket'])->name('ticket.reasig');
-
+/**Solicitar los departamentos segun sea la sucursal */
+Route::get('/department/data/{sucursal_id}', [DepartmentController::class, 'getAllDepartments']);
 
 
 

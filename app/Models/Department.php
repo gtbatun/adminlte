@@ -19,6 +19,7 @@ class Department extends Model
         'sucursal_id',
         'sucursal_ids',
         'enableforticket',
+        'multi',
         'logo'];
 
         public function ticket(){

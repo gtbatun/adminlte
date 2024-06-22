@@ -8,7 +8,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable 
+// implements MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -24,6 +25,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'is_admin',
         'department_id',
         'extension',
+        'ver_ticket',
         'image',
         'sucursal_id',
     ];
@@ -50,7 +52,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function isAdmin()
     {
-        return $this->is_admin === 1 ; // Suponiendo que tengas un campo 'role' que indica el rol del usuario
+        return $this->is_admin === 10 ; // Suponiendo que tengas un campo 'role' que indica el rol del usuario
     }
     public function adminlte_profile_url(){
         // return route('admin.profile.show', $this->id);
