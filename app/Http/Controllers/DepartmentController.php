@@ -146,11 +146,19 @@ class DepartmentController extends Controller
      */
     public function update(Request $request, Department $department)
     {
-        $request->validate([
+        $validateData= $request->validate([
             'name' => 'required',
             'description' => 'required',
             'sucursal_ids' => 'required'
         ]);
+
+        $department->fill($validateData);
+
+        if(isset($request->enablefortickets)){
+            $department->enableforticket = $request->enableforticket;
+            $department->suc_for_ticket = $request->suc_for_ticket;
+        }
+        // return $request;
         $department->update($request->all()); 
         return redirect()->route('department.index', $department)->with('success','El Departamento fue actualizado con exito');
     }

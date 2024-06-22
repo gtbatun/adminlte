@@ -19,6 +19,7 @@ class Department extends Model
         'sucursal_id',
         'sucursal_ids',
         'enableforticket',
+        'suc_for_ticket',
         'multi',
         'logo'];
 

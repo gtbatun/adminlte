@@ -21,10 +21,19 @@
            
 <div class="form-group">
 	<label for="sucursal">Sucursal donde acepta ticket:</label>
-	<select name="sucursal_ids[]" class="form-control" multiple required>
+	<select name="suc_for_ticket[]" class="form-control" multiple required>
 		<!-- <option value="">Seleccione una sucursal</option> -->
 		@foreach($sucursal as $id =>$name)
 			<!-- <option value="{{ $id }}" @if($id == old('sucursal_ids' , $department->sucursal_ids)) selected @endif >{{$name}}</option> -->
+			<option value="{{ $id }}" @if(in_array($id, old('sucursal_ids', json_decode($department->suc_for_ticket, true) ?? []))) selected @endif>{{ $name }}</option>
+		@endforeach
+	</select>
+</div>
+
+<div class="form-group">
+	<label for="sucursal">Sucursal Dep:</label>
+	<select name="sucursal_ids[]" class="form-control" multiple required>
+		@foreach($sucursal as $id =>$name)
 			<option value="{{ $id }}" @if(in_array($id, old('sucursal_ids', json_decode($department->sucursal_ids, true) ?? []))) selected @endif>{{ $name }}</option>
 		@endforeach
 	</select>

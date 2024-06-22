@@ -87,7 +87,6 @@ class UserController extends Controller
     
 
     public function show(){
-        //
     }
 
     public function updatepassword(Request $request){
@@ -95,13 +94,10 @@ class UserController extends Controller
             'user_id' => 'required|exists:users,id',
             'password' => ['required','string','min:8'],
         ]);
-
         $user = User::findOrFail($request->user_id);
-
         // Actualizar la contraseña
         $user->password = Hash::make($request->password);
-        $user->update();
-    
+        $user->update();    
         return redirect()->route('user.index')->with('success','Contraseña actualizada con exito');
     }
 
@@ -121,8 +117,10 @@ class UserController extends Controller
         ]);
 
         $user->fill($validatedData);  
-        if($request->ver_ticket){
+        if($request->has('ver_ticket')){
             $user->ver_ticket = json_encode($request->input('ver_ticket'));
+        }else{
+            $user->ver_ticket = json_encode([$request->input('department_id')]);
         }     
 
         if ($request->file('image')) {
@@ -134,6 +132,7 @@ class UserController extends Controller
             
             $user->image = $imageName;
         }
+        // return $request;
 
         $user->save();
         $user_log = Auth::user();

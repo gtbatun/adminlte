@@ -67,6 +67,8 @@ class ChartJSController extends Controller
 
         $user = Auth::user();
         $agente = collect();
+        $department_id = auth()->user()->department_id;
+        // dd($department_id);
 
         if ($user->is_admin == 10 || $user->is_admin == 5) {
             $agente = Ticket::whereYear('ticket.created_at', $year)
@@ -79,9 +81,10 @@ class ChartJSController extends Controller
                 ->groupBy('users.name')
                 ->pluck('count', 'user_name');
         } else {
-            $agente = Ticket::whereYear('ticket.created_at', $year)
+            
+                $agente = Ticket::whereYear('ticket.created_at', $year)
                 ->whereMonth('ticket.created_at', $month)
-                ->where('ticket.type', '=', auth()->user()->department_id)
+                ->where('ticket.department_id', '=', $department_id)
                 ->join('users', 'users.id', '=', 'ticket.user_id')
                 ->selectRaw('COUNT(*) as count, users.name as user_name')
                 ->groupBy('users.name')
@@ -130,7 +133,7 @@ class ChartJSController extends Controller
         } else {
             $department = Ticket::whereYear('ticket.created_at', $year)
                 ->whereMonth('ticket.created_at', '=', $month)                
-                ->where('ticket.type', '=', auth()->user()->department_id)
+                ->where('ticket.department_id', '=', auth()->user()->department_id)
                 ->join('area', 'ticket.area_id', '=', 'area.id')
                 ->selectRaw('COUNT(*) as count, area.name as area_name')
                 ->groupBy('area.name')
@@ -176,7 +179,7 @@ class ChartJSController extends Controller
         }else {            
              $t_dia1 = Ticket::whereYear('ticket.created_at', $year)
              ->whereMonth('ticket.created_at', $month)
-             ->where('ticket.type',auth()->user()->department_id)
+             ->where('ticket.department_id',auth()->user()->department_id)
                 ->selectRaw('COUNT(*) as count, DAY(created_at) as day')
                 ->groupBy('day')
                 ->pluck('count', 'day');

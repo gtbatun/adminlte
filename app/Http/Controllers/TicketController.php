@@ -51,11 +51,12 @@ class TicketController extends Controller
         }        
         $user = Auth::user();        
         if($user->is_admin == 10 || $user->is_admin == 5){
-            $tickets = Ticket::with('area','category','status','department')
+            $tickets1 = Ticket::with('area','category','status','department')
             ->where('status_id', '!=', 4 )
             ->get();
+            
         }else{ 
-            $tickets = Ticket::with(['area', 'category', 'status', 'department'])
+            $tickets1 = Ticket::with(['area', 'category', 'status', 'department'])
                 ->where(function($query) {
                     $query->where('department_id', auth()->user()->department_id)
                         ->orWhere('type', auth()->user()->department_id);
@@ -65,8 +66,26 @@ class TicketController extends Controller
                     $query->where('sucursal_id', auth()->user()->sucursal_id);
                 })
                 ->get();
-            }        
-        
+        }  
+
+        // Obtener el campo ver_ticket del usuario autenticado y decodificarlo
+        $ver_ticket = json_decode(Auth::user()->ver_ticket, true);
+        // return $ver_ticket;
+
+        // Verificar si el usuario tiene departamentos permitidos en ver_ticket
+        if (is_array($ver_ticket) && !empty($ver_ticket)) {
+            // Realizar la consulta para obtener los tickets permitidos
+            $tickets = Ticket::whereIn('department_id', $ver_ticket)
+            ->where('status_id', '!=', 4)
+                ->orWhere('type', auth()->user()->department_id)
+                ->with('area', 'category', 'status', 'department')
+                ->get();
+                // return $tickets;
+        } else {
+            // Si no hay departamentos permitidos, devolver una colección vacía
+            $tickets = collect();
+        }
+
         $tickets = $tickets->map(function($ticket){
             $userDepartmentId = auth()->user()->department_id;
             // $typeString = ($ticket->department_id == $userDepartmentId) ?  'Asignado':'Creado'; // En este caso, ambos retornos son 'creado'
@@ -197,11 +216,11 @@ class TicketController extends Controller
         $user = Auth::user();
         
         if($user->is_admin == 10 || $user->is_admin == 5){
-            $ticket_clo = Ticket::with('area','category','status','department','usuario')
+            $ticket_clo1 = Ticket::with('area','category','status','department','usuario')
                 ->where('status_id', '=', 4 )
                 ->get();
         }else{ 
-                $ticket_clo = Ticket::with(['area', 'category', 'status', 'department','usuario'])
+                $ticket_clo1 = Ticket::with(['area', 'category', 'status', 'department','usuario'])
                 ->where(function($query) {
                     $query->where('department_id', auth()->user()->department_id)
                         ->orWhere('type', auth()->user()->department_id);
@@ -211,7 +230,21 @@ class TicketController extends Controller
                     $query->where('sucursal_id', auth()->user()->sucursal_id);
                 })
                 ->get();  
-        }       
+        } 
+
+        // Obtener el campo ver_ticket del usuario autenticado y decodificarlo
+        $ver_ticket = json_decode(Auth::user()->ver_ticket, true);
+        // Verificar si el usuario tiene departamentos permitidos en ver_ticket
+        if (is_array($ver_ticket) && !empty($ver_ticket)) {
+            // Realizar la consulta para obtener los tickets permitidos
+            $ticket_clo = Ticket::whereIn('department_id', $ver_ticket)
+                ->with('area', 'category', 'status', 'department')
+                ->where('status_id', '=', 4)
+                ->get();
+        } else {
+            // Si no hay departamentos permitidos, devolver una colección vacía
+            $ticket_clo = collect();
+        }      
 
         return view('Ticket.closed',[
             'ticket' => $ticket_clo           

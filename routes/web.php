@@ -129,7 +129,6 @@ Route::get('/department/data/{sucursal_id}', [DepartmentController::class, 'getA
 
 
 
-
 /**ver tickets cerrados */
 Route::get('/ticket-closed',[TicketController::class,'closed'])->name('ticket.closed');
 /** Consultar los tickets cerrados */

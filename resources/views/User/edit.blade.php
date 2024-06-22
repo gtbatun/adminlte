@@ -121,6 +121,8 @@
                           </select>
                       </div>
                     </div>
+                    @endif 
+                    @if(auth()->user()->is_admin == 10)
                     <div class="row mb-3">
                     <label class="col-md-4 col-lg-3 col-form-label" for="sucursal">Solo ver tickets de:</label>
                     <div class="col-md-8 col-lg-9">
@@ -131,10 +133,8 @@
                           @endforeach
                     </select>
                   </div>
-                  </div>
-                  
-                    @endif     
-
+                  </div> 
+                  @endif 
                     <div class="row mb-3">
                       <label for="Phone" class="col-md-4 col-lg-3 col-form-label">Extension</label>
                       <div class="col-md-8 col-lg-2">
