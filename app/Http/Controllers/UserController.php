@@ -80,7 +80,7 @@ class UserController extends Controller
             'user' => $user,
             // 'enableforticket' => $enableforticket,
             'userDepartments' => $userDepartments,
-            'department' => Department::pluck('name','id'),
+            'departments' => Department::pluck('name','id'),
             'sucursal' => Sucursal::pluck('name','id'),
         ]);
     }

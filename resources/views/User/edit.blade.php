@@ -107,7 +107,7 @@
                           @if($id == old('sucursal_id' , $user->sucursal_id)) selected @endif  >{{$name}}</option>
                           @endforeach                    
                           </select>
-                      </div>
+                      </div> 
                     </div>
                     @endif
                     <!-- fin de seccion de agregar sucrsal -->
@@ -122,16 +122,17 @@
                       </div>
                     </div>
                     <div class="row mb-3">
-                    <label class="col-md-4 col-lg-3 col-form-label" for="sucursal">Dep extra(solo ver tickets):</label>
+                    <label class="col-md-4 col-lg-3 col-form-label" for="sucursal">Solo ver tickets de:</label>
                     <div class="col-md-8 col-lg-9">
-                    <select name="ver_ticket[]" class="form-control" multiple required>
-                      
-                      @foreach($department as $department)
-                          <option value="{{ $department->id }}" @if(in_array($department->id, $userDepartments)) selected @endif>{{ $department->name }}</option>
-                      @endforeach
+                    <select name="ver_ticket[]" class="form-control" multiple required>                      
+                          @foreach($departments as $id => $name)
+                                <!-- <option value="{{ $id }}">{{ $name }}</option> -->
+                                <option value="{{ $id }}" @if(in_array($id, $userDepartments)) selected @endif>{{ $name }}</option>
+                          @endforeach
                     </select>
                   </div>
                   </div>
+                  
                     @endif     
 
                     <div class="row mb-3">

@@ -1,7 +1,7 @@
 @extends('adminlte::page')
 @section('content')
-<!-- optimizar las consultas de las select options, se esta realizando 3 consultas una por cada opcion -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="{{asset('assets/js/plugins/jquery.min.js')}}"></script>
+
 <div>    
     @if(Session::get('success'))
         <div class="alert alert-success mt-2">

@@ -372,12 +372,11 @@ return [
             'icon_color' => 'red'  
         ],
         [
-            // 'text'   => 'Inventario',
-            // 'route'  => 'inventory.index',            
-            // 'icon'   => 'far fa-fw fa-hdd',
-            // 'can' => 'admin-access',            
-            // 'can' => 'inventory.index',
-            // 'icon_color' => 'red',  
+            'text'   => 'Inventario',
+            'route'  => 'inventory.index',            
+            'icon'   => 'far fa-fw fa-hdd',
+            'can' => 'admin-access',
+            'icon_color' => 'red',  
         ],
         // [
         //     'text'   => 'layout',

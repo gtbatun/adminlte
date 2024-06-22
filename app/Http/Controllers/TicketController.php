@@ -408,17 +408,25 @@ class TicketController extends Controller
 
     public function edit(Ticket $ticket)
     {
-        if(auth()->user()->sucursal_id == 1){
-            // $departamento = Department::where('enableforticket','!=','null')
-            $additionalDepartmentIds = [18,20,21,23];
-            $departamento = Department::whereIn('id',$additionalDepartmentIds)->get();
-        }else{
-            // $departamento = Department::where('multi','!=','null')
-            $additionalDepartmentIds = [20,21];
-            $departamento = Department::whereIn('id',$additionalDepartmentIds)->get();
-        }
+        // if(auth()->user()->sucursal_id == 1){
+        //     // $departamento = Department::where('enableforticket','!=','null')
+        //     $additionalDepartmentIds = [18,20,21,23];
+        //     $departamento = Department::whereIn('id',$additionalDepartmentIds)->get();
+        // }else{
+        //     // $departamento = Department::where('multi','!=','null')
+        //     $additionalDepartmentIds = [20,21];
+        //     $departamento = Department::whereIn('id',$additionalDepartmentIds)->get();
+        // }
+        $sucursalId = auth()->user()->sucursal_id;
+
+        $departments = Department::where(function($query) use ($sucursalId) {
+            $query->whereJsonContains('sucursal_ids', (string) $sucursalId);
+        })
+        ->where('enableforticket', 1)
+        ->get();
+
         $ticket = Ticket::find($ticket->id);
-        $department = $departamento;
+        $department = $departments;
         $areas = $ticket->department  ? $ticket->department->areas : collect();
         $categorias = $ticket->area ? $ticket->area->category : collect();
         // return $department;
