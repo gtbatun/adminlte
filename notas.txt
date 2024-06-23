@@ -1,0 +1,27 @@
+Manual de instlacion de proyecto de laravel en nuevo equipo
+clonar el repositorio(desde la vista de github)
+ingresar al proyecto por consola de laragon
+cd adminlte(nombre del proyecto)
+ejecutar comenado para instlar dependencias o librerias
+composer install
+copiar archivo env, para poder utilizar la base de datos y otros
+cp .env.example .env
+Generar una nueva key para laravel
+ejecutar el comando php artisan key:generate
+
+Ejecutar las migraciones de la base de datos
+php artisan migrate
+
+ejecutar el comando para crear vinculo simbolico, si se tiene imagenes o videos que se necesitan consultar
+php artisan storage:link
+++++ importante
+cambiar imagen de ticket y gestion, para que acepten nvalores nulos
+no se ven los tickets creados os asignados a los departamentos, es necesario aplicar algunos cambios
+
+
+ejecutar los camando de sql para insetar y actualizar algunas columnas de la base de datos
+-- UPDATE department SET sucursal_ids = '["1","2"]'
+--UPDATE users SET ver_ticket = JSON_ARRAY(CONCAT(department_id))
+-- UPDATE department SET suc_for_ticket = '["1","2"]' where id in (20,21)
+-- UPDATE department SET suc_for_ticket = '["1"]' where id = 23
+

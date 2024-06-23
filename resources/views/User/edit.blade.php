@@ -17,10 +17,7 @@
   </div>
 </div>
 
-<!-- @if(!isset(auth()->user()->department_id))
-<p class="text-danger"></p>
-<h2 class="text-danger"> Complete su perfil</h2>
-@endif -->
+
 <div class="container">
     @if(Session::get('success'))
             <div class="alert alert-success mt-2">
