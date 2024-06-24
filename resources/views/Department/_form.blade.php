@@ -13,17 +13,17 @@
 
 <div class="form-group">
 	<label for="enableforticket">Aceptar tickets:</label>
-	<select name="enableforticket" class="form-control" required>
+	<select name="enableforticket" id="enableforticket" class="form-control" required>
 	<option value="0" {{ old('enableforticket', $department->enableforticket) == 0 ? 'selected' : '' }}>No</option>
 	<option value="1" {{ old('enableforticket', $department->enableforticket) == 1 ? 'selected' : '' }}>Sí</option>	
 	</select>
 </div>
            
-<div class="form-group">
+<div class="form-group" id="suc_for_ticket_group" style="display: none;">
 	<label for="sucursal">Sucursal donde acepta ticket:</label>
-	<select name="suc_for_ticket[]" class="form-control" multiple required>
+	<select name="suc_for_ticket[]" class="form-control" multiple>
 		<!-- <option value="">Seleccione una sucursal</option> -->
-		@foreach($sucursal as $id =>$name)
+		@foreach($sucursal as $id => $name)
 			<!-- <option value="{{ $id }}" @if($id == old('sucursal_ids' , $department->sucursal_ids)) selected @endif >{{$name}}</option> -->
 			<option value="{{ $id }}" @if(in_array($id, old('sucursal_ids', json_decode($department->suc_for_ticket, true) ?? []))) selected @endif>{{ $name }}</option>
 		@endforeach
@@ -33,7 +33,7 @@
 <div class="form-group">
 	<label for="sucursal">Sucursal Dep:</label>
 	<select name="sucursal_ids[]" class="form-control" multiple required>
-		@foreach($sucursal as $id =>$name)
+		@foreach($sucursal as $id => $name)
 			<option value="{{ $id }}" @if(in_array($id, old('sucursal_ids', json_decode($department->sucursal_ids, true) ?? []))) selected @endif>{{ $name }}</option>
 		@endforeach
 	</select>
@@ -49,3 +49,24 @@
 <a class="btn btn-link btn-block"
 href="{{route('department.index')}}">Cancelar
 </a>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var enableForTicketSelect = document.getElementById('enableforticket');
+        var sucForTicketGroup = document.getElementById('suc_for_ticket_group');
+
+        // Show or hide the 'suc_for_ticket' group based on the initial value
+        toggleSucForTicketGroup();
+
+        // Add event listener to the select element
+        enableForTicketSelect.addEventListener('change', toggleSucForTicketGroup);
+
+        function toggleSucForTicketGroup() {
+            if (enableForTicketSelect.value == '1') {
+                sucForTicketGroup.style.display = 'block';
+            } else {
+                sucForTicketGroup.style.display = 'none';
+            }
+        }
+    });
+</script>

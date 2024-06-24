@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Inventory;
 use Illuminate\Http\Request;
-
+use App\Models\Department;
+use App\Models\Sucursal;
 class InventoryController extends Controller
 {
     /**
@@ -20,7 +21,10 @@ class InventoryController extends Controller
      */
     public function create()
     {
-        return view('layouts.layout');
+        $equipo = new Inventory();
+        $department = Department::pluck('name','id');
+        $sucursal = Sucursal::pluck('name','id');
+        return view('Inventory.create',compact('department','equipo','sucursal'));
     }
 
     /**

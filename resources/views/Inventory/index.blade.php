@@ -9,7 +9,7 @@
     @endif
     @include('partials.validation-errors')    
     <div class="d-grid gap-2 d-md-flex justify-content-md-end m-2">
-    <a href="{{route('user.create')}}" type="button" class="btn btn-primary p-2 ">Nuevo Usuario</a>
+    <a href="{{route('inventory.create')}}" type="button" class="btn btn-primary p-2 ">Nuevo equipo</a>
     </div>    
     @isset($users)  
     <div class="container-fluid">

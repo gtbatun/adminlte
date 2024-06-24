@@ -100,7 +100,6 @@ Route::get('/tickets/{ticket}/gestiones', [TicketController::class, 'getGestione
 
 
 
-
                 /**-------------------------------------------**/
                 /**              -- Crear ticket --           **/
                 /**-------------------------------------------**/

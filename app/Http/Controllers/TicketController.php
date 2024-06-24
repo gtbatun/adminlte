@@ -74,12 +74,52 @@ class TicketController extends Controller
 
         // Verificar si el usuario tiene departamentos permitidos en ver_ticket
         if (is_array($ver_ticket) && !empty($ver_ticket)) {
-            // Realizar la consulta para obtener los tickets permitidos
-            $tickets = Ticket::whereIn('department_id', $ver_ticket)
-            ->where('status_id', '!=', 4)
-                ->orWhere('type', auth()->user()->department_id)
+            // Realizar la consulta para obtener los tickets permitidos            
+                $tickets1 = Ticket::where(function($query) use ($ver_ticket) {
+                    $query->whereIn('department_id', $ver_ticket)
+                          ->orWhere('type', auth()->user()->department_id);
+                })
+                ->where('status_id', '!=', 4)
                 ->with('area', 'category', 'status', 'department')
                 ->get();
+                /** */
+                $tickets = Ticket::where(function($query) {
+                    $department = auth()->user()->department;
+                    $userSucursalId = auth()->user()->sucursal_id;
+                    $verTicket = json_decode(auth()->user()->ver_ticket, true); // Asumiendo que 'ver_ticket' es un JSON array
+    
+                    // Filtrar tickets creados por el departamento del usuario actual
+                    $query->where(function($query) use ($department, $userSucursalId, $verTicket) {
+                        $query->whereIn('department_id', $verTicket);
+                            //   ->where('sucursal_id', $userSucursalId);
+                    });
+    
+                    // Filtrar tickets asignados al departamento del usuario actual
+                    if ($department->multi) {
+                        // Departamentos multi-sucursal
+                        $query->orWhere(function($query) use ($department) {
+                            $query->where('type', $department->id);
+                        });
+                    } else {
+                        // Departamentos no multi-sucursal
+                        
+                        $query->orWhere(function($query) use ($department, $userSucursalId) {
+                            $query->where(function($query) {
+                                $query->where('department_id', auth()->user()->department_id)
+                                    ->orWhere('type', auth()->user()->department_id);
+                            })
+                            ->where('status_id', '!=', 4)
+                            ->whereHas('user', function($query) {
+                                $query->where('sucursal_id', auth()->user()->sucursal_id);
+                            });
+                        });
+                    }
+                })
+                ->where('status_id', '!=', 4)
+                ->with('area', 'category', 'status', 'department')
+                ->get();
+                /** */
+                
                 // return $tickets;
         } else {
             // Si no hay departamentos permitidos, devolver una colección vacía
@@ -237,10 +277,48 @@ class TicketController extends Controller
         // Verificar si el usuario tiene departamentos permitidos en ver_ticket
         if (is_array($ver_ticket) && !empty($ver_ticket)) {
             // Realizar la consulta para obtener los tickets permitidos
-            $ticket_clo = Ticket::whereIn('department_id', $ver_ticket)
+            $ticket_clo2 = Ticket::whereIn('department_id', $ver_ticket)
                 ->with('area', 'category', 'status', 'department')
                 ->where('status_id', '=', 4)
                 ->get();
+                /** */
+                $ticket_clo = Ticket::where(function($query) {
+                    $department = auth()->user()->department;
+                    $userSucursalId = auth()->user()->sucursal_id;
+                    $verTicket = json_decode(auth()->user()->ver_ticket, true); // Asumiendo que 'ver_ticket' es un JSON array
+    
+                    // Filtrar tickets creados por el departamento del usuario actual
+                    $query->where(function($query) use ($department, $userSucursalId, $verTicket) {
+                        $query->whereIn('department_id', $verTicket);
+                            //   ->where('sucursal_id', $userSucursalId);
+                    });
+    
+                    // Filtrar tickets asignados al departamento del usuario actual
+                    if ($department->multi) {
+                        // Departamentos multi-sucursal
+                        $query->orWhere(function($query) use ($department) {
+                            $query->where('type', $department->id);
+                        });
+                    } else {
+                        // Departamentos no multi-sucursal
+                        
+                        $query->orWhere(function($query) use ($department, $userSucursalId) {
+                            $query->where(function($query) {
+                                $query->where('department_id', auth()->user()->department_id)
+                                    ->orWhere('type', auth()->user()->department_id);
+                            })
+                            ->where('status_id', '=', 4)
+                            ->whereHas('user', function($query) {
+                                $query->where('sucursal_id', auth()->user()->sucursal_id);
+                            });
+                        });
+                    }
+                })
+                ->where('status_id', '=', 4)
+                ->with('area', 'category', 'status', 'department')
+                ->get();
+                
+                /** */
         } else {
             // Si no hay departamentos permitidos, devolver una colección vacía
             $ticket_clo = collect();
