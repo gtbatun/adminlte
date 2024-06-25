@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ChartJSController;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\DeviceController;
 
 use App\Http\Controllers\NotificationController;
 use App\Models\Ticket;
@@ -94,6 +95,9 @@ Route::resource('user', UserController::class);
 Route::resource('gestion',GestionController::class);
 Route::resource('ticket',TicketController::class);
 Route::resource('inventory',InventoryController::class);
+Route::resource('device',DeviceController::class);
+/**asignar los equipos a los usuarios si es necesario */
+Route::get('/assignments', [InventoryController::class, 'assignments'])->name('inventory.assignments');
 Route::get('/tickets/data', [TicketController::class, 'data'])->name('tickets.data');
 /** Consultar las gestiones de cada ticket */
 Route::get('/tickets/{ticket}/gestiones', [TicketController::class, 'getGestiones'])->name('tickets.gestiones');

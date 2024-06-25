@@ -358,6 +358,35 @@ return [
                 ],
             ],
         ],
+        /** -------------------------------------------------- */
+        // [
+        //     'text'    => 'Inventario',
+        //     'url'     => 'Inventario',            
+        //     'icon'   => 'far fa-fw fa-hdd',
+        //     'can' => 'admin-access', 
+        //     'submenu' => [
+        //         [
+        //             'text' => 'Equipos',
+        //             'route'  => 'device.index',
+        //             'can' => 'admin-access',
+        //         ],
+        //         [
+        //             'text' => 'Asignar',
+        //             'route'  => 'inventory.create',
+        //             'can' => 'admin-access',
+        //         ],
+                
+        //         [
+        //             'text' => 'Asignados',
+        //             'can' => 'admin-access',
+        //             'route'  => 'inventory.index',
+        //             // 'icon_color' => 'red', 
+
+        //         ],
+        //     ],
+        // ],
+
+        /** -------------------------------------------------- */
         [
             'text'   => 'Ticket',
             'route'  => 'ticket.index',
@@ -371,13 +400,21 @@ return [
             'icon'   => 'fas fa-lock',
             'icon_color' => 'red'  
         ],
-        [
-            'text'   => 'Inventario',
-            'route'  => 'inventory.index',            
-            'icon'   => 'far fa-fw fa-hdd',
-            'can' => 'admin-access',
-            'icon_color' => 'red',  
-        ],
+        // [
+        //     'text'   => 'Inventario',
+        //     'route'  => 'inventory.index',            
+        //     'icon'   => 'far fa-fw fa-hdd',
+        //     'can' => 'admin-access',
+        //     'icon_color' => 'red',  
+        // ],
+        
+        // [
+        //     'text'   => 'Equipo',
+        //     'route'  => 'device.index',            
+        //     // 'icon'   => 'far fa-fw fa-hdd',
+        //     'can' => 'admin-access',
+        //     'icon_color' => 'green',  
+        // ],
         // [
         //     'text'   => 'layout',
         //     'route'  => 'inventory.create',

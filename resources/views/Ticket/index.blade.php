@@ -51,7 +51,7 @@
         </div>
     </div>
 </div>
-<button id="enable-sound-notifications" class="btn btn-warning">Habilitar notificaciones de sonido</button>
+<!-- <button id="enable-sound-notifications" class="btn btn-warning">Habilitar notificaciones de sonido</button> -->
 
 
 <!---------------------------------- Modal de reasignar ticket  ---------------------->
@@ -67,6 +67,7 @@
                 <form id="reasignticket" action="{{route('ticket.reasig')}}"  method="post">
                     @csrf
                     <input type="hidden" name="ticket_id" id="ticket-id">
+                    <input type="hidden" name="user_id" value="{{auth()->user()->id}}">
                     <div class="col-xs-12 col-sm-4 col-md-12 mt-2">
                     <label for="departamento">Departamento</label>
                     <select name="department_id" id="departamento" class="form-control" required>
@@ -267,7 +268,6 @@
             $('#modal-reasig-ticket').modal('show');
         });
             
-
         // Manejar el cambio de departamento
         $('#departamento').change(function() {
             var departmentId = $(this).val();

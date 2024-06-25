@@ -69,4 +69,9 @@ class User extends Authenticatable
         // se lee, un usuario pertenece a una sucursal
         return $this->belongsTo(Sucursal::class,'sucursal_id');
     }
+    /**codigo pasra la seccion de asignacion de equipos de computo */
+    public function devices()
+    {
+        return $this->belongsToMany(Device::class);
+    }
 }

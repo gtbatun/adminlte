@@ -6,6 +6,8 @@ use App\Models\Inventory;
 use Illuminate\Http\Request;
 use App\Models\Department;
 use App\Models\Sucursal;
+use App\Models\Device;
+use App\Models\User;
 class InventoryController extends Controller
 {
     /**
@@ -13,7 +15,8 @@ class InventoryController extends Controller
      */
     public function index()
     {
-        return view('Inventory.index');
+        $users = User::with('devices')->get();
+        return view('Inventory.assignments',compact('users'));
     }
 
     /**
@@ -21,10 +24,17 @@ class InventoryController extends Controller
      */
     public function create()
     {
-        $equipo = new Inventory();
-        $department = Department::pluck('name','id');
-        $sucursal = Sucursal::pluck('name','id');
-        return view('Inventory.create',compact('department','equipo','sucursal'));
+        $devices = Device::all();
+        $users = User::pluck('name','id');
+        return view('Inventory.index',['devices' => $devices, 'users' => $users]);
+    }
+    /**
+     * Fucnion para la asignacion de equipos de computo a los usuarios
+     */
+    public function assignments()
+    {
+        $users = User::with('devices')->get();
+        return view('Inventory.assignments',compact('users'));
     }
 
     /**
@@ -32,7 +42,17 @@ class InventoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'device_ids' => 'required|array',
+            'device_ids.*' => 'exists:device,id',
+        ]);
+        // return $request;
+
+        $user = User::findOrFail($request->user_id);
+        $user->devices()->attach($request->device_ids);
+
+        return redirect()->route('inventory.index')->with('success', 'Equipos asignados con éxito.');
     }
 
     /**
@@ -64,6 +84,11 @@ class InventoryController extends Controller
      */
     public function destroy(Inventory $inventory)
     {
-        //
+        $device = Device::findOrFail($id);
+        $device->user_id = null;
+        // $device->save();
+        return $inventory;
+
+        return redirect()->route('inventory.index')->with('success', 'Equipo desasignado con éxito.');
     }
 }

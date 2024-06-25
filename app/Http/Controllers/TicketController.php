@@ -599,7 +599,16 @@ class TicketController extends Controller
                 $reaticket->area_id = $request->area_id;
                 $reaticket->category_id = $request->category_id;
                 $reaticket->status_id = 6; // Asegúrate de que el status_id 6 es el correcto
-                $reaticket->save();               
+                // return $request;
+                $reaticket->save();  
+                
+                if ($reaticket) {
+                    $insert_gestion = new Gestion();
+                    $insert_gestion->ticket_id = $reaticket->ticket_id;
+                    $insert_gestion->coment = 'Reasignado por ';
+                    $insert_gestion->user_id = $reaticket->user_id;
+                   $insert_gestion->save();
+                }
 
                 return redirect()->route('ticket.index')->with('success', 'Ticket reasignado exitosamente');
             } else {
