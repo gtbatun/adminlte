@@ -57,7 +57,6 @@ class ReportController extends Controller
         // return response()->json(['start_date' => $fechaInicio, 'end_date' => $fechaFin]);
     
     }
-
     /** secccion para visualizar los reportes los datos en la tabla */
     public function search(Request $request)
     {

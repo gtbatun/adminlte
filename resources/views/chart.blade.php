@@ -8,7 +8,7 @@
     <!-- <div class="row"> -->
   @if($ticketCounts)
   <span>Resumen</span>
-  <!-- {{$ticketCounts}} -->
+  <!-- {{$ticketCounts}} --> 
   <div class="row mt-2">
   @foreach($ticketCounts as $ticketstatus)
   <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
