@@ -67,6 +67,7 @@
                 <form id="reasignticket" action="{{route('ticket.reasig')}}"  method="post">
                     @csrf
                     <input type="hidden" name="ticket_id" id="ticket-id">
+                    <input type="hidden" name="departmentOld_id" id="ticket-department">
                     <input type="hidden" name="user_id" value="{{auth()->user()->id}}">
                     <div class="col-xs-12 col-sm-4 col-md-12 mt-2">
                     <label for="departamento">Departamento</label>
@@ -257,11 +258,13 @@
 
         // Manejar el clic en el botón de reasignar
         $(document).on('click', '.modal-reasig-btn', function() {
-            var ticketId = $(this).data('ticket-id');
+            var ticketDepartment = $(this).data('ticket-department');
             var ticketTitle = $(this).data('ticket-title');
+            var ticketId = $(this).data('ticket-id');
 
             $('#modal-reasig-ticket').find('#ticket-id').val(ticketId);
             $('#modal-reasig-ticket').find('#ticket-name-title').text(ticketTitle);
+            $('#modal-reasig-ticket').find('#ticket-department').val(ticketDepartment);
             
             loadDepartments();
 

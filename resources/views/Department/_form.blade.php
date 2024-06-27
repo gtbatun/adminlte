@@ -1,4 +1,5 @@
 @csrf
+<script src="{{asset('assets/js/plugins/jquery.min.js')}}"></script>
 <div class="form-group">
 <label for="title">Nombre del Departamento</label>
 	<input class="form-control border-0 bg-light shadow-sm"	type="text"	name="name"	value="{{old ('name', $department->name)}}" >
@@ -28,7 +29,7 @@
 			<option value="{{ $id }}" @if(in_array($id, old('sucursal_ids', json_decode($department->suc_for_ticket, true) ?? []))) selected @endif>{{ $name }}</option>
 		@endforeach
 	</select>
-</div>
+</div> 
 
 <div class="form-group">
 	<label for="sucursal">Sucursal Dep:</label>
@@ -40,6 +41,7 @@
 </div>
 
 <div class="form-check">
+	<input type="hidden" name="multi" value="0">
 	<input class="form-check-input" type="checkbox" value="1" name="multi" {{ $department->multi == 1 ? 'checked' : '' }}>
 	<label class="form-check-label text-success" for="status_id"><strong>Multi sucursal</strong></label>            
 </div>

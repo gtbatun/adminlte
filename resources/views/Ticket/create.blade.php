@@ -136,12 +136,11 @@
 </div>
 
 
-
 @endsection
 @section('js')
 <script type="text/javascript">
     
-<!-- scrip para el nuevo select option -->
+// <!-- scrip para el nuevo select option -->
 
 $(document).ready(function() {
     $('#department').on('change', function() {

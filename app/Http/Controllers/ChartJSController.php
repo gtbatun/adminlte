@@ -68,7 +68,7 @@ class ChartJSController extends Controller
             
                 $agente = Ticket::whereYear('ticket.created_at', $year)
                 ->whereMonth('ticket.created_at', $month)
-                ->where('ticket.department_id', '=', $department_id)
+                ->where('ticket.type', '=', $department_id)
                 ->join('users', 'users.id', '=', 'ticket.user_id')
                 ->selectRaw('COUNT(*) as count, users.name as user_name')
                 ->groupBy('users.name')
@@ -117,7 +117,7 @@ class ChartJSController extends Controller
         } else {
             $department = Ticket::whereYear('ticket.created_at', $year)
                 ->whereMonth('ticket.created_at', '=', $month)                
-                ->where('ticket.department_id', '=', auth()->user()->department_id)
+                ->where('ticket.type', '=', auth()->user()->department_id)
                 ->join('area', 'ticket.area_id', '=', 'area.id')
                 ->selectRaw('COUNT(*) as count, area.name as area_name')
                 ->groupBy('area.name')
@@ -163,7 +163,7 @@ class ChartJSController extends Controller
         }else {            
              $t_dia1 = Ticket::whereYear('ticket.created_at', $year)
              ->whereMonth('ticket.created_at', $month)
-             ->where('ticket.department_id',auth()->user()->department_id)
+             ->where('ticket.type',auth()->user()->department_id)
                 ->selectRaw('COUNT(*) as count, DAY(created_at) as day')
                 ->groupBy('day')
                 ->pluck('count', 'day');

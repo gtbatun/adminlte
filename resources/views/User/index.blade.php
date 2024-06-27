@@ -45,7 +45,7 @@
                                     </td>
                                     <td>
                                         @if (is_null($userItem->email_verified_at))
-                                            <a href="{{ route('admin.verify-email', $userItem->id) }}" class="btn btn-primary">Verificar Correo</a>
+                                            <a href="{{ route('admin.verify-email', $userItem->id) }}" class="btn btn-primary">Verificar</a>
                                         @else
                                             Verificado
                                         @endif

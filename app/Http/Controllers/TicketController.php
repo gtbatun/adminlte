@@ -338,8 +338,7 @@ class TicketController extends Controller
      * Show the form for creating a new resource.
      */
     public function create()
-    {
-        
+    {        
         $sucursalId = auth()->user()->sucursal_id;
         $departamento = Department::where(function($query) use ($sucursalId) {
             $query->whereJsonContains('sucursal_ids', (string) $sucursalId);
@@ -603,12 +602,17 @@ class TicketController extends Controller
                 $reaticket->save();  
                 
                 if ($reaticket) {
+                    $departmentOld = Department::find($request->departmentOld_id);
+                    $departmentNew = Department::find($request->department_id);
+                    $usuario = User::find($request->user_id);
                     $insert_gestion = new Gestion();
-                    $insert_gestion->ticket_id = $reaticket->ticket_id;
-                    $insert_gestion->coment = 'Reasignado por ';
-                    $insert_gestion->user_id = $reaticket->user_id;
+                    $insert_gestion->ticket_id = $request->ticket_id;
+                    $insert_gestion->coment = 'El ticket '.$request->ticket_id .', Fue asignado por error al departamento '.$departmentOld->name.'. Se reasigno por el usuario '. $usuario->name.' al departamento '.$departmentNew->name;
+                    $insert_gestion->user_id = $request->user_id;
+                    $insert_gestion->status_id = 6;
                    $insert_gestion->save();
                 }
+                // return [$insert_gestion,$reaticket];
 
                 return redirect()->route('ticket.index')->with('success', 'Ticket reasignado exitosamente');
             } else {

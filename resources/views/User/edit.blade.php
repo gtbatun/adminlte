@@ -107,7 +107,7 @@
                       </div> 
                     </div>
                     @endif
-                    <!-- fin de seccion de agregar sucrsal -->
+                    <!-- fin de seccion de agregar sucursal -->
 
                     @if($user->department_id == '' || auth()->user()->is_admin == 10)
                     <div class="row mb-3">
@@ -125,13 +125,12 @@
                     <div class="col-md-8 col-lg-9">
                     <select name="ver_ticket[]" class="form-control" multiple required>                      
                           @foreach($departments as $id => $name)
-                                <!-- <option value="{{ $id }}">{{ $name }}</option> -->
                                 <option value="{{ $id }}" @if(in_array($id, $userDepartments)) selected @endif>{{ $name }}</option>
                           @endforeach
                     </select>
-                  </div>
-                  </div> 
-                  @endif 
+                    </div>
+                    </div> 
+                    @endif 
                     <div class="row mb-3">
                       <label for="Phone" class="col-md-4 col-lg-3 col-form-label">Extension</label>
                       <div class="col-md-8 col-lg-2">

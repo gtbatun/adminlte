@@ -85,7 +85,6 @@ class DepartmentController extends Controller
             }
             $department->sucursal_names = $departmentSucursales;
         }
-
         return view('Department.index', ['departments' => $departments]);
     }
     /**
