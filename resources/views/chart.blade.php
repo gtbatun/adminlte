@@ -56,6 +56,10 @@
                         <option value="11">Noviembre</option>
                         <option value="12">Diciembre</option>
                     </select>
+                    <select id="s_dep" >
+                        <option value="1">soporte</option>
+                        <option value="2">Sistemas</option>
+                    </select>
                     </div>
                     <canvas id="agentmonth" width="400" height="200"></canvas>
                 </div>

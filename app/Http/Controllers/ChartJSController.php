@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use Illuminate\View\View;
 use App\Models\Ticket;
+use App\Models\Department;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -52,6 +53,7 @@ class ChartJSController extends Controller
         $user = Auth::user();
         $agente = collect();
         $department_id = auth()->user()->department_id;
+        $department = Department::find($department_id);
         // dd($department_id);
 
         if ($user->is_admin == 10 || $user->is_admin == 5) {
@@ -64,7 +66,18 @@ class ChartJSController extends Controller
                 ->selectRaw('COUNT(*) as count, users.name as user_name')
                 ->groupBy('users.name')
                 ->pluck('count', 'user_name');
-        } else {
+        }elseif($department->enableforticket = 1){
+            $agente = DB::table('ticket')
+            ->join('gestion', 'gestion.ticket_id', '=', 'ticket.id')
+            ->join('users', 'users.id', '=', 'gestion.user_id')
+            ->select(DB::raw('COUNT(*) as count'), 'users.name as user_name'  )
+            ->whereMonth('ticket.created_at', '=', $month)
+            ->whereYear('ticket.created_at', '=', $year)
+            ->where('ticket.department_id', '=', $department)
+            ->where('ticket.status_id', '=', '4')
+            ->groupBy('users.name')
+            ->pluck('count', 'user_name');
+        }else {
             
                 $agente = Ticket::whereYear('ticket.created_at', $year)
                 ->whereMonth('ticket.created_at', $month)
