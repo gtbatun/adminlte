@@ -16,8 +16,9 @@ class InventoryController extends Controller
     public function index()
     {
         $users = User::with('devices')->get();
-        return view('Inventory.assignments',compact('users'));
+        return view('Inventory.index',compact('users'));
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -26,7 +27,7 @@ class InventoryController extends Controller
     {
         $devices = Device::all();
         $users = User::pluck('name','id');
-        return view('Inventory.index',['devices' => $devices, 'users' => $users]);
+        return view('Inventory.assignments',['devices' => $devices, 'users' => $users]);
     }
     /**
      * Fucnion para la asignacion de equipos de computo a los usuarios

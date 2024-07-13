@@ -395,6 +395,13 @@ return [
             // 'icon_color' => 'green'  
         ],
         [
+            'text'   => 'Ticket2',
+            'route'  => 'ticket.index1',
+            // 'icon'   => 'far fa-fw fa-file',
+            'icon'   => 'fas fa-lock-open',
+            // 'icon_color' => 'green'  
+        ],
+        [
             'text'   => ' Ticket cerrados',
             'route'  => 'ticket.closed',
             'icon'   => 'fas fa-lock',

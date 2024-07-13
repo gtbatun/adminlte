@@ -37,7 +37,6 @@
 
         <div class="col-xs-12 col-sm-6 col-md-3 mt-2">
             <div class="form-group">
-                <!-- <label for=""><strong>Usuario solicitante:</strong></label> -->
                 <h6><strong>Solicitante:</strong></h6>
                 <span>{{$ticket->usuario->name}}</span>
             </div>

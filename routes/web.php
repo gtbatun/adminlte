@@ -129,8 +129,9 @@ Route::post('/reasigticket', [TicketController::class, 'reasigticket'])->name('t
 /**Solicitar los departamentos segun sea la sucursal */
 Route::get('/department/data/{sucursal_id}', [DepartmentController::class, 'getAllDepartments']);
 
-
-
+/**ruta para ver el nuev index */
+Route::get('/tickets/index2', [TicketController::class, 'index1'])->name('ticket.index1');
+Route::get('/tickets/data2', [TicketController::class, 'data2'])->name('tickets.data2');
 
 /**ver tickets cerrados */
 Route::get('/ticket-closed',[TicketController::class,'closed'])->name('ticket.closed');
@@ -152,7 +153,8 @@ Route::get('/chart-per-month', [ChartJSController::class, 'getDataMonth'])->name
 Route::get('/chart-per-month-department', [ChartJSController::class, 'getDepartmentDataMonth'])->name('ticketsDepartmentPerMonth'); /**Departamento */
 Route::get('/chart-per-month-day', [ChartJSController::class, 'getDayDataMonth'])->name('ticketsDayPerMonth');/**Dia por dep */
 
-
+/** Ruta creada para la seccion de usuarios */
+Route::get('/search', [UserController::class, 'search'])->name('search');
 
 
 

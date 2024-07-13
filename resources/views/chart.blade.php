@@ -32,7 +32,6 @@
   @endif
   </div>
     <div class="row mt-2">
-    
     </div>
     <!-- </div> -->
 <div class="row">

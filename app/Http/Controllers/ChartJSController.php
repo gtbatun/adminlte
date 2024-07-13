@@ -67,13 +67,14 @@ class ChartJSController extends Controller
                 ->groupBy('users.name')
                 ->pluck('count', 'user_name');
         }elseif($department->enableforticket = 1){
+            
             $agente = DB::table('ticket')
             ->join('gestion', 'gestion.ticket_id', '=', 'ticket.id')
             ->join('users', 'users.id', '=', 'gestion.user_id')
             ->select(DB::raw('COUNT(*) as count'), 'users.name as user_name'  )
             ->whereMonth('ticket.created_at', '=', $month)
             ->whereYear('ticket.created_at', '=', $year)
-            ->where('ticket.department_id', '=', $department)
+            ->where('ticket.department_id', '=', $department_id)
             ->where('ticket.status_id', '=', '4')
             ->groupBy('users.name')
             ->pluck('count', 'user_name');

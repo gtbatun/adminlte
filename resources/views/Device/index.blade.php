@@ -23,7 +23,7 @@
                                     <th>ID</th>
                                     <th>TIPO</th>
                                     <th>NOMBRE</th>
-                                    <th>MARCA</th>
+                                    <!-- <th>MARCA</th> -->
                                     <th>DEPARTAMENTO</th>
                                     <th>USUARIO</th>
                                     <th>SUCURSAL</th>
@@ -37,7 +37,7 @@
                                     <td>{{$deviceItem->id}}</td>  
                                     <td>{{$deviceItem->tipodevice->name}}</td>
                                     <td>{{$deviceItem->name ?? ''}}</td>
-                                    <td>{{$deviceItem->marca->name ?? ''}}</td>
+                                    <!-- <td>{{$deviceItem->marca->name ?? ''}}</td> -->
                                     <td>{{$deviceItem->departamento->name ?? ''}}</td>
                                     <td>{{$deviceItem->usuario->name ?? ''}}</td>
                                     <td>{{$deviceItem->sucursal->name ?? ''}}</td>
@@ -45,12 +45,16 @@
                                         
                                     </td>
                                     <td>
-                                    <a href="{{route('device.edit',$deviceItem)}}" class="btn btn-info">Editar <i class='fas fa-edit'></i></a>           
+                                        <button type="button" class="btn btn-warning asignar-device" data-toggle="modal" data-target="#modal-asignar-device" 
+                                        data-device-id="{{ $deviceItem->id }}" data-device-name="{{ $deviceItem->name }}">Asignar</button> 
+                                        <a href="{{route('device.edit',$deviceItem)}}" class="btn btn-info">Editar <i class='fas fa-edit'></i></a>
+
                                         <form action="{{route('device.destroy',$deviceItem)}}" method="post" class="d-inline">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger">Dell <i class='fas fa-eraser'></i></button>
                                         </form>
+
                                     </td>
                                 </tr>
                                 @endforeach
@@ -70,20 +74,27 @@
 </div>
 
 <!-- Modal de cambio de contraseña  -->
-<div class="modal" id="modal-update-password">
+<div class="modal" id="modal-asignar-device">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modal-titulo">Usuario: <strong class="text-danger"><span id="user-name-title"></span></strong></h5>
+                <h5 class="modal-title" id="modal-titulo">Equipo: <strong class="text-danger"><span id="device-title"></span></strong></h5>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
                 <form action="{{ route('user.update.password') }}" method="post">
                     @csrf
-                    <input type="hidden" name="user_id" id="user-id">
+                    <input type="hidden" name="device_id" id="device-id">
                     <div class="form-group">
-                        <label for="password">Nueva Contraseña</label>
-                        <input type="password" name="password" id="password" class="form-control">
+                        <label for="user_id">Usuario</label>
+                        <select name="user_id" id="user_id" class="form-control">
+                            <option value="">Seleccione un usuario</option>
+                            
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="coment">Comentario</label>
+                        <input type="text" name="coment" id="coment" class="form-control">
                     </div>
                     <button type="submit" class="btn btn-primary">Guardar Cambios</button>
                 </form>
@@ -96,12 +107,11 @@
 <!--  -->
 <script>
     $(document).ready(function() {
-        $('.edit-password-btn').click(function() {
-            var userId = $(this).data('user-id');
-            var userName = $(this).data('user-name');
-            $('#modal-update-password').find('#user-id').val(userId);
-
-            $('#modal-update-password').find('#user-name-title').text(userName);
+        $('.asignar-device').click(function() {
+            var deviceId = $(this).data('device-id');
+            var deviceName = $(this).data('device-name');
+            $('#modal-asignar-device').find('#device-id').val(deviceId);
+            $('#modal-asignar-device').find('#device-title').text(deviceName);
 
         });  
      });
@@ -128,11 +138,12 @@ $(document).ready(function() {
             },
             responsive: true,
             "autoWidth": true,
-            "columnDefs": [
-                // { "width": "10%", "targets": 0 },
-                { "width": "20%", "targets": 1 },
-                { "width": "20%", "targets": 2 },
-                { "width": "5%", "targets": 3 }]
+            // "columnDefs": [
+            //     { "width": "5%", "targets": 0 },
+            //     { "width": "10%", "targets": 1 },
+            //     { "width": "10%", "targets": 2 },
+            //     { "width": "5%", "targets": 3 },
+            //     { "width": "10%", "targets": 4}]
     } );
 } );
 </script>

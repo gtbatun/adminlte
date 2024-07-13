@@ -21,6 +21,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use Yajra\DataTables\DataTables;
 
 class TicketController extends Controller
 {
@@ -29,7 +30,6 @@ class TicketController extends Controller
         $this->middleware('auth');
     }
 
-    /** */  
     /**funcion para verificar si algun ticket ya se le modifico la fecha de update */
     public function checkUpdates()
     {
@@ -41,7 +41,140 @@ class TicketController extends Controller
         return response()->json(['last_updated_at' => optional($latestUpdate)->last_updated_at]);
     } 
 
-    /*
+    /**
+     * ---------------------------------------------------------------------------------------------------------------------------------------------------------
+     */
+    public function data2(Request $request)
+    {
+        if (!auth()->check()) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $user = Auth::user();
+        $ver_ticket = json_decode($user->ver_ticket, true);
+
+        if (is_array($ver_ticket) && !empty($ver_ticket)) {
+            $tickets = Ticket::where(function($query) use ($user, $ver_ticket) {
+                $department = $user->department;
+                $userSucursalId = $user->sucursal_id;
+
+                $query->whereIn('department_id', $ver_ticket);
+
+                if ($department->multi) {
+                    $query->orWhere('type', $department->id);
+                } else {
+                    $query->orWhere(function($query) use ($department, $userSucursalId) {
+                        $query->where(function($query) use ($department) {
+                            $query->where('department_id', $department->id)
+                                  ->orWhere('type', $department->id);
+                        })
+                        ->where('status_id', '!=', 4)
+                        ->whereHas('user', function($query) use ($userSucursalId) {
+                            $query->where('sucursal_id', $userSucursalId);
+                        });
+                    });
+                }
+            })
+            ->where('status_id', '!=', 4)
+            ->with('area', 'category', 'status', 'department');
+        } else {
+            $tickets = collect();
+        }
+
+        return DataTables::of($tickets)
+            ->addColumn('title', function($ticket) {
+                return view('Ticket.Partials.title', [
+                    'ticket' => $ticket,
+                    'messageStatus' => $this->getMessageStatus($ticket),
+                    'gestionTime' => $this->getGestionTime($ticket),
+                    'messageClass' => $this->getMessageClass($ticket)
+                ])->render();
+            })
+            ->addColumn('category', function($ticket) {
+                return view('Ticket.Partials.dep', ['ticket' => $ticket])->render();
+            })
+            ->addColumn('sucursal', function($ticket) {
+                return $ticket->usuario->sucursal->name;
+            })
+            ->addColumn('type', function($ticket) {
+                $user = auth()->user();
+                if ($ticket->user_id == $user->id) {
+                    return '<strong>Creado</strong>';
+                } elseif ($ticket->department_id == $user->department_id) {
+                    return '<strong>Asignado</strong>';
+                } else {
+                    return '<strong>' . $ticket->department->name . '</strong>';
+                }
+            })
+            ->addColumn('typeColor', function($ticket) {
+                return ($ticket->user_id == auth()->user()->id || $ticket->department_id == auth()->user()->department_id) 
+                    ? 'rgba(46, 204, 133,0.4)' : '';
+            })
+            ->addColumn('typeColorback', function($ticket) {
+                return $ticket->status->name == 'Nuevo' ? 'rgba(255, 0, 0, 0.2)' : ($ticket->status->name == 'En proceso' ? 'rgba(255, 165, 0, 0.2)' : '');
+            })
+            ->addColumn('area', function($ticket) {
+                return $ticket->area->name;
+            })
+            ->addColumn('status', function($ticket) {
+                return $ticket->status->name;
+            })
+            ->addColumn('actions', function($ticket) {
+                return view('Ticket.Partials1.actions1', ['ticket' => $ticket])->render();
+            })
+            ->filterColumn('title', function($query, $keyword) {
+                $query->whereRaw("LOWER(`title`) like ?", ["%{$keyword}%"]);
+            })
+            ->filterColumn('type', function($query, $keyword) {
+                $query->whereRaw("LOWER(`type`) like ?", ["%{$keyword}%"]);
+            })
+            ->rawColumns(['title','category', 'type', 'actions'])
+            ->make(true);
+    }
+
+    private function getMessageStatus($ticket) {
+        $latestGestion = Gestion::where('ticket_id', $ticket->id)
+            ->orderBy('created_at', 'desc')
+            ->first();
+        if ($latestGestion) {
+            if ($latestGestion->user_id == $ticket->user_id) {
+                return 'Enviado';
+            } elseif ($latestGestion->department_id == $ticket->assigned_department) {
+                return 'Contestado';
+            } else {
+                return 'Pendiente';
+            }
+        } else {
+            return 'Sin respuesta';
+        }
+    }
+
+    private function getGestionTime($ticket) {
+        $latestGestion = Gestion::where('ticket_id', $ticket->id)
+            ->orderBy('created_at', 'desc')
+            ->first();
+        return $latestGestion ? $latestGestion->created_at : $ticket->created_at;
+    }
+
+    private function getMessageClass($ticket) {
+        $latestGestion = Gestion::where('ticket_id', $ticket->id)
+            ->orderBy('created_at', 'desc')
+            ->first();
+        if ($latestGestion) {
+            if ($latestGestion->user_id == $ticket->user_id) {
+                return 'status-enviado';
+            } elseif ($latestGestion->department_id == $ticket->assigned_department) {
+                return 'status-respondido';
+            } else {
+                return 'status-pendiente';
+            }
+        } else {
+            return 'status-sin-respuesta';
+        }
+    }
+
+
+
     /** funcion para refrescar la tabla de tickets sin recargar la pagina */ 
 
     public function data()
@@ -67,11 +200,9 @@ class TicketController extends Controller
                 })
                 ->get();
         }  
-
         // Obtener el campo ver_ticket del usuario autenticado y decodificarlo
         $ver_ticket = json_decode(Auth::user()->ver_ticket, true);
         // return $ver_ticket;
-
         // Verificar si el usuario tiene departamentos permitidos en ver_ticket
         if (is_array($ver_ticket) && !empty($ver_ticket)) {
             // Realizar la consulta para obtener los tickets permitidos            
@@ -332,6 +463,10 @@ class TicketController extends Controller
     public function index()
     { 
         return view('Ticket.index');
+    }
+    public function index1()
+    { 
+        return view('Ticket.indexnew');
     }
 
     /**

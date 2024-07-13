@@ -39,7 +39,6 @@
                                 <th>CATEGORIA</th>
                                 <th>ASIGNADO</th>
                                 <th>SUCURSAL</th>
-                                <!-- <th>AREA</th> -->
                                 <th>ESTATUS</th>
                                 <th>ACCION</th>
                             </tr>
@@ -141,7 +140,6 @@
                     { data: 'category' },
                     { data: 'type' },
                     { data: 'sucursal' },
-                    // { data: 'area' },
                     { data: 'status' },
                     { data: 'actions', orderable: false, searchable: false}
                 ],

@@ -1,38 +1,28 @@
 @extends('adminlte::page')
 @section('content')
 <div class="container">
-    <h1>Asignaciones de Equipos</h1>
-    <a href="{{ route('inventory.create') }}" class="btn btn-primary mb-3">Asignar Equipos a Usuario</a>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Usuario</th>
-                <th>Equipos Asignados</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($users as $user)
-                <tr>
-                    <td>{{ $user->name }}</td>
-                    <td>
-                        @foreach($user->devices as $device)
-                            <div>
-                                {{ $device->name }}
-                                <form action="{{ route('inventory.destroy', $device->id) }}" method="POST" class="d-inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm">Desasignar</button>
-                                </form>
-                            </div>
-                        @endforeach
-                    </td>
-                    <td>
-                        <!-- Otras acciones, si las hay -->
-                    </td>
-                </tr>
+    <h1>Asignar Equipos a Usuario</h1>
+    <form action="" method="POST">
+        @csrf
+        <div class="form-group">
+            <label for="user_id">Usuario</label>
+            <select name="user_id" id="user_id" class="form-control">
+                <option value="">Seleccione un usuario</option>
+                @foreach($users as $id => $name)
+                    <option value="{{ $id }}">{{ $name }}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="devices">Equipos</label>
+            @foreach($devices as $device)
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="device_ids[]" value="{{ $device->id }}" id="device_{{ $device->id }}">
+                    <label class="form-check-label" for="device_{{ $device->id }}">{{ $device->name }}</label>
+                </div>
             @endforeach
-        </tbody>
-    </table>
+        </div>
+        <button type="submit" class="btn btn-primary">Asignar</button>
+    </form>
 </div>
 @endsection
