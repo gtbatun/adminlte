@@ -9,6 +9,26 @@ use App\Models\Devicedetail;
 
 class DeviceController extends Controller
 {
+    public function getDevicesByType($tipoequipoId)
+    {
+        $devices = Device::where('tipo_equipo_id', $tipoequipoId)
+        ->where('statusdevice_id',15)
+        ->with('tipodevice') // Cargar la relación tipodevice
+        ->get();
+        // $devices = Device::all();
+        return response()->json($devices);
+    }
+    public function gettipoequipo(){
+        $categories = Devicedetail::where('type_device',1)->get();
+        return response()->json($categories);
+    }
+    public function getDevices()
+    {
+        // Obtener todos los dispositivos con sus relaciones necesarias
+        $devices = Device::with(['usuario','marca','tipodevice','statusdevice','sucursal','departamento'])->get();
+
+        return response()->json($devices);
+    }
     /**
      * Display a listing of the resource.
       */
@@ -42,7 +62,7 @@ class DeviceController extends Controller
     {
         // return $request;
         Device::create($request->all());
-        return redirect()->route('inventory.index')->with('success', 'Nuevo equipo creado exitosamente');
+        return redirect()->route('device.index')->with('success', 'Nuevo equipo creado exitosamente');
     }
 
     /**
@@ -85,6 +105,7 @@ class DeviceController extends Controller
     public function destroy(Device $device)
     {
         $device->delete();
-        return redirect()->route('inventory.index')->with('success', 'dispositivo Eliminado exitosamente');
+        // return redirect()->route('inventory.index')->with('success', 'dispositivo Eliminado exitosamente');
+        return response()->json(['success' => 'Dispositivo eliminado correctamente.']);
     }
 }

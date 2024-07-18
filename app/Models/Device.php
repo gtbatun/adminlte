@@ -29,6 +29,7 @@ class Device extends Model
     {
         return $this->belongsTo(Devicedetail::class,'tipo_equipo_id');
     }
+    // Definir la relación con el modelo TipoEquipo
     public function statusdevice()
     {
         return $this->belongsTo(Devicedetail::class,'statusdevice_id');

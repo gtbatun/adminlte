@@ -10,6 +10,28 @@ use App\Models\Device;
 use App\Models\User;
 class InventoryController extends Controller
 {
+    public function assignDevices(Request $request)
+    {
+        $userId = $request->input('user_id');
+        $deviceIds = $request->input('device_ids');
+
+        foreach ($deviceIds as $deviceId) {
+            $device = Device::find($deviceId);
+            $device->user_id = $userId;
+            // $device->assigned = true;
+            $device->statusdevice_id = 13;
+            $device->save();
+
+            // Registrar la asignación en la tabla inventario
+            Inventory::create([
+                'device_id' => $deviceId,
+                'user_id' => $userId,
+            ]);
+        }
+
+        return response()->json(['success' => 'Dispositivos asignados correctamente.']);
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -45,15 +67,25 @@ class InventoryController extends Controller
     {
         $request->validate([
             'user_id' => 'required|exists:users,id',
-            'device_ids' => 'required|array',
-            'device_ids.*' => 'exists:device,id',
+            'device_id' => 'required',
+            'coment' => 'nullable',
         ]);
-        // return $request;
+        // Guardar los datos en la tabla device_user
+        $inventory = new Inventory();
+        $inventory->device_id = $request->device_id;
+        $inventory->user_id = $request->user_id;
+        $inventory->coment = $request->coment;
 
-        $user = User::findOrFail($request->user_id);
-        $user->devices()->attach($request->device_ids);
-
-        return redirect()->route('inventory.index')->with('success', 'Equipos asignados con éxito.');
+        // $inventory->save();
+        /** actualizar o gregar el usuario a la seccion del device */
+        if(isset($request->user_id)){
+            $user = User::find($request->user_id);
+            $device = Device::find($request->device_id);
+            $device->user_id = $request->user_id;
+            $device->department_id = $user->department_id;
+            $device->update();
+        }
+        return redirect()->back()->with('success', 'El dispositivo ha sido asignado al usuario correctamente.');
     }
 
     /**

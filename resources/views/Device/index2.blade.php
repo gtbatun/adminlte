@@ -1,14 +1,13 @@
 @extends('adminlte::page')
 @section('content')
 <script src="{{asset('assets/js/plugins/jquery.min.js')}}"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.min.css">
 <div>    
     @if(Session::get('success'))
-        <!-- <div class="alert alert-success mt-2"> -->
-        <!-- <strong>{{Session::get('success')}} </strong> -->
-        <!-- </div> -->
+        <div class="alert alert-success mt-2">
+        <strong>{{Session::get('success')}} </strong><br>
+        </div>
     @endif
-    <!-- @include('partials.validation-errors')     -->
+    @include('partials.validation-errors')    
     <div class="d-grid gap-2 d-md-flex justify-content-md-end m-2">
     <a href="{{route('device.create')}}" type="button" class="btn btn-primary p-2 ">Nuevo equipo</a>
     </div>    
@@ -24,6 +23,7 @@
                                     <th>ID</th>
                                     <th>TIPO</th>
                                     <th>NOMBRE</th>
+                                    <!-- <th>MARCA</th> -->
                                     <th>DEPARTAMENTO</th>
                                     <th>USUARIO</th>
                                     <th>SUCURSAL</th>
@@ -31,6 +31,34 @@
                                     <th>ACCION</th>
                                 </tr>
                             </thead>
+                            <tbody>
+                                @foreach($devices as $deviceItem)                    
+                                <tr>
+                                    <td>{{$deviceItem->id}}</td>  
+                                    <td>{{$deviceItem->tipodevice->name}}</td>
+                                    <td>{{$deviceItem->name ?? ''}}</td>
+                                    <!-- <td>{{$deviceItem->marca->name ?? ''}}</td> -->
+                                    <td>{{$deviceItem->departamento->name ?? ''}}</td>
+                                    <td>{{$deviceItem->usuario->name ?? ''}}</td>
+                                    <td>{{$deviceItem->sucursal->name ?? ''}}</td>
+                                    <td>{{$deviceItem->statusdevice->name ?? ''}}</td> 
+                                        
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-warning asignar-device" data-toggle="modal" data-target="#modal-asignar-device" 
+                                        data-device-id="{{ $deviceItem->id }}" data-device-name="{{ $deviceItem->name }}" data-device-tipodevice="{{ $deviceItem->tipodevice->name }}">Asignar</button> 
+                                        <a href="{{route('device.edit',$deviceItem)}}" class="btn btn-info">Editar <i class='fas fa-edit'></i></a>
+
+                                        <form action="{{route('device.destroy',$deviceItem)}}" method="post" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger">Dell <i class='fas fa-eraser'></i></button>
+                                        </form>
+
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
                         </table>
                         </div>
                     </div>
@@ -82,67 +110,9 @@
 </div>
 @endsection
 @section('js')
-<script>    
+<!--  -->
+<script>
 $(document).ready(function() {
-        var table = $('#tb-invent').DataTable({
-        ajax: {
-            url: "{{ route('api.devices') }}",
-            dataSrc: ''
-        },
-        columns: [
-            { data: 'id' },
-            { data: 'tipodevice.name' },
-            { data: 'name'}, // Asumiendo que type es una relación
-            { data: 'departamento.name' ,
-                render: function(data, type, row) {
-                    return data ? data : ''; // Mostrar cadena vacía si no hay departamento
-                }
-            }, // Asumiendo que user es una relación
-            { data: 'usuario.name',
-                render: function(data, type, row) {
-                    return data ? data : ''; // Mostrar cadena vacía si no hay usuario
-                }
-            },
-            { data: 'sucursal.name' },
-            { data: 'statusdevice.name' },
-            {   data: null,
-                className: "center",
-                defaultContent: '',
-                render: function(data, type, row) {
-                    return `
-                        <button type="button" class="btn btn-warning asignar-device" data-toggle="modal" data-target="#modal-asignar-device" 
-                            data-device-id="${row.id}" data-device-name="${row.name}" data-device-tipodevice="${row.tipodevice.name}">Asignar</button> 
-                        <a href="device/${row.id}/edit" class="btn btn-info">Editar <i class='fas fa-edit'></i></a>
-                        
-                        <form action="/device/${row.id}" method="post" class="d-inline delete-device-form">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger">Eliminar <i class='fas fa-eraser'></i></button>
-                        </form>                                        
-                    `;
-                }
-            },
-        ],
-        "order": [[ 0,"desc" ]],
-        "language": {
-                "search": "Buscar",
-                "lengthMenu": "Mostrar _MENU_ ticket por pagina",
-                "info":"Mostrando _START_ de _END_ de _TOTAL_ ",
-                "infoFiltered":   "( filtrado de un total de _MAX_)",
-                "emptyTable":     "Sin Datos a Mostrar",
-                "zeroRecords":    "No se encontraron coincidencias",
-                "infoEmpty":      "Mostrando 0 de 0 de 0 coincidencias",
-                "paginate": {
-                        "previous": "Anterior",
-                        "next": "Siguiente",
-                        "first": "Primero",
-                        "last": "Ultimo",
-                        },
-            },
-            responsive: true,
-            "autoWidth": true
-    });
-
     // Objeto para almacenar los comentarios de cada dispositivo
     var deviceComments = {};
 
@@ -236,13 +206,7 @@ $(document).ready(function() {
                 // Mostrar un mensaje de éxito o manejar la respuesta
                 // alert('El dispositivo ha sido asignado al usuario correctamente.');
                 $('#modal-asignar-device').modal('hide'); // Cerrar el modal
-
-                // Recargar los datos de la DataTable
-                table.ajax.reload(null, false);
-
-                // Resetear el modal
-                form[0].reset();
-                $('#user-devices').empty().append('<li>Seleccione un usuario para ver los dispositivos asignados.</li>')
+                // Opcionalmente, puedes actualizar la UI para reflejar los cambios
             },
             error: function(xhr, status, error) {
                 // Manejar los errores
@@ -250,34 +214,33 @@ $(document).ready(function() {
             }
         });
     });
-    // Manejar la eliminación del dispositivo
-    $(document).on('submit', '.delete-device-form', function(event) {
-        event.preventDefault();
-
-        if (!confirm('¿Está seguro de que desea eliminar este dispositivo?')) {
-            return;
-        }
-
-        var form = $(this);
-        var actionUrl = form.attr('action');
-
-        $.ajax({
-            url: actionUrl,
-            method: 'POST',
-            data: form.serialize(),
-            success: function(response) {
-                alert('Dispositivo eliminado correctamente.');
-                table.ajax.reload(null, false);
-            },
-            error: function(xhr, status, error) {
-                alert('Ocurrió un error al eliminar el dispositivo. Por favor, inténtelo de nuevo.');
-            }
-        });
-    });
-});  
-
+});        
 </script>
-
+<script>
+    
+$(document).ready(function() {
+    $('#tb-invent').DataTable({
+        "order": [[ 0,"desc" ]],
+        "language": {
+                "search": "Buscar",
+                "lengthMenu": "Mostrar _MENU_ ticket por pagina",
+                "info":"Mostrando _START_ de _END_ de _TOTAL_ ",
+                "infoFiltered":   "( filtrado de un total de _MAX_)",
+                "emptyTable":     "Sin Datos a Mostrar",
+                "zeroRecords":    "No se encontraron coincidencias",
+                "infoEmpty":      "Mostrando 0 de 0 de 0 coincidencias",
+                "paginate": {
+                        "previous": "Anterior",
+                        "next": "Siguiente",
+                        "first": "Primero",
+                        "last": "Ultimo",
+                        },
+            },
+            responsive: true,
+            "autoWidth": true
+    } );
+} );
+</script>
 @endsection
 
 

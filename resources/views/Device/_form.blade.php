@@ -66,7 +66,7 @@
 	@endforeach
 </div>
 
-<div class="form-group">
+<!-- <div class="form-group">
 	<label for="department">Departamento</label>
 	<select name="department_id" class="form-control" >
         <option value="">Seleccionar un departamento</option>
@@ -74,7 +74,7 @@
         <option value="{{$id}}" @if($id == old('department_id', $equipo->department_id)) selected @endif>{{$name}}</option>
 		@endforeach
 	</select>
-</div>
+</div> -->
 
 <div class="form-group">
 	<label for="sucursal">Estatus</label>

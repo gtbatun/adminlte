@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Department;
 use App\Models\Sucursal;
+use App\Models\Device;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 
@@ -16,7 +17,21 @@ use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
-    
+    public function searchUsers(Request $request)
+    {
+        $users = User::where('name', 'LIKE', '%' . $request->input('query') . '%')->get();
+        return response()->json($users);
+    }
+    public function getUserDevices($userId)
+    {
+        $devices = Device::where('user_id', $userId)->with('tipodevice')->get(); // Obtén los dispositivos asignados al usuario
+        return response()->json($devices);
+    }
+    public function getUsers()
+    {
+        $users = User::all(); // Obtén todos los usuarios
+        return response()->json($users);
+    }
     public function verifyUserEmail($userId)
     {
         $user = User::find($userId);

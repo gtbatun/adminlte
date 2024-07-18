@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('device_user', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('device_id')->references('id')->on('department')->constrained()->onDelete('cascade');
+            $table->foreignId('device_id')->references('id')->on('device')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->references('id')->on('users')->constrained()->onDelete('cascade');
 
             

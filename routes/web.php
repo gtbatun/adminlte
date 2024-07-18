@@ -96,8 +96,7 @@ Route::resource('gestion',GestionController::class);
 Route::resource('ticket',TicketController::class);
 Route::resource('inventory',InventoryController::class);
 Route::resource('device',DeviceController::class);
-/**asignar los equipos a los usuarios si es necesario */
-Route::get('/assignments', [InventoryController::class, 'assignments'])->name('inventory.assignments');
+
 Route::get('/tickets/data', [TicketController::class, 'data'])->name('tickets.data');
 /** Consultar las gestiones de cada ticket */
 Route::get('/tickets/{ticket}/gestiones', [TicketController::class, 'getGestiones'])->name('tickets.gestiones');
@@ -153,9 +152,21 @@ Route::get('/chart-per-month', [ChartJSController::class, 'getDataMonth'])->name
 Route::get('/chart-per-month-department', [ChartJSController::class, 'getDepartmentDataMonth'])->name('ticketsDepartmentPerMonth'); /**Departamento */
 Route::get('/chart-per-month-day', [ChartJSController::class, 'getDayDataMonth'])->name('ticketsDayPerMonth');/**Dia por dep */
 
-/** Ruta creada para la seccion de usuarios */
-Route::get('/search', [UserController::class, 'search'])->name('search');
+/** Seccion inventario */
+/**Solicitar todos los usuarios */
+Route::get('/users', [UserController::class, 'getUsers'])->name('users.list');
+/**Solicitar los dispositivos que tienen asignado el usuario */
+Route::get('/user/{id}/devices', [UserController::class, 'getUserDevices'])->name('user.devices');
+/**asignar los equipos a los usuarios si es necesario */
+Route::get('/assignments', [InventoryController::class, 'assignments'])->name('inventory.assignments');
+/**Ruta la consulta de los devices */
+Route::get('/api/devices', [DeviceController::class, 'getDevices'])->name('api.devices');
 
+/** Ruta creada para la seccion de usuarios */
+Route::get('/search-users', [UserController::class, 'searchUsers'])->name('user.searchUsers');
+Route::get('/device-assignment/tipoequipo', [DeviceController::class, 'gettipoequipo'])->name('device-assignment.tipoequipo');
+Route::get('/device-assignment/devices/{tipoequipoId}', [DeviceController::class, 'getDevicesByType'])->name('device-assignment.devices-by-type');
+Route::post('/device-assignment/assign', [InventoryController::class, 'assignDevices'])->name('device-assignment.assign');
 
 
 /** tickets por dia */

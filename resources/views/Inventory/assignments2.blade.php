@@ -12,26 +12,26 @@
 </div>
 </section>
 
-<!-- <section class="content"> -->
+<section class="content">
 <div class="container-fluid">
 <div class="row">
-    <!-- Sección izquierda: Buscar y seleccionar dispositivos -->
-    <div class="col-md-6">
+<div class="col-md-3">    
+    <div class="container mt-0">
         <div class="form-group">
             <label for="user-search">Buscar Usuario:</label>
             <input type="text" id="user-search" class="form-control" placeholder="Escribe el nombre del usuario">
             <div id="user-results" class="list-group mt-2"></div>
         </div>
         <div id="device-section" style="display:none;">
-            <!-- <div class="card-body box-profile">
+            <div class="card-body box-profile">
                 <div class="text-center">
                     <img class="profile-user-img img-fluid img-circle" src="../../dist/img/user4-128x128.jpg" alt="User profile picture">
                 </div>
                 <h3 class="profile-username text-center">Nina Mcintire</h3>
                 <p class="text-muted text-center">Software Engineer</p>
-            </div> -->
+            </div>
             <div class="form-group">
-                <label for="tipoequipo-select">Categoría de Dispositivos:</label>
+                <label for="category-select">Categoría de Dispositivos:</label>
                 <select id="tipoequipo-select" class="form-control">
                     <option value="">Seleccione una categoría</option>
                 </select>
@@ -43,40 +43,47 @@
                 </select>
             </div>
             <button id="add-device" class="btn btn-primary">Agregar Dispositivo</button>
+            <ul id="device-list" class="list-group mt-3"></ul>
+            <button id="assign-devices" class="btn btn-success mt-3">Asignar Dispositivos</button>
         </div>
     </div>
-     <!-- Sección derecha: Tabla de dispositivos seleccionados -->
-    <div class="col-md-6">
-        <div class="card card-info">
-            <div class="card-header">
-                <h3 class="card-title">Dispositivos seleccionados</h3>
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse"><i class="fas fa-minus"></i></button>
-                </div>
-            </div>
-            <div class="card-body p-0">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Categoria</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="device-list">
-                    </tbody>
-                </table>
-            </div>
-            <div class="card-footer text-muted">                
-                <button id="assign-devices" class="btn btn-primary mt-3">Asignar</button>
+</div>
+<!--  -->
+<!-- <div class="col-md-9">    
+    <div class="card card-info">
+        <div class="card-header">
+            <h3 class="card-title">Equipos seleccionados</h3>
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse"><i class="fas fa-minus"></i></button>
             </div>
         </div>
+        <div class="card-body p-0">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>File Name</th>
+                        <th>File Size</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                <td>Functional-requirements.docx</td>
+                <td>49.8005 kb</td>
+                    <td class="text-right py-0 align-middle">
+                        <div class="btn-group btn-group-sm">
+                        <a href="#" class="btn btn-info"><i class="fas fa-eye"></i></a>
+                        <a href="#" class="btn btn-danger"><i class="fas fa-trash"></i></a>
+                        </div>
+                    </td>        
+                </tbody>
+            </table>
+        </div>
     </div>
-
+</div> -->
 
 </div>
 </div>
-<!-- </section> -->
+</section>
 @endsection
 @section('js')
 <script>
@@ -129,7 +136,7 @@
                 }
         });
     }); 
-    // Cargar dispositivos según el tipoequipo seleccionada
+
     $('#tipoequipo-select').on('change', function() {
         const tipoequipoId = $(this).val();
         if (tipoequipoId) {
@@ -141,8 +148,7 @@
                     deviceSelect.empty();
                     deviceSelect.append('<option value="">Seleccione un dispositivo</option>');
                     data.forEach(device => {
-                        // deviceSelect.append(`<option value="${device.id}" data-tipodevice="${device.tipodevice.name}">${device.name}</option>`);
-                        deviceSelect.append(`<option value="${device.id}" data-tipodevice="${device.tipo_equipo_id}">${device.name}${device.tipodevice.name}</option>`);
+                        deviceSelect.append(`<option value="${device.id}">${device.name}</option>`);
                     });
                 }
             });
@@ -156,20 +162,16 @@
     $('#add-device').on('click', function() {
         const deviceId = $('#device-select').val();
         const deviceName = $('#device-select option:selected').text();
-        const deviceTipodevice = $('#device-select option:selected').data('tipodevice');
         if (deviceId && !selectedDevices.includes(deviceId)) {
             selectedDevices.push(deviceId);
-            $('#device-list').append(`<tr data-id="${deviceId}"><td>${deviceName}</td><td>${deviceTipodevice}</td><td><button class="btn btn-sm btn-danger remove-device">Quitar</button></td></tr>`);
-       
+            $('#device-list').append(`<li class="list-group-item" data-id="${deviceId}">${deviceName} <button class="btn btn-sm btn-danger float-right remove-device">Quitar</button></li>`);
         }
     });
-
-
     // Quitar dispositivo de la lista
     $(document).on('click', '.remove-device', function() {
-        const deviceId = $(this).closest('tr').data('id');
+        const deviceId = $(this).closest('li').data('id');
         selectedDevices = selectedDevices.filter(id => id !== deviceId);
-        $(this).closest('tr').remove();
+        $(this).closest('li').remove();
     });
     // Asignar dispositivos al usuario
     $('#assign-devices').on('click', function() {
