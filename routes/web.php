@@ -167,6 +167,7 @@ Route::get('/search-users', [UserController::class, 'searchUsers'])->name('user.
 Route::get('/device-assignment/tipoequipo', [DeviceController::class, 'gettipoequipo'])->name('device-assignment.tipoequipo');
 Route::get('/device-assignment/devices/{tipoequipoId}', [DeviceController::class, 'getDevicesByType'])->name('device-assignment.devices-by-type');
 Route::post('/device-assignment/assign', [InventoryController::class, 'assignDevices'])->name('device-assignment.assign');
+Route::get('/device-assignment/user-details/{userId}', [UserController::class, 'getUserDetails'])->name('device-assignment.user-details');
 
 
 /** tickets por dia */

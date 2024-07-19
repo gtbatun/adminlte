@@ -22,6 +22,16 @@
             <input type="text" id="user-search" class="form-control" placeholder="Escribe el nombre del usuario">
             <div id="user-results" class="list-group mt-2"></div>
         </div>
+        
+        <div id="user-details" style="display:none;" class="card-body box-profile">
+                <!-- <div class="text-center">
+                    <img class="profile-user-img img-fluid img-circle" src="../../dist/img/user4-128x128.jpg" alt="User profile picture">
+                </div> -->
+                
+                <!-- <h5 class="card-title text-center" id="employee-name"></h5>
+                <p class="text-muted text-center" id="employee-department"></p>
+                <p class="text-muted text-center"><span id="employee-branch"></span></p> -->
+        </div>
         <!--  -->
         <div class="card card-succes" >
             <div class="card-header">
@@ -36,7 +46,7 @@
                         <tr>                            
                             <th>Categoria</th>
                             <th>Nombre</th>
-                            <th>Acciones</th>
+                            <!-- <th>Acciones</th> -->
                         </tr>
                     </thead>
                     <tbody id="user-devices">
@@ -79,7 +89,7 @@
                             <th>Acciones</th>
                         </tr>
                     </thead>
-                    <tbody id="device-list">
+                    <tbody id="device-select">
                     </tbody>
                 </table>
             </div>
@@ -127,7 +137,7 @@
         $('#user-search').val($(this).text());
         $('#user-results').empty();
 
-        $.ajax({  
+        $.ajax({ //`/device-assignment/user-details/${selectedUserId}` 
             url: `/device-assignment/user-details/${selectedUserId}`,
             method: 'GET',
             success: function(data) {
@@ -157,7 +167,9 @@
                         if (data.length > 0) {                            
                             
                             $.each(data, function(index, device) {
-                               devicesList.append(`<tr><td>${device.tipodevice.name}</td><td>${device.name}</td><td><button class="btn btn-sm btn-danger remove-device">Quitar</button></td></tr>`);
+                                // devicesList.append('<li>' + device.tipodevice.name +':  '+ device.name +'</li>');
+                                // devicesList.append(`<tr><td>${device.id}</td><td>${device.name}</td><td><button class="btn btn-sm btn-danger remove-device">Quitar</button></td></tr>`);
+                                devicesList.append(`<tr><td>${device.tipo_equipo_id}</td><td>${device.name}</td></tr>`);
        
                             });
                         } else {
@@ -215,7 +227,6 @@
         if (deviceId && !selectedDevices.includes(deviceId)) {
             selectedDevices.push(deviceId);
             $('#device-list').append(`<tr data-id="${deviceId}"><td>${deviceTipodevice}</td><td>${deviceName}</td><td><button class="btn btn-sm btn-danger remove-device">Quitar</button></td></tr>`);
-            // $('#device-list').append(`<li class="list-group-item" data-id="${deviceId}">${deviceName} <button class="btn btn-sm btn-danger float-right remove-device">Quitar</button></li>`);
        }
     });
 
@@ -226,7 +237,6 @@
         selectedDevices = selectedDevices.filter(id => id !== deviceId);
         $(this).closest('tr').remove();
     });
-    
     // Asignar dispositivos al usuario
     $('#assign-devices').on('click', function() {
         if (selectedUserId && selectedDevices.length > 0) {

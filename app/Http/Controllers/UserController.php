@@ -101,7 +101,13 @@ class UserController extends Controller
     }
     
 
-    public function show(){
+    public function getUserDetails($userId){
+        $user = User::with('department','sucursal')->find($userId);        
+        return response()->json($user);
+    }
+    public function show(User $user){
+        $user = User::find($user);        
+        return response()->json($user);
     }
 
     public function updatepassword(Request $request){
