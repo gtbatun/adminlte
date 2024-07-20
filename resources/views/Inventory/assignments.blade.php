@@ -2,6 +2,41 @@
 @section('content')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.min.css">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<style>
+    .floating-button {
+        position: absolute;
+        bottom: -19px; /* Ajuste para mover más cerca del borde inferior */
+        right: -20px; /* Ajuste para mover más cerca del borde derecho */
+        z-index: 1000;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        font-size: 24px;
+        line-height: 5px;
+        text-align: center;
+        inline-size: false;
+        background-color: green;
+        color: white;
+        border: none;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        transition: background-color 0.3s ease;
+    }
+    .floating-button:hover {
+        background-color: #218838;
+    }
+    .table-container {
+        position: relative;
+        padding: 20px;
+        background-color: #fff;
+        border: 1px solid #dee2e6;
+        border-radius: 0.25rem;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    #device-section {
+        display: none;
+        transition: all 0.3s ease;
+    }
+</style>
 <section class="content-header">
 <div class="container-fluid">
     <div class="row mb-2">
@@ -12,87 +47,86 @@
 </div>
 </section>
 
-<!-- <section class="content"> -->
 <div class="container-fluid">
-<div class="row">
-    <!-- Sección izquierda: Buscar y seleccionar dispositivos -->
-    <div class="col-md-6">
-        <div class="form-group">
-            <label for="user-search">Buscar Usuario:</label>
-            <input type="text" id="user-search" class="form-control" placeholder="Escribe el nombre del usuario">
-            <div id="user-results" class="list-group mt-2"></div>
-        </div>
-        <!--  -->
-        <div class="card card-succes" >
-            <div class="card-header">
-                <h5 class="card-title">Dispositivos Asignados</h5>
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse"><i class="fas fa-minus"></i></button>
+    <div class="row">
+        <!-- Sección izquierda: Buscar y seleccionar dispositivos -->
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="user-search">Buscar Usuario:</label>
+                <input type="text" id="user-search" class="form-control" placeholder="Escribe el nombre del usuario">
+                <div id="user-results" class="list-group mt-2"></div>
+            </div>
+            <!--  -->
+            <div id="device-asignados" style="display: none;" class="card card-success card-outline" >
+                <div class="card-header">
+                    <h5 class="card-title">Dispositivos Asignados</h5>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse"><i class="fas fa-minus"></i></button>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>                            
+                                <th>Categoria</th>
+                                <th>Nombre</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="user-devices">
+                        </tbody>
+                        <button class="floating-button" id="show-device-section"><span>+</span></button>
+                    </table>
                 </div>
             </div>
-            <div class="card-body p-0">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>                            
-                            <th>Categoria</th>
-                            <th>Nombre</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="user-devices">
-                    </tbody>
-                </table>
+            <!--  -->
+            <div id="device-section" style="display:none;">
+                <div class="form-group">
+                    <label for="tipoequipo-select">Categoría de Dispositivos:</label>
+                    <select id="tipoequipo-select" class="form-control">
+                        <option value="">Seleccione una categoría</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="device-select">Dispositivos Disponibles:</label>
+                    <select id="device-select" class="form-control">
+                        <option value="">Seleccione un dispositivo</option>
+                    </select>
+                </div>
+                <button id="add-device" class="btn btn-primary">Agregar Dispositivo</button>
             </div>
         </div>
-        <!--  -->
-        <div id="device-section" style="display:none;">
-            <div class="form-group">
-                <label for="tipoequipo-select">Categoría de Dispositivos:</label>
-                <select id="tipoequipo-select" class="form-control">
-                    <option value="">Seleccione una categoría</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="device-select">Dispositivos Disponibles:</label>
-                <select id="device-select" class="form-control">
-                    <option value="">Seleccione un dispositivo</option>
-                </select>
-            </div>
-            <button id="add-device" class="btn btn-primary">Agregar Dispositivo</button>
-        </div>
-    </div>
-     <!-- Sección derecha: Tabla de dispositivos seleccionados -->
-    <div class="col-md-6">
-        <div class="card card-info">
-            <div class="card-header">
-                <h3 class="card-title">Dispositivos seleccionados</h3>
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse"><i class="fas fa-minus"></i></button>
+        <!-- Sección derecha: Tabla de dispositivos seleccionados -->
+        <div class="col-md-6">
+            <div class="card card-info card-outline">
+                <div class="card-header">
+                    <h3 class="card-title">Dispositivos seleccionados</h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse"><i class="fas fa-minus"></i></button>
+                        <!-- <button class="btn btn-primary" id="show-device-section">Agregar Dispositivo</button> -->
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-hover table-striped">
+                        <thead>
+                            <tr>                            
+                                <th>Categoria</th>
+                                <th>Nombre</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="device-list">
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer text-muted">                
+                    <button id="assign-devices" class="btn btn-primary mt-1">Asignar</button>
+                    <!-- Botón flotante -->
                 </div>
             </div>
-            <div class="card-body p-0">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>                            
-                            <th>Categoria</th>
-                            <th>Nombre</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="device-list">
-                    </tbody>
-                </table>
-            </div>
-            <div class="card-footer text-muted">                
-                <button id="assign-devices" class="btn btn-primary mt-1">Asignar</button>
-            </div>
         </div>
     </div>
-
-
 </div>
-</div>
-<!-- </section> -->
 @endsection
 @section('js')
 <script>
@@ -102,6 +136,11 @@
 
      // Token CSRF
      const csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+     // Mostrar la sección de dispositivos cuando se hace clic en el botón flotante
+    $('#show-device-section').on('click', function() {
+        $('#device-section').toggle();
+    });
 
     // Buscar usuarios
     $('#user-search').on('input', function() {
@@ -135,7 +174,7 @@
                 $('#employee-department').text(data.department ? data.department.name : 'N/A');
                 $('#employee-branch').text(data.sucursal ? data.sucursal.name : 'N/A');
                 $('#user-details').show();
-                $('#device-section').show();
+                // $('#device-section').show();
                 $('#device-asignados').show();
 
                 // Resetear los selectores y la lista de dispositivos
@@ -157,7 +196,8 @@
                         if (data.length > 0) {                            
                             
                             $.each(data, function(index, device) {
-                               devicesList.append(`<tr><td>${device.tipodevice.name}</td><td>${device.name}</td><td><button class="btn btn-sm btn-danger remove-device">Quitar</button></td></tr>`);
+                               devicesList.append(`<tr><td>${device.tipodevice.name}</td><td>${device.name}</td><td><button class="btn btn-sm btn-danger remove-device"><i class="far fa-trash-alt"></i></button></td></tr>`);
+                            
        
                             });
                         } else {
@@ -214,7 +254,7 @@
         const deviceTipodevice = $('#device-select option:selected').data('tipodevice');
         if (deviceId && !selectedDevices.includes(deviceId)) {
             selectedDevices.push(deviceId);
-            $('#device-list').append(`<tr data-id="${deviceId}"><td>${deviceTipodevice}</td><td>${deviceName}</td><td><button class="btn btn-sm btn-danger remove-device">Quitar</button></td></tr>`);
+            $('#device-list').append(`<tr data-id="${deviceId}"><td>${deviceTipodevice}</td><td>${deviceName}</td><td><button class="btn btn-sm btn-danger remove-device"><i class="far fa-trash-alt"></i></button></td></tr>`);
             // $('#device-list').append(`<li class="list-group-item" data-id="${deviceId}">${deviceName} <button class="btn btn-sm btn-danger float-right remove-device">Quitar</button></li>`);
        }
     });
@@ -226,7 +266,7 @@
         selectedDevices = selectedDevices.filter(id => id !== deviceId);
         $(this).closest('tr').remove();
     });
-    
+
     // Asignar dispositivos al usuario
     $('#assign-devices').on('click', function() {
         if (selectedUserId && selectedDevices.length > 0) {
