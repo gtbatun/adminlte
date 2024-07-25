@@ -9,6 +9,11 @@ use App\Models\Devicedetail;
 
 class DeviceController extends Controller
 {
+    public function getStatuses()
+    {
+        $statuses = Devicedetail::where('type_device',5)->get();
+        return response()->json($statuses);
+    }
     public function getDevicesByType($tipoequipoId)
     {
         $devices = Device::where('tipo_equipo_id', $tipoequipoId)

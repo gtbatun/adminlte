@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\DeviceController;
 
 use App\Http\Controllers\NotificationController;
+use App\Models\Inventory;
 use App\Models\Ticket;
 
 /*
@@ -157,6 +158,7 @@ Route::get('/chart-per-month-day', [ChartJSController::class, 'getDayDataMonth']
 Route::get('/users', [UserController::class, 'getUsers'])->name('users.list');
 /**Solicitar los dispositivos que tienen asignado el usuario */
 Route::get('/user/{id}/devices', [UserController::class, 'getUserDevices'])->name('user.devices');
+// Route::get('/device-assignment/{id}/devices', [InventoryController::class, 'getUserDevices'])->name('device-assignment.devices');
 /**asignar los equipos a los usuarios si es necesario */
 Route::get('/assignments', [InventoryController::class, 'assignments'])->name('inventory.assignments');
 /**Ruta la consulta de los devices */
@@ -168,6 +170,10 @@ Route::get('/device-assignment/tipoequipo', [DeviceController::class, 'gettipoeq
 Route::get('/device-assignment/devices/{tipoequipoId}', [DeviceController::class, 'getDevicesByType'])->name('device-assignment.devices-by-type');
 Route::post('/device-assignment/assign', [InventoryController::class, 'assignDevices'])->name('device-assignment.assign');
 Route::get('/device-assignment/user-details/{userId}', [UserController::class, 'getUserDetails'])->name('device-assignment.user-details');
+
+Route::post('/device-assignment/delete-device/{deviceId}', [InventoryController::class, 'deleteDevice']);
+/** Ruta para encontrar los estatus de los devices en devicesdetail */
+Route::get('/statuses', [DeviceController::class, 'getStatuses']);
 
 
 /** tickets por dia */

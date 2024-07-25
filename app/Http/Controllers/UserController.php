@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Department;
 use App\Models\Sucursal;
 use App\Models\Device;
+use App\Models\Inventory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 
@@ -24,9 +25,42 @@ class UserController extends Controller
     }
     public function getUserDevices($userId)
     {
-        $devices = Device::where('user_id', $userId)->with('tipodevice')->get(); // Obtén los dispositivos asignados al usuario
-        return response()->json($devices);
+        // Obtener los registros de Inventory con los IDs de device
+    $devicesUser = Inventory::where('user_id', $userId)
+                            ->where('enable', 1)
+                            ->get(['id', 'device_id']); // Obtener los campos id (Inventory) y device_id
+
+    // Obtener los detalles de los dispositivos desde la tabla Device
+    $deviceIds = $devicesUser->pluck('device_id')->toArray();
+    $devices = Device::whereIn('id', $deviceIds)->with('tipodevice')->get();
+
+    // Combinar los datos de Inventory y Device
+    $result = $devicesUser->map(function($inventory) use ($devices) {
+    $device = $devices->firstWhere('id', $inventory->device_id);
+    if ($device) {
+    return [
+        'inventory_id' => $inventory->id, // ID de Inventory
+        'id' => $device->id, // ID de Device
+        'name' => $device->name,
+        'tipodevice' => $device->tipodevice,
+        // Agrega otros campos del dispositivo según sea necesario
+    ];
+    } else {
+    return [
+        'inventory_id' => $inventory->id, // ID de Inventory
+        'id' => null, // ID de Device
+        'name' => null,
+        'tipodevice' => null,
+        // Agrega otros campos del dispositivo según sea necesario
+    ];
     }
+    });
+
+
+        return response()->json($result);
+    }
+ // $devices = Device::whereIn('id', $devicesUser)->with('tipodevice')->get(); 
+    // $devices = Device::where('user_id', $userId)->with('tipodevice')->get(); // Obtén los dispositivos asignados al usuario
     public function getUsers()
     {
         $users = User::all(); // Obtén todos los usuarios

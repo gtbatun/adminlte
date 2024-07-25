@@ -10,25 +10,59 @@ use App\Models\Device;
 use App\Models\User;
 class InventoryController extends Controller
 {
+    public function deleteDevice(Request $request, $deviceId)
+    {
+        $comment = $request->input('comment');
+        $staff_id = $request->staff_id;
+        $statusId = $request->input('status_id');
+
+        $device = Device::find($deviceId);
+        $device->statusdevice_id = $statusId; // Cambiar a un estado que represente la eliminación lógica
+        $device->user_id = null;
+        $device->save();
+
+        $inventory_device = Inventory::find($request->inventory_id);
+        $inventory_device->enable = 0;
+        $inventory_device->save();
+
+        // Registrar la eliminación en la tabla inventario
+        Inventory::create([
+            'device_id' => $deviceId,
+            'user_id' => $staff_id,
+            'coment' => $comment,
+            'tipo' => 'devolucion',
+            'enable' => 0,
+        ]);
+        // return $request;
+               
+
+        return response()->json(['success' => 'Dispositivo eliminado correctamente.']);
+    }
     public function assignDevices(Request $request)
     {
         $userId = $request->input('user_id');
-        $deviceIds = $request->input('device_ids');
+        $devices = $request->input('devices');
 
-        foreach ($deviceIds as $deviceId) {
+        $userData = User::find($userId);
+
+        foreach ($devices as $deviceData) {
+            $deviceId = $deviceData['deviceId'];
+            $coment = $deviceData['coment'];
+
             $device = Device::find($deviceId);
             $device->user_id = $userId;
-            // $device->assigned = true;
+            $device->department_id = $userData->department_id;
             $device->statusdevice_id = 13;
             $device->save();
-
             // Registrar la asignación en la tabla inventario
             Inventory::create([
                 'device_id' => $deviceId,
                 'user_id' => $userId,
+                'enable' => 1,
+                'tipo' => 'entrega',
+                'coment' => $coment, // Guardar el comentario
             ]);
         }
-
         return response()->json(['success' => 'Dispositivos asignados correctamente.']);
     }
 
@@ -75,14 +109,16 @@ class InventoryController extends Controller
         $inventory->device_id = $request->device_id;
         $inventory->user_id = $request->user_id;
         $inventory->coment = $request->coment;
-
-        // $inventory->save();
+        $inventory->tipo = 'entrega';
+        $inventory->enable = 1;
+        $inventory->save();
         /** actualizar o gregar el usuario a la seccion del device */
         if(isset($request->user_id)){
             $user = User::find($request->user_id);
             $device = Device::find($request->device_id);
             $device->user_id = $request->user_id;
-            $device->department_id = $user->department_id;
+            $device->department_id = $user->department_id;            
+            $device->statusdevice_id = 13;
             $device->update();
         }
         return redirect()->back()->with('success', 'El dispositivo ha sido asignado al usuario correctamente.');

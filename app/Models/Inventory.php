@@ -9,5 +9,7 @@ class Inventory extends Model
 {
     use HasFactory;
     protected $table = 'device_user';
-    protected $fillable = ['device_id','user_id','coment'];
+    protected $fillable = ['device_id','user_id','coment','enable','tipo'];
+    
+    
 }
