@@ -105,7 +105,7 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="coment">Comentario</label>
-                            <input type="text" class="form-control" id="coment" placeholder="Comentarios">
+                            <input type="text" class="form-control" id="coment" placeholder="Comentarios" autocomplete="off">
                         </div>
                     </div>
                     <div class="col-md-2 float-right"> 
@@ -131,7 +131,7 @@
                 <div class="card-body p-0">
                     <table class="table table-hover table-bordered">
                         <thead>
-                            <tr>                            
+                            <!-- <tr> <th>Id-device</th>                           -->
                                 <th>Categoria</th>
                                 <th>Nombre</th>
                                 <th>Comentario</th>
@@ -230,6 +230,16 @@
     let selectedUserId = null;
     let selectedDevices = [];
     let deviceIdToDelete = null;
+    // console.log(selectedDevices);
+    
+    // Verificar si hay un parámetro user_id en la URL
+    const urlParams = new URLSearchParams(window.location.search);
+        const userIdFromUrl = urlParams.get('user_id');
+        if (userIdFromUrl) {
+            selectedUserId = userIdFromUrl;
+            cargarDatosUsuario(selectedUserId);
+        }
+
     // Token CSRF
     const csrfToken = $('meta[name="csrf-token"]').attr('content');
     // Delegar evento para mostrar la sección de dispositivos cuando se hace clic en el botón flotante
@@ -263,6 +273,8 @@
         $('#user-results').empty();
 
         resetSelections();
+
+        cargarDatosUsuario(selectedUserId);
 
         $.ajax({  
             url: `/device-assignment/user-details/${selectedUserId}`,
@@ -305,7 +317,15 @@
                     deviceSelect.empty();
                     deviceSelect.append('<option value="">Seleccione un dispositivo</option>');
                     data.forEach(device => {
-                        deviceSelect.append(`<option value="${device.id}" data-tipodevice="${device.tipodevice.name}">${device.name}</option>`);
+                        // deviceSelect.append(`<option value="${device.id}" data-tipodevice="${device.tipodevice.name}">${device.name}</option>`);
+                        // Verificar si el dispositivo ya está en la lista de seleccionados
+                        if (device && !selectedDevices.some(selectedDevice => selectedDevice.deviceId == device.id)) {  // ===
+                            // Si no está seleccionado, añadirlo como opción habilitada
+                            deviceSelect.append(`<option value="${device.id}" data-tipodevice="${device.tipodevice.name}">${device.name}</option>`);
+                        } else {
+                            // Si está seleccionado, añadirlo como opción deshabilitada
+                            deviceSelect.append(`<option value="${device.id}" data-tipodevice="${device.tipodevice.name}" disabled>${device.name}</option>`);
+                        }
                     });
                 }
             });
@@ -321,7 +341,8 @@
         const deviceTipodevice = $('#device-select option:selected').data('tipodevice');
         const coment = $('#coment').val();
 
-        if (deviceId && !selectedDevices.some(device => device.deviceId === deviceId)) {
+
+        if (deviceId && !selectedDevices.some(device => device.deviceId == deviceId)) {
             selectedDevices.push({ deviceId, coment }); // Guardar ID del dispositivo y comentario
 
             $('#device-seleccionado').show();
@@ -331,32 +352,30 @@
                     <td>${coment}</td>
                     <td><button class="btn btn-sm btn-danger remove-device">X</button></td>
                 </tr>`);
-            
-            // -----------------------     Reseteo del selector de dispositivos -----------------------
-            const tipoequipoId = $('#tipoequipo-select').val();
-            if (tipoequipoId) {
-                $.ajax({
-                    url: `/device-assignment/devices/${tipoequipoId}`,
-                    method: 'GET',
-                    success: function(data) {
-                        let deviceSelect = $('#device-select');
-                        deviceSelect.empty();
-                        deviceSelect.append('<option value="">Seleccione un dispositivo</option>');
-                        data.forEach(device => {
-                            deviceSelect.append(`<option value="${device.id}" data-tipodevice="${device.tipo_equipo_id}">${device.name}</option>`);
-                        });
-                        $('#coment').val('');
-                    }
-                });
-            }            
+
+            // Limpiar el campo de comentario
+            $('#coment').val('');
+            $('#tipoequipo-select').empty().append('<option value="">Seleccione una categoría</option>');
+            $('#device-select').empty().append('<option value="">Seleccione un dispositivo</option>');
+            searchCategories();
         }
+        // console.log(selectedDevices);
     });
+            
+
 
     // Quitar dispositivo de la lista
     $(document).on('click', '.remove-device', function() {
         const deviceId = $(this).closest('tr').data('id');
-        selectedDevices = selectedDevices.filter(id => id !== deviceId);
+        // console.log("Intentando eliminar dispositivo con ID:", deviceId); 
+        // console.log("Antes de eliminar:", selectedDevices);
+
+        // Filtrar la lista para eliminar el dispositivo
+        selectedDevices = selectedDevices.filter(item => item.deviceId != deviceId); // deberian ser === pero solo funciono corectamente con !=
         $(this).closest('tr').remove();
+
+        // console.log("Después de eliminar:", selectedDevices);        
+        // console.log(selectedDevices);
     });
 
     // Quitar dispositivo al usuario(dispositivos asignados)
@@ -454,7 +473,6 @@
                 if (data.length > 0) {
                     $.each(data, function(index, device) {
                         devicesList.append(`<tr>
-                        
                         <td>${device.tipodevice.name}</td>
                         <td>${device.name}</td>
                         <td>
@@ -488,7 +506,7 @@
         $('#device-list').empty();
         $('#device-section').hide();
         $('#device-seleccionado').hide();
-        $('#user-search').val('');
+        // $('#user-search').val('');
     }
 
     function searchCategories() {
@@ -504,6 +522,35 @@
             }
         });
     }
+
+    // Función para cargar datos del usuario
+    function cargarDatosUsuario(userId) {
+            $.ajax({
+                url: `/device-assignment/user-details/${userId}`,
+                method: 'GET',
+                success: function(data) {
+                    $('#employee-name').text(data.name);
+                    $('#employee-department').text(data.department ? data.department.name : 'N/A');
+                    $('#employee-branch').text(data.sucursal ? data.sucursal.name : 'N/A');
+                    $('#user-image').attr('src', '../storage/images/user/' + data.image);
+                    $('#user-details').show();
+                    $('#device-asignados').show();
+
+                    // Cargar dispositivos asignados al usuario
+                    loadUserDevices(userId);
+
+                    // Cargar categorías de tipoequipo
+                    searchCategories();
+
+                    // Redirigir sin parámetros
+                    if (history.pushState) {
+                        const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+                        window.history.pushState({path: cleanUrl}, '', cleanUrl);
+                    }
+                }
+            });
+        }
+
 });
 </script>
 @endsection

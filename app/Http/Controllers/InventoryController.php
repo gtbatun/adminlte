@@ -8,6 +8,7 @@ use App\Models\Department;
 use App\Models\Sucursal;
 use App\Models\Device;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 class InventoryController extends Controller
 {
     public function deleteDevice(Request $request, $deviceId)
@@ -71,8 +72,25 @@ class InventoryController extends Controller
      */
     public function index()
     {
-        $users = User::with('devices')->get();
-        return view('Inventory.index',compact('users'));
+        // $devices = Inventory::where('enable',1)->get();
+        // $users = User::with('devices')->get();
+        $devices = DB::table('device_user')
+            ->join('device', 'device_user.device_id', '=', 'device.id')
+            ->join('users', 'device_user.user_id', '=', 'users.id')
+            ->where('device_user.enable', 1)
+            ->select('device_user.id', 'device.name as device_name', 'users.name as user_name')
+            ->get();   
+        
+        $usersWithDevices = DB::table('device_user')
+            ->join('device', 'device_user.device_id', '=', 'device.id')
+            ->join('users', 'device_user.user_id', '=', 'users.id')
+            ->where('device_user.enable', 1)
+            ->select('device_user.id', 'device.name as device_name', 'users.name as user_name', 'users.id as user_id')
+            ->orderBy('users.id')
+            ->get()
+            ->groupBy('user_id');
+
+        return view('Inventory.index',compact('usersWithDevices'));
     }
 
 
