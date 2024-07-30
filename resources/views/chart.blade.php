@@ -4,36 +4,40 @@
 <script src="{{asset('assets/js/plugins/chart-4.4.3.min.js')}}"></script>
 <script src="{{asset('assets/js/plugins/jquery-3.7.1.min.js')}}"></script>
 
-<!-- <div class="container"> -->
-    <!-- <div class="row"> -->
+
   @if($ticketCounts)
-  <span>Resumen</span>
-  <!-- {{$devicesCounts}}  -->
-  <div class="row mt-2">
-  @foreach($ticketCounts as $ticketstatus)
-  <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-    <div class="card">
-      <div class="card-header p-3 pt-2">
-        <div class="mt-n4 position-absolute">
-          <!-- <i class="bg-teal fas fa-lg fa-thumbs-up"></i> -->
+  <div class="card">
+    <div class="card-header">
+        <h5 class="card-title">Tickets</h5>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse"><i class="fas fa-minus"></i></button>
         </div>
-        <div class="text-end pt-1">
-          <p class="text-sm mb-0 text-capitalize"><strong>Ticket {{$ticketstatus->name}}</strong></p>
-          <!-- <h4 class="mb-0">$53k</h4> -->
-        </div>
-      </div>
-      <hr class="dark horizontal my-0">
-      <div class="card-footer p-3">
-        <p class="mb-0"><span class="text-success text-sm font-weight-bolder">{{$ticketstatus->total}} </span></p>
-      </div>
     </div>
-  </div>
-  @endforeach
+    <div class="card-body">
+  <!-- <div class="row mt-2"> -->
+        @foreach($ticketCounts as $ticketstatus)
+        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-0">
+            <div class="card">
+            <div class="card-header p-3 pt-2">
+                <div class="mt-n4 position-absolute">
+                </div>
+                <div class="text-end pt-1">
+                <p class="text-sm mb-0 text-capitalize"><strong>Ticket {{$ticketstatus->name}}</strong></p>
+                </div>
+            </div>
+            <hr class="dark horizontal my-0">
+            <div class="card-footer p-3">
+                <p class="mb-0"><span class="text-success text-sm font-weight-bolder">{{$ticketstatus->total}} </span></p>
+            </div>
+            </div>
+        </div>
+        @endforeach    
+    </div>
+</div>
   @endif
-  </div>
-    <div class="row mt-2">
-    </div>
-    <!-- </div> -->
+  <!-- </div> -->
+    <!-- -------------------------- -->
+
 <div class="row">
     <div class="col-md-4 col-xs-12">
         <div class="row">
@@ -121,28 +125,39 @@
 
 
 @if($devicesCounts)
-  <span>Equipos</span>
-  <!-- {{$devicesCounts}}  -->
-  <div class="row mt-2">
-  @foreach($devicesCounts as $devicesstatus)
-  <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-    <div class="card">
-      <div class="card-header p-3 pt-2">
-        <div class="mt-n4 position-absolute">
-          <!-- <i class="bg-teal fas fa-lg fa-thumbs-up"></i> -->
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title">Equipos</h5>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse"><i class="fas fa-minus"></i></button>
         </div>
-        <div class="text-end pt-1">
-          <p class="text-sm mb-0 text-capitalize"><strong>{{$devicesstatus->name}}</strong></p>
-          <!-- <h4 class="mb-0">$53k</h4> -->
-        </div>
-      </div>
-      <hr class="dark horizontal my-0">
-      <div class="card-footer p-3">
-        <p class="mb-0"><span class="text-success text-sm font-weight-bolder">{{$devicesstatus->total}} </span></p>
-      </div>
     </div>
-  </div>
-  @endforeach
+    <div class="card-body">
+        <div class="row mt-2">
+        @foreach($devicesCounts as $devicesstatus)
+        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-2">
+            <div class="card">
+            <div class="card-header p-3 pt-2">
+                <div class="mt-n4 position-absolute">
+                <!-- <i class="bg-teal fas fa-lg fa-thumbs-up"></i> -->
+                </div>
+                <div class="text-end pt-1">
+                <p class="text-sm mb-0 text-capitalize"><strong>{{$devicesstatus->name}}</strong></p>
+                <!-- <h4 class="mb-0">$53k</h4> -->
+                </div>
+            </div>
+            <hr class="dark horizontal my-0">
+            <div class="card-footer p-3">
+                <p class="mb-0"><span class="text-success text-sm font-weight-bolder">{{$devicesstatus->total}} </span></p>
+            </div>
+            </div>
+        </div>
+        @endforeach
+        </div>
+    </div>
+</div>
+  
+  
   @endif
 
 
