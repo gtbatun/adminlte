@@ -8,7 +8,7 @@
     <!-- <div class="row"> -->
   @if($ticketCounts)
   <span>Resumen</span>
-  <!-- {{$ticketCounts}} --> 
+  <!-- {{$devicesCounts}}  -->
   <div class="row mt-2">
   @foreach($ticketCounts as $ticketstatus)
   <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
@@ -119,9 +119,33 @@
     </div>
 </div>
 
-<div class="row mt-2">
 
-</div>
+@if($devicesCounts)
+  <span>Equipos</span>
+  <!-- {{$devicesCounts}}  -->
+  <div class="row mt-2">
+  @foreach($devicesCounts as $devicesstatus)
+  <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+    <div class="card">
+      <div class="card-header p-3 pt-2">
+        <div class="mt-n4 position-absolute">
+          <!-- <i class="bg-teal fas fa-lg fa-thumbs-up"></i> -->
+        </div>
+        <div class="text-end pt-1">
+          <p class="text-sm mb-0 text-capitalize"><strong>{{$devicesstatus->name}}</strong></p>
+          <!-- <h4 class="mb-0">$53k</h4> -->
+        </div>
+      </div>
+      <hr class="dark horizontal my-0">
+      <div class="card-footer p-3">
+        <p class="mb-0"><span class="text-success text-sm font-weight-bolder">{{$devicesstatus->total}} </span></p>
+      </div>
+    </div>
+  </div>
+  @endforeach
+  @endif
+
+
 @endsection
 
 @section('js')

@@ -128,10 +128,15 @@ $a_data = $agente->values();
             ->join('status','ticket.status_id', '=', 'status.id')
             ->groupBy('status_id')
             ->get();
+        $devicesCounts = DB::table('device')
+        ->select( DB::raw('count(*) as total'),'devicedetail.name')
+        ->join('devicedetail','device.statusdevice_id','=','devicedetail.id')
+        ->groupBy('device.statusdevice_id')
+        ->get();
         }else{
            
             $ticketCounts = DB::table('ticket')
-            ->select('status_id', DB::raw('COUNT(*) as total'), 'status.name')
+            ->select('status_id', DB::raw('COUNT(*) as total'), 'devicedetail.name')
             ->join('status', 'ticket.status_id', '=', 'status.id')
             ->whereMonth('ticket.created_at', '=', date('m'))
             ->whereYear('ticket.created_at', '=', date('Y'))
@@ -144,7 +149,7 @@ $a_data = $agente->values();
    
         // return view('home', compact('a_labels', 'a_data','d_labels', 'd_data','labels1', 'data1'));
         // return view('chart', compact('a_labels', 'a_data','d_labels', 'd_data','labels1', 'data1','ticketCounts'));
-        return view('chart', compact('ticketCounts'));
+        return view('chart', compact('ticketCounts','devicesCounts'));
        
         // return view('home');
     }
