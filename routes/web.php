@@ -174,6 +174,8 @@ Route::get('/device-assignment/user-details/{userId}', [UserController::class, '
 Route::post('/device-assignment/delete-device/{deviceId}', [InventoryController::class, 'deleteDevice']);
 /** Ruta para encontrar los estatus de los devices en devicesdetail */
 Route::get('/statuses', [DeviceController::class, 'getStatuses']);
+/** consultar los datos necesarios para poder crear un nuevo device */
+Route::get('/device-data', [DeviceController::class, 'getDeviceData']);
 
 
 /** tickets por dia */

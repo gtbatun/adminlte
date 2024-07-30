@@ -29,6 +29,7 @@
                     <thead>
                         <tr> 
                             <th>ID</th>
+                            <th>Sucursal</th>
                             <th>Creado por</th>
                             <th>Asignado a</th>
                             <th>Area</th>
@@ -92,6 +93,7 @@
                     response.data.forEach(function(ticket) {                            
                         table.row.add([
                             ticket.id,
+                            ticket.user_sucursal ? ticket.user_sucursal : '',
                             // ticket.creator_department ? ticket.creator_department.name : '',
                             ticket.creador,
                             // ticket.assigned_department ? ticket.assigned_department.name : '',

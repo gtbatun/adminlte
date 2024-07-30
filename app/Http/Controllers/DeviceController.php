@@ -9,6 +9,18 @@ use App\Models\Devicedetail;
 
 class DeviceController extends Controller
 {
+    public function getDeviceData()
+    {
+        $tipo_equipo = Devicedetail::where('type_device', 1)->pluck('name', 'id');
+        $marca = Devicedetail::where('type_device', 2)->pluck('name', 'id');
+        $almacenamiento = Devicedetail::where('type_device', 3)->pluck('name', 'id');
+        $procesador = Devicedetail::where('type_device', 4)->pluck('name', 'id');
+        $status = Devicedetail::where('type_device', 5)->pluck('name', 'id');
+        $department = Department::pluck('name', 'id');
+        $sucursal = Sucursal::pluck('name', 'id');
+
+        return response()->json(compact('tipo_equipo', 'marca', 'almacenamiento', 'procesador', 'status', 'department', 'sucursal'));
+    }
     public function getStatuses()
     {
         $statuses = Devicedetail::where('type_device',5)->get();
@@ -58,6 +70,7 @@ class DeviceController extends Controller
         $department = Department::pluck('name','id');
         $sucursal = Sucursal::pluck('name','id');
         return view('Device.create',compact('department','equipo','sucursal','tipo_equipo','marca','almacenamiento','procesador','status'));
+        // return response()->json(compact('tipo_equipo', 'marca', 'almacenamiento', 'procesador', 'status', 'department', 'sucursal'));
     }
 
     /**
@@ -66,8 +79,38 @@ class DeviceController extends Controller
     public function store(Request $request)
     {
         // return $request;
-        Device::create($request->all());
-        return redirect()->route('device.index')->with('success', 'Nuevo equipo creado exitosamente');
+        // Device::create($request->all());
+        // return redirect()->route('device.index')->with('success', 'Nuevo equipo creado exitosamente');
+
+         // Validar los datos
+         $request->validate([
+            'name' => 'required',
+            'tipo_equipo_id' => 'required',
+            'marca_id' => 'required',
+            'almacenamiento_id' => 'required',
+            'procesador_id' => 'required',
+            'statusdevice_id' => 'required',
+            'sucursal_id' => 'required',
+            // Agrega más validaciones según sea necesario
+        ]);
+
+        // Crear el nuevo dispositivo
+        $device = new Device;
+        $device->name = $request->name;
+        $device->serie = $request->serie;
+        $device->description = $request->description;
+        $device->tipo_equipo_id = $request->tipo_equipo_id;
+        $device->marca_id = $request->marca_id;
+        $device->almacenamiento_id = $request->almacenamiento_id;
+        $device->procesador_id = $request->procesador_id;
+        $device->statusdevice_id = $request->statusdevice_id;
+        $device->sucursal_id = $request->sucursal_id;
+        // Guarda más campos según sea necesario
+        $device->save();
+
+        // Retornar una respuesta JSON
+        return response()->json(['success' => true, 'message' => 'Dispositivo creado correctamente']);
+
     }
 
     /**
@@ -99,7 +142,7 @@ class DeviceController extends Controller
      */
     public function update(Request $request,  Device $device)
     {
-        
+        // return $request;
         $device->update($request->all()); 
         return redirect()->route('device.index')->with('success','El equipoo fue actualizado con exito');
 

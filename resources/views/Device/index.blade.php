@@ -9,29 +9,35 @@
         <!-- </div> -->
     @endif
     <!-- @include('partials.validation-errors')     -->
-    <div class="d-grid gap-2 d-md-flex justify-content-md-end m-2">
+    <!-- <div class="d-grid gap-2 d-md-flex justify-content-md-end m-2">
     <a href="{{route('device.create')}}" type="button" class="btn btn-primary p-2 ">Nuevo equipo</a>
-    </div>    
+    </div>  -->
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end m-2"><!-- Botón para abrir el modal -->
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createModal">Nuevo equipo</button> 
+    </div>
+    <!-- Incluir el modal -->
+    @include('Device.createmodal')
+      
     @isset($devices)  
     <div class="container-fluid">
             <div class="col-12 mt-1">
                 <div class="card fluid">
                     <div class="card-body ">
                         <div class="table-responsive" >
-                        <table id="tb-invent" class="table table-bordered shadow-lg mt-2 table-striped  ">
-                            <thead  class="table-dark ">
-                                <tr>
-                                    <th>ID</th>
-                                    <th>TIPO</th>
-                                    <th>NOMBRE</th>
-                                    <th>DEPARTAMENTO</th>
-                                    <th>USUARIO</th>
-                                    <th>SUCURSAL</th>
-                                    <th>ESTATUS</th>
-                                    <th>ACCION</th>
-                                </tr>
-                            </thead>
-                        </table>
+                            <table id="tb-invent" class="table table-bordered shadow-lg mt-2 table-striped  ">
+                                <thead  class="table-dark ">
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>TIPO</th>
+                                        <th>NOMBRE</th>
+                                        <th>DEPARTAMENTO</th>
+                                        <th>USUARIO</th>
+                                        <th>SUCURSAL</th>
+                                        <th>ESTATUS</th>
+                                        <th>ACCION</th>
+                                    </tr>
+                                </thead>
+                            </table>
                         </div>
                     </div>
                 <!-- /.card-body -->

@@ -66,6 +66,7 @@ class ReportController extends Controller
         $tickets = DB::table('ticket')
             ->select([
                 'ticket.id',
+                'sucursal.name as user_sucursal',
                 'department_creador.name AS creador',
                 'department_asignado.name as asignado',
                 'area.name as concepto',
@@ -76,20 +77,20 @@ class ReportController extends Controller
                 DB::raw("
                     CASE 
                         WHEN status.id <> 4 THEN (
-                            SELECT users.name 
+                            SELECT gestion_users.name 
                             FROM gestion 
-                            INNER JOIN users ON users.id = gestion.user_id
-                            inner JOIN department ON users.department_id = department.id
-                            
+                            INNER JOIN users AS gestion_users ON gestion_users.id = gestion.user_id
+                            inner JOIN department ON gestion_users.department_id = department.id                            
                             WHERE department.id = ticket.department_id and gestion.ticket_id = ticket.id
                             ORDER BY gestion.id DESC
                             LIMIT 1
                         )
-                        ELSE users.name 
+                        ELSE gestion_users.name 
                     END AS personal_sistemas
                 ")
             ])
-            // ->join('department', 'department.id', '=', 'ticket.department_id')
+            ->join('users AS creator_users', 'creator_users.id', '=', 'ticket.user_id')
+            ->join('sucursal', 'sucursal.id', '=', 'creator_users.sucursal_id')
             ->join('department as department_creador', 'department_creador.id', '=', 'ticket.type')
             ->join('department as department_asignado', 'department_asignado.id', '=', 'ticket.department_id')
             ->join('area', 'area.id', '=', 'ticket.area_id')
@@ -100,7 +101,7 @@ class ReportController extends Controller
                                 GROUP BY gestion.ticket_id) AS max_gestion'), 
                         'ticket.id', '=', 'max_gestion.ticket_id')
             ->leftJoin('gestion', 'gestion.id', '=', 'max_gestion.max_gestion_id')
-            ->leftJoin('users', 'users.id', '=', 'gestion.user_id')
+            ->leftJoin('users AS gestion_users', 'gestion_users.id', '=', 'gestion.user_id')
             ->whereBetween('ticket.created_at', [$startDate, $endDate])
             ->get();
         

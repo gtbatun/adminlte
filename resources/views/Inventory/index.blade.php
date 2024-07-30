@@ -1,54 +1,12 @@
 @extends('adminlte::page')
 @section('content')
-<div class="card">
-    <div class="card-header">
-        <h3 class="card-title">Asignaciones de equipos</h3>
-        <div class="card-tools">
-        <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse"><i class="fas fa-minus"></i></button>
-        <!-- <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove"><i class="fas fa-times"></i></button> -->
-        </div>
-    </div>
-    <div class="card-body p-0">
-        <table class="table table-striped projects">
-            <thead>
-            <tr>
-                <th>Project Name</th>
-                <th>Team Members</th>
-            </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>fdfd</td>
-                    <td>
-                        <ul>
-                        <li class="list-inline-item">
-                        <img alt="Avatar" class="table-avatar" src="../../dist/img/avatar.png">
-                        </li>
-                        <li class="list-inline-item">
-                        <img alt="Avatar" class="table-avatar" src="../../dist/img/avatar2.png">
-                        </li>
-                        <li class="list-inline-item">
-                        <img alt="Avatar" class="table-avatar" src="../../dist/img/avatar3.png">
-                        </li>
-                        <li class="list-inline-item">
-                        <img alt="Avatar" class="table-avatar" src="../../dist/img/avatar4.png">
-                        </li>
-                        </ul>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
-
-
-<div class="container-fluid">
+<div class="container-fluid p-2">
     <div class="card">
-        <div class="card-header">
-        <h4>Asignaciones de Equipos</h4>
-    </div>
-    <div class="card-body p-0">
-        <table class="table table-bordered">
+        <!-- <div class="card-header">
+        <h4 class="card-title">Asignaciones de Equipos</h4>
+        </div> -->
+    <div class="card-body m-1">
+        <table id="tb-device" class="table table-striped table-bordered">
             <thead>
                 <tr>
                     <th style="width: 20%">Usuario</th>
@@ -64,15 +22,25 @@
                         </div>
                     </td>
                     <td> 
-                        <ul class="list-group list-group-horizontal d-flex" >
+                        <ul class="list-group list-group-horizontal list-group-flush d-flex">
                         @foreach($devices as $device)
                         <a href="#" style="color: black;">
-                            <li class="list-group-item ">
-                                <span title="{{ $device->device_name }}">{{ $device->device_name }} </span>                                
+                            <li class="list-group-flush d-flex p-1" >
+                                <span title="{{ $device->device_name }}" style="background-color:none;" >{{ $device->device_name }} </span>                                
                             </li>
-                            </a>
+                        </a>
+                        @endforeach 
+                        </ul>
+                        <!-- <ul class="list-group list-group-horizontal list-group-flush d-flex" >
+                        @foreach($devices as $device)
+                        <a href="#" style="color: black; border-color: green;">
+                            <li class="list-group-item p-1">
+                                <span title="{{ $device->device_name }}" style="background-color:none;" >{{ $device->device_name }} </span>                                
+                            </li>
+                        </a>
                         @endforeach  
-                        </ul>                                             
+                        </ul>  -->
+                        
                     </td>
                 </tr>                    
                 @endforeach
@@ -83,4 +51,30 @@
 </div>
 
 
+@endsection
+@section('js')
+<script>
+    $(document).ready(function() {
+        var table = $('#tb-device').DataTable({
+        "order": [[ 0,"desc" ]],
+        "language": {
+                "search": "Buscar",
+                "lengthMenu": "Mostrar _MENU_ ticket por pagina",
+                "info":"Mostrando _START_ de _END_ de _TOTAL_ ",
+                "infoFiltered":   "( filtrado de un total de _MAX_)",
+                "emptyTable":     "Sin Datos a Mostrar",
+                "zeroRecords":    "No se encontraron coincidencias",
+                "infoEmpty":      "Mostrando 0 de 0 de 0 coincidencias",
+                "paginate": {
+                        "previous": "Anterior",
+                        "next": "Siguiente",
+                        "first": "Primero",
+                        "last": "Ultimo",
+                        },
+            },
+            responsive: true,
+        });
+
+    });
+</script>
 @endsection

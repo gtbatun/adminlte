@@ -99,3 +99,43 @@ class TicketExport implements FromCollection , WithHeadings, WithStyles
     }
     
 }
+
+
+$ticket = DB::table('ticket')
+            ->select([
+                'ticket.id',
+                'department_creador.name AS nombre_dep_creador',
+                'department_asignado.name AS nombre_dep_asignado',
+                'area.name as concepto',
+                'category.name as categoria',
+                'ticket.title',
+                DB::raw('DATE(ticket.created_at) AS fecha'),
+                'status.name AS estado',
+                DB::raw("
+                    CASE 
+                        WHEN status.id <> 4 THEN (
+                            SELECT users.name 
+                            FROM gestion 
+                            INNER JOIN users AS users ON users.id = gestion.user_id
+                            INNER JOIN department ON users.department_id = department.id
+                            WHERE department.id IN (20, 21) AND gestion.ticket_id = ticket.id
+                            ORDER BY gestion.id DESC
+                            LIMIT 1
+                        )
+                        ELSE users.name 
+                    END AS personal_sistemas
+                ")
+            ])
+            ->join('department as department_creador','department_creador.id', '=', 'ticket.type')
+            ->join('department as department_asignado','department_asignado.id', '=', 'ticket.department_id')
+            ->join('area', 'area.id', '=', 'ticket.area_id')
+            ->join('category', 'category.id', '=', 'ticket.category_id')
+            ->join('status', 'status.id', '=', 'ticket.status_id')
+            ->leftJoin(DB::raw('(SELECT gestion.ticket_id, MAX(gestion.id) AS max_gestion_id
+                                FROM gestion
+                                GROUP BY gestion.ticket_id) AS max_gestion'), 
+                        'ticket.id', '=', 'max_gestion.ticket_id')
+            ->leftJoin('gestion', 'gestion.id', '=', 'max_gestion.max_gestion_id')
+            ->leftJoin('users', 'users.id', '=', 'gestion.user_id')
+            ->whereBetween('ticket.created_at', [$this->fechaInicio, $this->fechaFin])
+            ->get();

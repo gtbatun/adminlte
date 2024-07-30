@@ -108,9 +108,16 @@
                             <input type="text" class="form-control" id="coment" placeholder="Comentarios" autocomplete="off">
                         </div>
                     </div>
-                    <div class="col-md-2 float-right"> 
-                        <div class="form-group">                       
-                            <button id="add-device" class="btn btn-primary ">Agregar</button>
+                    <div class="col-md-3"> 
+                        <div class="form-group">
+                            <div class="btn-group">                       
+                                <button id="add-device" class="btn btn-primary "><i class="fas fa-shopping-cart"></i></button>
+                            </div>
+                            <div class="btn-group"><!-- Botón para abrir el modal -->                            
+                                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#createModal"><i class="fas fa-plus"></i></button> 
+                            </div>
+                            <!-- Incluir el modal -->
+                            @include('Device.createmodal')
                         </div>
                     </div>
                 </div>
@@ -215,8 +222,8 @@
             </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-danger" id="confirm-delete">Eliminar</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirm-delete">Eliminar</button>
             </div>
         </div>
     </div>
@@ -231,7 +238,7 @@
     let selectedDevices = [];
     let deviceIdToDelete = null;
     // console.log(selectedDevices);
-    
+
     // Verificar si hay un parámetro user_id en la URL
     const urlParams = new URLSearchParams(window.location.search);
         const userIdFromUrl = urlParams.get('user_id');
@@ -291,16 +298,16 @@
                 loadUserDevices(selectedUserId);
 
                 // Cargar categorías de tipoequipo
-                $.ajax({
-                    url: "{{ route('device-assignment.tipoequipo')}}",
-                    method: 'GET',
-                    success: function(data) {
-                        let tipoequipoSelect = $('#tipoequipo-select');
-                        data.forEach(tipoequipo => {
-                            tipoequipoSelect.append(`<option value="${tipoequipo.id}">${tipoequipo.name}</option>`);
-                        });
-                    }
-                });
+                // $.ajax({
+                //     url: "{{ route('device-assignment.tipoequipo')}}",
+                //     method: 'GET',
+                //     success: function(data) {
+                //         let tipoequipoSelect = $('#tipoequipo-select');
+                //         data.forEach(tipoequipo => {
+                //             tipoequipoSelect.append(`<option value="${tipoequipo.id}">${tipoequipo.name}</option>`);
+                //         });
+                //     }
+                // });
             }
         });
     });
