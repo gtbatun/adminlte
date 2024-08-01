@@ -8,10 +8,10 @@
         @csrf
         <div class="container d-flex justify-content-between" >
         <div class="col-3 mb-1">
-            <label class="form-label" for="reporttype">De:</label>
-            <select class="form-control" id="reporttype" name="reporttype">
-            <option value="tickets">Tickets</option> 
-            <option value="equipos">Equipos</option>             
+            <label class="form-label" for="category_id">De:</label>
+            <select class="form-control" id="category_id" name="category_id">
+            <option value="">Tickets</option> 
+            <option value="">Equipos</option>             
             </select>
         </div>
         <div class="col-3 mb-1">
@@ -34,16 +34,18 @@
                 <div class="table-responsive" >
                 <table id="reportTableone" class="table table-striped table-bordered dt-responsive nowrap" style="width:98%">
                     <thead>
-                        <tr>
+                        <tr> 
                             <th>ID</th>
-                            <th>Creador</th>
-                            <th>Asignado</th>
-                            <th>Concepto</th>
+                            <th>Sucursal</th>
+                            <th>Creado por</th>
+                            <th>Asignado a</th>
+                            <th>Area</th>
                             <th>Categoría</th>
                             <th>Título</th>
                             <th>Fecha</th>
-                            <!-- Aquí se agregarán las columnas que se desean mostrar en el reporte -->
-                        </tr>                       
+                            <th>Estado</th>
+                            <th>Atendio</th>
+                        </tr>
                     </thead>
                     <tbody>
                         <!-- Aquí se llenarán los datos con AJAX -->
@@ -53,7 +55,6 @@
             </div>
         </div>
     </div>
-    
 </div>
 @endsection
 
@@ -81,7 +82,6 @@
         $('#reportForm').on('submit', function(e) {
             e.preventDefault();
 
-            var reporttype = $('#reporttype').val(); // seleccionar el reporte que se desea seleccionar
             var startDate = $('#start_date').val();
             var endDate = $('#end_date').val();
 
@@ -89,7 +89,6 @@
                 url: $(this).attr('action'),
                 method: 'GET',
                 data: {
-                    reporttype: reporttype,
                     start_date: startDate,
                     end_date: endDate,
                     _token: '{{ csrf_token() }}'
@@ -98,15 +97,6 @@
                     $('#tableContainer').show();
                     $('#exportExcel').show();
                     table.clear().draw();
-
-                    // var theadHtml = '';
-                    if (reporttype === 'tickets') {
-                        table.columns().header().to$().remove();
-                        $('#reportTableone thead').append(
-                            '<tr><th>ID</th><th>Sucursal</th><th>Creado por</th><th>Asignado a</th><th>Area</th><th>Categoría</th><th>Título</th><th>Fecha</th><th>Estado</th><th>Atendio</th></tr>'
-                        );
-                        // theadHtml = '<tr><th>ID</th><th>Sucursal</th><th>Creado por</th><th>Asignado a</th><th>Area</th><th>Categoría</th><th>Título</th><th>Fecha</th><th>Estado</th><th>Atendio</th></tr>';
-
                     response.data.forEach(function(ticket) {                            
                         table.row.add([
                             ticket.id,
@@ -121,22 +111,6 @@
                             ticket.personal_sistemas ? ticket.personal_sistemas : ''
                         ]).draw(false);
                     });
-                } else if (reporttype === 'equipos') {
-                        table.columns().header().to$().remove();
-                        $('#reportTableone thead').append(
-                            '<tr><th>ID</th><th>Nombre</th><th>Tipo</th><th>Modelo</th><th>Fecha de Compra</th><th>Estado</th></tr>'
-                        );
-                        response.data.forEach(function(equipo) {                            
-                            table.row.add([
-                                equipo.id,
-                                equipo.nombre,
-                                equipo.tipo,
-                                equipo.modelo,
-                                moment(equipo.fecha_compra).format('YYYY-MM-DD'), // Formatear la fecha
-                                equipo.estado
-                            ]).draw(false);
-                        });
-                    }
                 },
                 error: function(xhr) {
                     console.error('Error fetching data:', xhr);

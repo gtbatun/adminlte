@@ -407,31 +407,37 @@ return [
             'icon'   => 'fas fa-lock',
             'icon_color' => 'red'  
         ],
-        // [
-        //     'text'   => 'Inventario',
-        //     'route'  => 'inventory.index',            
-        //     'icon'   => 'far fa-fw fa-hdd',
-        //     'can' => 'admin-access',
-        //     'icon_color' => 'red',  
-        // ],        
-        // [
-        //     'text'   => 'Equipo',
-        //     'route'  => 'device.index',            
-        //     // 'icon'   => 'far fa-fw fa-hdd',
-        //     'can' => 'admin-access',
-        //     'icon_color' => 'green',  
-        // ],
-        // [
-        //     'text'   => 'layout',
-        //     'route'  => 'inventory.create',
-        //     'icon'   => 'far fa-fw fa-file',  
-        // ],
         [
             'text' => 'Reportes',
-            'route'  => 'report.index',
             'can' => 'admin-access',
             'icon' => 'far fa-file',
-            // 'can'  => 'manage-blog',
+            'submenu' => [
+                [
+                    'text' => 'Tickets',                    
+                    'route'  => 'report.index',
+                    'icon' => 'fas fa-chart-bar',
+                ],
+                [
+                    'text' => 'Inventario',
+                    'icon' => 'fas fa-chart-pie',
+                    'url' => '',
+                ],
+                // [
+                //     'text' => 'Tickets por estatus',
+                //     'icon' => 'fas fa-chart-line',
+                //     'url' => '',
+                // ],
+                // [
+                //     'text' => 'Tickets por usuario',
+                //     'icon' => 'fas fa-user-tie',
+                //     'url' => '',
+                // ],
+                // [
+                //     'text' => 'Tickets por fecha',
+                //     'icon' => 'fas fa-calendar-alt',
+                //     'url' => '',
+                // ],
+            ]
         ],
 
 
