@@ -142,7 +142,6 @@ Route::get('/tickets/check-updates', [TicketController::class, 'checkUpdates'])-
 Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
 Route::get('/notifications/mark-as-read/{id}', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
 
-
 //Exporta a un documento excel los tickets seleccionados
 Route::get('/report/search', [ReportController::class, 'search'])->name('report.search'); ///**** */
 Route::get('reporte-excel/{start_date}/{end_date}', [ReportController::class, 'reportexcel'])->name('reporte.excel');

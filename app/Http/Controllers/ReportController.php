@@ -60,10 +60,12 @@ class ReportController extends Controller
     /** secccion para visualizar los reportes los datos en la tabla */
     public function search(Request $request)
     {
+        $reporttype = $request->input('reporttype');
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
-// WHERE department.id IN (20, 21) AND gestion.ticket_id = ticket.id /** parte quitado de l espacio vacion de la consulta de a bajo */
-        $tickets = DB::table('ticket')
+        
+        if ($reporttype === 'tickets') {
+        $data = DB::table('ticket')
             ->select([
                 'ticket.id',
                 'sucursal.name as user_sucursal',
@@ -104,9 +106,15 @@ class ReportController extends Controller
             ->leftJoin('users AS gestion_users', 'gestion_users.id', '=', 'gestion.user_id')
             ->whereBetween('ticket.created_at', [$startDate, $endDate])
             ->get();
-        
 
-        return response()->json(['data' => $tickets]);
+        } elseif ($reporttype === 'equipos') {
+            $data = DB::table('device')->select(['id','name','description'])->where('id',4)->get();
+
+        }else {
+            $data = collect();
+        }        
+
+        return response()->json(['data' => $data]);
     }
 
     /**nueva seccion para una nueva consulta */

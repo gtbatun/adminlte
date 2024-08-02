@@ -33,17 +33,8 @@
             <div class="card-body">  
                 <div class="table-responsive" >
                 <table id="reportTableone" class="table table-striped table-bordered dt-responsive nowrap" style="width:98%">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Creador</th>
-                            <th>Asignado</th>
-                            <th>Concepto</th>
-                            <th>Categoría</th>
-                            <th>Título</th>
-                            <th>Fecha</th>
-                            <!-- Aquí se agregarán las columnas que se desean mostrar en el reporte -->
-                        </tr>                       
+                    <thead id="reportTableHead">
+                        <th>ID</th><!-- es necesario dejarlo, en caso contrario manda al json y marca error en la consola  -->
                     </thead>
                     <tbody>
                         <!-- Aquí se llenarán los datos con AJAX -->
@@ -60,23 +51,7 @@
 @section('js')
 <script>
     $(document).ready(function() {
-        var table = $('#reportTableone').DataTable({
-            "language": {
-                "search": "Buscar",
-                "lengthMenu": "Mostrar _MENU_ ticket por pagina",
-                "info": "Mostrando _START_ de _END_ de _TOTAL_ ",
-                "infoFiltered": "(filtrado de un total de _MAX_)",
-                "emptyTable": "Sin Datos a Mostrar",
-                "zeroRecords": "No se encontraron coincidencias",
-                "infoEmpty": "Mostrando 0 de 0 de 0 coincidencias",
-                "paginate": {
-                    "previous": "Anterior",
-                    "next": "Siguiente",
-                    "first": "Primero",
-                    "last": "Ultimo"
-                }
-            }
-        });
+        var table = $('#reportTableone').DataTable();
 
         $('#reportForm').on('submit', function(e) {
             e.preventDefault();
@@ -97,46 +72,77 @@
                 success: function(response) {
                     $('#tableContainer').show();
                     $('#exportExcel').show();
-                    table.clear().draw();
 
-                    // var theadHtml = '';
+                    // Destruir el DataTable antes de modificar los encabezados
+                    table.destroy();
+
+                    // Limpiar los encabezados y el contenido de la tabla antes de agregar los nuevos
+                    $('#reportTableHead').empty();
+                    $('#reportTableone tbody').empty();
+                    
+
                     if (reporttype === 'tickets') {
-                        table.columns().header().to$().remove();
-                        $('#reportTableone thead').append(
+                        // table.columns().header().to$().remove();
+                        $('#reportTableHead').append(
                             '<tr><th>ID</th><th>Sucursal</th><th>Creado por</th><th>Asignado a</th><th>Area</th><th>Categoría</th><th>Título</th><th>Fecha</th><th>Estado</th><th>Atendio</th></tr>'
                         );
-                        // theadHtml = '<tr><th>ID</th><th>Sucursal</th><th>Creado por</th><th>Asignado a</th><th>Area</th><th>Categoría</th><th>Título</th><th>Fecha</th><th>Estado</th><th>Atendio</th></tr>';
-
-                    response.data.forEach(function(ticket) {                            
-                        table.row.add([
-                            ticket.id,
-                            ticket.user_sucursal ? ticket.user_sucursal : '',
-                            ticket.creador,
-                            ticket.asignado,
-                            ticket.concepto,
-                            ticket.categoria,
-                            ticket.title,
-                            moment(ticket.created_at).format('YYYY-MM-DD'), // Formatear la fecha
-                            ticket.estado,
-                            ticket.personal_sistemas ? ticket.personal_sistemas : ''
-                        ]).draw(false);
+                        response.data.forEach(function(ticket) {
+                        $('#reportTableone tbody').append('<tr><td>' + ticket.id + '</td><td>' + (ticket.user_sucursal ? ticket.user_sucursal : '') + '</td><td>' + ticket.creador + '</td><td>' + ticket.asignado + '</td><td>' + ticket.concepto + '</td><td>' + ticket.categoria + '</td><td>' + ticket.title + '</td><td>' + moment(ticket.created_at).format('YYYY-MM-DD') + '</td><td>' + ticket.estado + '</td><td>' + (ticket.personal_sistemas ? ticket.personal_sistemas : '') + '</td></tr>');
                     });
-                } else if (reporttype === 'equipos') {
-                        table.columns().header().to$().remove();
-                        $('#reportTableone thead').append(
-                            '<tr><th>ID</th><th>Nombre</th><th>Tipo</th><th>Modelo</th><th>Fecha de Compra</th><th>Estado</th></tr>'
+                    
+                    // response.data.forEach(function(ticket) {                            
+                    //     table.row.add([
+                    //         ticket.id,
+                    //         ticket.user_sucursal ? ticket.user_sucursal : '',
+                    //         ticket.creador,
+                    //         ticket.asignado,
+                    //         ticket.concepto,
+                    //         ticket.categoria,
+                    //         ticket.title,
+                    //         moment(ticket.created_at).format('YYYY-MM-DD'), // Formatear la fecha
+                    //         ticket.estado,
+                    //         ticket.personal_sistemas ? ticket.personal_sistemas : '',
+                    //     ]).draw(false);
+                    // });
+                    
+                } else if (reporttype === 'equipos'){
+                        // table.columns().header().to$().remove();
+                        $('#reportTableHead').append(
+                            '<tr><th>ID</th><th>Nombre</th><th>Tipo</th></tr>'
                         );
-                        response.data.forEach(function(equipo) {                            
-                            table.row.add([
-                                equipo.id,
-                                equipo.nombre,
-                                equipo.tipo,
-                                equipo.modelo,
-                                moment(equipo.fecha_compra).format('YYYY-MM-DD'), // Formatear la fecha
-                                equipo.estado
-                            ]).draw(false);
+                        // response.data.forEach(function(equipo) {                            
+                        //     table.row.add([
+                        //         equipo.id,
+                        //         equipo.name,
+                        //         //equipo.tipo,
+                        //         equipo.description
+                        //         //moment(equipo.fecha_compra).format('YYYY-MM-DD'), // Formatear la fecha
+                        //         //equipo.estado
+                        //     ]).draw(false);
+                        // });
+                        response.data.forEach(function(equipo) {
+                        $('#reportTableone tbody').append('<tr><td>' + equipo.id + '</td><td>' + equipo.name + '</td><td>' + equipo.description + '</td></tr>');
                         });
                     }
+                    // Recrear el DataTable después de modificar los encabezados y el contenido
+                    table = $('#reportTableone').DataTable({
+                        "language": {
+                            "search": "Buscar",
+                            "lengthMenu": "Mostrar _MENU_ tickets por página",
+                            "info": "Mostrando _START_ de _END_ de _TOTAL_",
+                            "infoFiltered": "(filtrado de un total de _MAX_)",
+                            "emptyTable": "Sin Datos a Mostrar",
+                            "zeroRecords": "No se encontraron coincidencias",
+                            "infoEmpty": "Mostrando 0 de 0 de 0 coincidencias",
+                            "paginate": {
+                                "previous": "Anterior",
+                                "next": "Siguiente",
+                                "first": "Primero",
+                                "last": "Último"
+                            }
+                        }
+                    });
+                    
                 },
                 error: function(xhr) {
                     console.error('Error fetching data:', xhr);
