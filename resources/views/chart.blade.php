@@ -125,7 +125,7 @@
 
 
 @if($devicesCounts)
-<div class="card">
+<div class="card"> 
     <div class="card-header">
         <h5 class="card-title">Equipos</h5>
         <div class="card-tools">
@@ -155,10 +155,8 @@
         @endforeach
         </div>
     </div>
-</div>
-  
-  
-  @endif
+</div> 
+@endif
 
 
 @endsection

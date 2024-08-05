@@ -15,3 +15,4 @@ class DevicesExport implements FromCollection
         return Device::all();
     }
 }
+

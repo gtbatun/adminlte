@@ -408,40 +408,28 @@ return [
             'icon_color' => 'red'  
         ],
         [
-            'text' => 'Reportes',
+            'text'   => ' Reportes',
+            'route'  => 'report.index',            
             'can' => 'admin-access',
-            'icon' => 'far fa-file',
-            'submenu' => [
-                [
-                    'text' => 'Tickets',                    
-                    'route'  => 'report.index',
-                    'icon' => 'fas fa-chart-bar',
-                ],
-                [
-                    'text' => 'Inventario',
-                    'icon' => 'fas fa-chart-pie',
-                    'url' => '',
-                ],
-                // [
-                //     'text' => 'Tickets por estatus',
-                //     'icon' => 'fas fa-chart-line',
-                //     'url' => '',
-                // ],
-                // [
-                //     'text' => 'Tickets por usuario',
-                //     'icon' => 'fas fa-user-tie',
-                //     'url' => '',
-                // ],
-                // [
-                //     'text' => 'Tickets por fecha',
-                //     'icon' => 'fas fa-calendar-alt',
-                //     'url' => '',
-                // ],
-            ]
+            'icon'   => 'far fa-file' 
         ],
-
-
-
+        // [
+        //     'text' => 'Reportes',
+        //     'can' => 'admin-access',
+        //     'icon' => 'far fa-file',
+        //     'submenu' => [
+        //         [
+        //             'text' => 'Tickets',                    
+        //             'route'  => 'report.index',
+        //             'icon' => 'fas fa-chart-bar',
+        //         ],
+        //         [
+        //             'text' => 'Inventario',
+        //             'icon' => 'fas fa-chart-pie',
+        //             'url' => '',
+        //         ],
+        //     ]
+        // ],
     ],
 
     /*

@@ -82,7 +82,6 @@
                     
 
                     if (reporttype === 'tickets') {
-                        // table.columns().header().to$().remove();
                         $('#reportTableHead').append(
                             '<tr><th>ID</th><th>Sucursal</th><th>Creado por</th><th>Asignado a</th><th>Area</th><th>Categoría</th><th>Título</th><th>Fecha</th><th>Estado</th><th>Atendio</th></tr>'
                         );
@@ -90,36 +89,10 @@
                         $('#reportTableone tbody').append('<tr><td>' + ticket.id + '</td><td>' + (ticket.user_sucursal ? ticket.user_sucursal : '') + '</td><td>' + ticket.creador + '</td><td>' + ticket.asignado + '</td><td>' + ticket.concepto + '</td><td>' + ticket.categoria + '</td><td>' + ticket.title + '</td><td>' + moment(ticket.created_at).format('YYYY-MM-DD') + '</td><td>' + ticket.estado + '</td><td>' + (ticket.personal_sistemas ? ticket.personal_sistemas : '') + '</td></tr>');
                     });
                     
-                    // response.data.forEach(function(ticket) {                            
-                    //     table.row.add([
-                    //         ticket.id,
-                    //         ticket.user_sucursal ? ticket.user_sucursal : '',
-                    //         ticket.creador,
-                    //         ticket.asignado,
-                    //         ticket.concepto,
-                    //         ticket.categoria,
-                    //         ticket.title,
-                    //         moment(ticket.created_at).format('YYYY-MM-DD'), // Formatear la fecha
-                    //         ticket.estado,
-                    //         ticket.personal_sistemas ? ticket.personal_sistemas : '',
-                    //     ]).draw(false);
-                    // });
-                    
                 } else if (reporttype === 'equipos'){
-                        // table.columns().header().to$().remove();
                         $('#reportTableHead').append(
                             '<tr><th>ID</th><th>Nombre</th><th>Tipo</th></tr>'
                         );
-                        // response.data.forEach(function(equipo) {                            
-                        //     table.row.add([
-                        //         equipo.id,
-                        //         equipo.name,
-                        //         //equipo.tipo,
-                        //         equipo.description
-                        //         //moment(equipo.fecha_compra).format('YYYY-MM-DD'), // Formatear la fecha
-                        //         //equipo.estado
-                        //     ]).draw(false);
-                        // });
                         response.data.forEach(function(equipo) {
                         $('#reportTableone tbody').append('<tr><td>' + equipo.id + '</td><td>' + equipo.name + '</td><td>' + equipo.description + '</td></tr>');
                         });
@@ -155,7 +128,6 @@
     $('#exportExcel').on('click', function() {
         var startDate = $('#start_date').val();
         var endDate = $('#end_date').val();
-        // console.log(startDate, endDate);
         var url = "{{ route('reporte.excel', ['start_date' => ':startDate', 'end_date' => ':endDate']) }}";
         url = url.replace(':startDate', startDate).replace(':endDate', endDate);
         // console.log(url); // Verifica que la URL sea correcta

@@ -136,12 +136,18 @@ $a_data = $agente->values();
         }else{
            
             $ticketCounts = DB::table('ticket')
-            ->select('status_id', DB::raw('COUNT(*) as total'), 'devicedetail.name')
+            ->select('status_id', DB::raw('COUNT(*) as total'), 'status.name')
             ->join('status', 'ticket.status_id', '=', 'status.id')
             ->whereMonth('ticket.created_at', '=', date('m'))
             ->whereYear('ticket.created_at', '=', date('Y'))
             ->where('ticket.department_id', '=', auth()->user()->department_id)
             ->groupBy('status_id', 'status.name')
+            ->get();
+
+            $devicesCounts = DB::table('device')
+            ->select( DB::raw('count(*) as total'),'devicedetail.name')
+            ->join('devicedetail','device.statusdevice_id','=','devicedetail.id')
+            ->groupBy('device.statusdevice_id')
             ->get();
         }
        
