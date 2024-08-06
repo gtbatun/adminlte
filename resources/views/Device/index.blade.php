@@ -51,6 +51,7 @@
    @endisset
 </div>
 
+
 <!-- Modal de asignacion de device  -->
 <div class="modal" id="modal-asignar-device">
     <div class="modal-dialog">

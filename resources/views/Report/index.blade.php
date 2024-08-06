@@ -86,15 +86,33 @@
                             '<tr><th>ID</th><th>Sucursal</th><th>Creado por</th><th>Asignado a</th><th>Area</th><th>Categoría</th><th>Título</th><th>Fecha</th><th>Estado</th><th>Atendio</th></tr>'
                         );
                         response.data.forEach(function(ticket) {
-                        $('#reportTableone tbody').append('<tr><td>' + ticket.id + '</td><td>' + (ticket.user_sucursal ? ticket.user_sucursal : '') + '</td><td>' + ticket.creador + '</td><td>' + ticket.asignado + '</td><td>' + ticket.concepto + '</td><td>' + ticket.categoria + '</td><td>' + ticket.title + '</td><td>' + moment(ticket.created_at).format('YYYY-MM-DD') + '</td><td>' + ticket.estado + '</td><td>' + (ticket.personal_sistemas ? ticket.personal_sistemas : '') + '</td></tr>');
+                        $('#reportTableone tbody').append(
+                            '<tr>'+
+                                '<td>' + ticket.id + '</td>'+
+                                '<td>' + (ticket.user_sucursal ? ticket.user_sucursal : '') + '</td>'+
+                                '<td>' + ticket.creador + '</td><td>' + ticket.asignado + '</td>'+
+                                '<td>' + ticket.concepto + '</td>'+
+                                '<td>' + ticket.categoria + '</td>'+
+                                '<td>' + ticket.title + '</td>'+
+                                '<td>' + moment(ticket.fecha).format('YYYY-MM-DD') + '</td>'+
+                                '<td>' + ticket.estado + '</td>'+
+                                '<td>' + (ticket.personal_sistemas ? ticket.personal_sistemas : '') + '</td>'+
+                            '</tr>');
                     });
                     
                 } else if (reporttype === 'equipos'){
                         $('#reportTableHead').append(
-                            '<tr><th>ID</th><th>Nombre</th><th>Tipo</th></tr>'
+                            '<tr><th>ID</th><th>Nombre</th><th>Descripcion</th><th>Estado</th><th>Usuario</th></tr>'
                         );
                         response.data.forEach(function(equipo) {
-                        $('#reportTableone tbody').append('<tr><td>' + equipo.id + '</td><td>' + equipo.name + '</td><td>' + equipo.description + '</td></tr>');
+                        $('#reportTableone tbody').append(
+                            '<tr>'+
+                                '<td>' + equipo.id + '</td>'+
+                                '<td>' + equipo.name + '</td>'+
+                                '<td>' + (equipo.description ? equipo.description :'' )+ '</td>'+                                
+                                '<td>' + equipo.status_device + '</td>'+
+                                '<td>' + (equipo.user_name ? equipo.user_name: '') + '</td>'+
+                            '</tr>');
                         });
                     }
                     // Recrear el DataTable después de modificar los encabezados y el contenido
@@ -114,8 +132,7 @@
                                 "last": "Último"
                             }
                         }
-                    });
-                    
+                    });                    
                 },
                 error: function(xhr) {
                     console.error('Error fetching data:', xhr);
@@ -126,9 +143,17 @@
     });
 
     $('#exportExcel').on('click', function() {
+        var reportType = $('#reporttype').val();
         var startDate = $('#start_date').val();
         var endDate = $('#end_date').val();
-        var url = "{{ route('reporte.excel', ['start_date' => ':startDate', 'end_date' => ':endDate']) }}";
+
+        // var url = "{{ route('reporte.excel', ['start_date' => ':startDate', 'end_date' => ':endDate']) }}";
+        var url = '';
+        if (reportType === 'tickets') {
+            url = "{{ route('reporte.excel', ['start_date' => ':startDate', 'end_date' => ':endDate']) }}";
+        } else if (reportType === 'equipos') {
+            url = "{{ route('reporte.excel_device', ['start_date' => ':startDate', 'end_date' => ':endDate']) }}";
+        }
         url = url.replace(':startDate', startDate).replace(':endDate', endDate);
         // console.log(url); // Verifica que la URL sea correcta
         window.location.href = url;

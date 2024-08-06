@@ -145,6 +145,7 @@ Route::get('/notifications/mark-as-read/{id}', [NotificationController::class, '
 //Exporta a un documento excel los tickets seleccionados
 Route::get('/report/search', [ReportController::class, 'search'])->name('report.search'); ///**** */
 Route::get('reporte-excel/{start_date}/{end_date}', [ReportController::class, 'reportexcel'])->name('reporte.excel');
+Route::get('reporte-device/{start_date}/{end_date}', [ReportController::class, 'reportexcel_device'])->name('reporte.excel_device');
 
 /**Ruta para nueva grafica */
 /**solicitar los tickets creados o cerrado de un determinado mes, segun el mes seleccionado */

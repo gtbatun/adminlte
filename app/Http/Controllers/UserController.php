@@ -41,7 +41,8 @@ class UserController extends Controller
     return [
         'inventory_id' => $inventory->id, // ID de Inventory
         'id' => $device->id, // ID de Device
-        'name' => $device->name,
+        'name' => $device->name,        
+        'user_id' => $device->user_id,
         'tipodevice' => $device->tipodevice,
         // Agrega otros campos del dispositivo según sea necesario
     ];

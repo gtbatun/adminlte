@@ -14,8 +14,7 @@ class TicketExport implements FromCollection , WithHeadings, WithStyles
     */
     protected $fechaInicio;
     protected $fechaFin;
-    // 
- 
+    //  
 
     public function __construct($fechaInicio, $fechaFin)
     {
@@ -77,9 +76,7 @@ class TicketExport implements FromCollection , WithHeadings, WithStyles
 
     public function collection()
     {
-        // $ticket = Ticket::with('department')
-        // ->whereBetween('created_at', [$this->fechaInicio, $this->fechaFin])
-        // ->get();
+        
         $ticket = DB::table('ticket')
             ->select([
                 'ticket.id',

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Ticket;
-use App\Models\Gestion;
+use App\Models\Devicedetail;
 
 use App\Models\Department;
 // para la export de los reportes de tickets
@@ -15,6 +15,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\DB;
 use Exception;
 use Log;
+use App\Exports\DevicesExport;
 
 
 class ReportController extends Controller
@@ -41,13 +42,12 @@ class ReportController extends Controller
 
 
    
-    public function reportexport($fechaInicio, $fechaFin){       
+    public function reportexport1($fechaInicio, $fechaFin){       
         return Excel::download(new TicketExport($fechaInicio, $fechaFin), 'Reporte de tickets_'.$fechaInicio.'.xlsx', \Maatwebsite\Excel\Excel::XLSX);        
     }
 
     public function reportexcel($start_date, $end_date)
     {
-        // return $request;
         $fechaInicio = $start_date;
         $fechaFin = $end_date;
         return Excel::download(new TicketExport($fechaInicio, $fechaFin), 'Reporte de tickets_'.$fechaInicio.'.xlsx', \Maatwebsite\Excel\Excel::XLSX);
@@ -57,6 +57,14 @@ class ReportController extends Controller
         // return response()->json(['start_date' => $fechaInicio, 'end_date' => $fechaFin]);
     
     }
+    public function reportexcel_device($start_date, $end_date)
+    {
+        $fechaInicio = $start_date;
+        $fechaFin = $end_date;
+        return Excel::download(new DevicesExport($fechaInicio, $fechaFin), 'Reporte de equipos_'.$fechaInicio.'.xlsx', \Maatwebsite\Excel\Excel::XLSX);
+            
+    }
+
     /** secccion para visualizar los reportes los datos en la tabla */
     public function search(Request $request)
     {
@@ -108,7 +116,11 @@ class ReportController extends Controller
             ->get();
 
         } elseif ($reporttype === 'equipos') {
-            $data = DB::table('device')->select(['id','name','description'])->where('id',4)->get();
+            $data = DB::table('device')->select(['device.id','device.name','device.description','users.name as user_name','devicedetail.name as status_device'])
+            ->leftjoin('users','users.id','=', 'device.user_id')
+            ->join('devicedetail','devicedetail.id','=', 'device.statusdevice_id')
+            ->whereBetween('device.created_at', [$startDate, $endDate])
+            ->get();
 
         }else {
             $data = collect();

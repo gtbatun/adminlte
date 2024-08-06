@@ -185,7 +185,8 @@
         </div>
     </div>
 </div>
-
+<!-- se incluye el modal de mantenimiento -->
+@include('Inventory.manttomodal')
 
 <!-- Modal para confirmación de eliminación -->
 <div class="modal fade" id="deleteDeviceModal" tabindex="-1" role="dialog" aria-labelledby="deleteDeviceModalLabel" aria-hidden="true">
@@ -296,18 +297,6 @@
 
                 // Cargar dispositivos asignados al usuario
                 loadUserDevices(selectedUserId);
-
-                // Cargar categorías de tipoequipo
-                // $.ajax({
-                //     url: "{{ route('device-assignment.tipoequipo')}}",
-                //     method: 'GET',
-                //     success: function(data) {
-                //         let tipoequipoSelect = $('#tipoequipo-select');
-                //         data.forEach(tipoequipo => {
-                //             tipoequipoSelect.append(`<option value="${tipoequipo.id}">${tipoequipo.name}</option>`);
-                //         });
-                //     }
-                // });
             }
         });
     });
@@ -384,6 +373,7 @@
         // console.log("Después de eliminar:", selectedDevices);        
         // console.log(selectedDevices);
     });
+
 
     // Quitar dispositivo al usuario(dispositivos asignados)
     // Mostrar modal para confirmación de eliminación
@@ -483,8 +473,8 @@
                         <td>${device.tipodevice.name}</td>
                         <td>${device.name}</td>
                         <td>
-                            <button class="btn btn-sm btn-success addgestion" data-device_id="${device.id}" data-inventory_id="${device.inventory_id}">
-                                Mantto
+                            <button class="btn btn-sm btn-success add_mantto" data-user_id="${device.user_id}" data-device_id="${device.id}" data-inventory_id="${device.inventory_id}">                                
+                                <i class="fas fa-tools"></i>
                             </button>
                             <button class="btn btn-sm btn-danger remove-deviceAssing" data-device_id="${device.id}" data-inventory_id="${device.inventory_id}">
                                 <i class="far fa-trash-alt"></i>
