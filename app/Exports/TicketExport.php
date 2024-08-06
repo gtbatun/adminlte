@@ -1,16 +1,9 @@
 <?php
-
 namespace App\Exports;
-
-use App\Models\Ticket;
-
-
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
-use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
-use Maatwebsite\Excel\Concerns\WithDrawings;
 
 use Illuminate\Support\Facades\DB;
 

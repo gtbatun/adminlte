@@ -177,7 +177,7 @@
                         </thead>
                         <tbody id="user-devices">
                         </tbody>
-                        <!-- <button class="floating-button" id="show-device-section"><span>+</span></button> -->
+                        <button class="floating-button" id="show-device-section"><span>+</span></button>
                     </table>
                 </div>                
                 <button class="floating-button" id="show-device-section"><i class="fas fa-plus"></i></button>
@@ -483,6 +483,9 @@
                         <td>${device.tipodevice.name}</td>
                         <td>${device.name}</td>
                         <td>
+                            <button class="btn btn-sm btn-success addgestion" data-device_id="${device.id}" data-inventory_id="${device.inventory_id}">
+                                Mantto
+                            </button>
                             <button class="btn btn-sm btn-danger remove-deviceAssing" data-device_id="${device.id}" data-inventory_id="${device.inventory_id}">
                                 <i class="far fa-trash-alt"></i>
                             </button>
