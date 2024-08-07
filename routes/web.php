@@ -11,7 +11,7 @@ use App\Http\Controllers\StatusController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\SucursalController;
-
+use App\Http\Controllers\ManttoController;
 
 
 use App\Http\Controllers\UserController;
@@ -176,6 +176,9 @@ Route::post('/device-assignment/delete-device/{deviceId}', [InventoryController:
 Route::get('/statuses', [DeviceController::class, 'getStatuses']);
 /** consultar los datos necesarios para poder crear un nuevo device */
 Route::get('/device-data', [DeviceController::class, 'getDeviceData']);
+
+/** Guardado del mantenimiento de los equipos*/
+Route::resource('mantto',ManttoController::class);
 
 
 /** tickets por dia */

@@ -10,7 +10,8 @@
                 </button>
             </div> 
             <div class="modal-body">
-            <form action="">
+            <form >
+                @csrf
                 <div class="form-group">
                     <label for="">inventory_id</label>
                     <input type="text" id="mantto-inventory-id">
@@ -54,11 +55,11 @@
         $('#manttodeviceModal').modal('show');
     });
 
-    $(document).on('click', function() {
+    $('#add-mantto').on('click', function() {
         const mantto_comment = $('#mantto_comment').val();
         if (mantto_comment) {
             $.ajax({
-                url: '/mantto',
+                url: "{{route('mantto.store')}}",
                 type: 'POST',
                 data: {
                     mantto_inventory_id: $('#mantto-inventory-id').val(),
@@ -68,11 +69,12 @@
                     mantto_comment: mantto_comment
                 },
                 success: function(response) {
-                    console.log(response);
-                    $('#manttodeviceModal').modal('hide');
+                    // console.log(response);
+                    console.log('Success:', response);
+                    // $('#manttodeviceModal').modal('hide');
                 },
                 error: function(xhr, status, error) {
-                    alert('Ocurrió un error al eliminar el dispositivo. Por favor, inténtelo de nuevo.');
+                    alert('Ocurrió un error al agregar el mantenimiento del dispositivo. Por favor, inténtelo de nuevo.');
                 }
             });
         } else {
