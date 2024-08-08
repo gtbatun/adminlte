@@ -21,6 +21,11 @@ class DeviceController extends Controller
 
         return response()->json(compact('tipo_equipo', 'marca', 'almacenamiento', 'procesador', 'status', 'department', 'sucursal'));
     }
+    public function getTasks()
+    {
+        $tasks = Devicedetail::where('type_device',6)->get();
+        return response()->json($tasks);
+    }
     public function getStatuses()
     {
         $statuses = Devicedetail::where('type_device',5)->get();

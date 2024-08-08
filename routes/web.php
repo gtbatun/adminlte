@@ -180,6 +180,8 @@ Route::get('/device-data', [DeviceController::class, 'getDeviceData']);
 /** Guardado del mantenimiento de los equipos*/
 Route::resource('mantto',ManttoController::class);
 
+Route::get('/tasks', [DeviceController::class, 'getTasks']);
+
 
 /** tickets por dia */
 // Route::get('/chart-per-day', [ChartJSController::class, 'getDataDay'])->name('ticketsPerDay');

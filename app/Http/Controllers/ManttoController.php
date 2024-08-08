@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Mantto;
 use Illuminate\Http\Request;
 
+
+use Illuminate\Support\Facades\Log;
+
 class ManttoController extends Controller
 {
     /**
@@ -28,12 +31,28 @@ class ManttoController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());
-
-        return response()->json(['message' => 'Success']);
        
-        $userId = $request->input('user_id');
-        $device_id = $request->input('device_id');
+        // Validar la solicitud
+        $request->validate([
+        'mantto_task_id' => 'required',
+        'mantto_device_id' => 'required',        
+        'mantto_comment' => 'required',
+        'usermantto_id' => 'required',
+        'user_id' => 'required'
+        ]);
+
+        Log::info('Datos del request:', $request->all());
+
+        // Crear un nuevo registro de mantenimiento
+        $mantto = new Mantto();
+        $mantto->statusdevice_id = $request->mantto_task_id;
+        $mantto->device_id = $request->mantto_device_id;        
+        $mantto->coment = $request->mantto_comment;
+        $mantto->usermantto_id = $request->usermantto_id;
+        $mantto->user_id = $request->user_id;
+        $mantto->save();
+
+        return response()->json(['message' => 'Mantenimiento agregado con éxito']);
 
     }
 
