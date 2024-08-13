@@ -1,4 +1,5 @@
 @extends('adminlte::page')
+
 @section('content')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.min.css">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -284,21 +285,21 @@
 
         cargarDatosUsuario(selectedUserId);
 
-        $.ajax({  
-            url: `/device-assignment/user-details/${selectedUserId}`,
-            method: 'GET',
-            success: function(data) {
-                $('#employee-name').text(data.name);
-                $('#employee-department').text(data.department ? data.department.name : 'N/A');
-                $('#employee-branch').text(data.sucursal ? data.sucursal.name : 'N/A');
-                $('#user-image').attr('src','../storage/images/user/'+data.image); // Asegúrate de que `data.image` contiene la URL de la imagen
-                $('#user-details').show();
-                $('#device-asignados').show();
+        // $.ajax({  
+        //     url: `/device-assignment/user-details/${selectedUserId}`,
+        //     method: 'GET',
+        //     success: function(data) {
+        //         $('#employee-name').text(data.name);
+        //         $('#employee-department').text(data.department ? data.department.name : 'N/A');
+        //         $('#employee-branch').text(data.sucursal ? data.sucursal.name : 'N/A');
+        //         $('#user-image').attr('src','../storage/images/user/'+data.image); // Asegúrate de que `data.image` contiene la URL de la imagen
+        //         $('#user-details').show();
+        //         $('#device-asignados').show();
 
-                // Cargar dispositivos asignados al usuario
-                loadUserDevices(selectedUserId);
-            }
-        });
+        //         // Cargar dispositivos asignados al usuario
+        //         loadUserDevices(selectedUserId);
+        //     }
+        // });
     });
 
     // Cargar dispositivos según el tipoequipo seleccionada
@@ -464,13 +465,14 @@
             url: `/user/${userId}/devices`,
             method: 'GET',
             success: function(data) {
+                // console.log(data);
                 var devicesList = $('#user-devices');
                 devicesList.empty(); // Limpia la lista de dispositivos
 
                 if (data.length > 0) {
                     $.each(data, function(index, device) {
                         devicesList.append(`<tr>
-                        <td>${device.tipodevice.name}</td>
+                        <td>${device.tipodevice}</td>
                         <td>${device.name}</td>
                         <td>
                             <button class="btn btn-sm btn-success add_mantto" data-user_id="${device.user_id}" data-device_id="${device.id}" data-inventory_id="${device.inventory_id}">                                

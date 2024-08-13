@@ -108,7 +108,7 @@
                         <div class="container-fuid">
                     <div class="card direct-chat direct-chat-primary">
                         <div class="card-header">
-                            <h3 class="card-title">Historial</h3>            
+                            <!-- <h3 class="card-title">Historial</h3>             -->
                             <div class="card-tools">
                                 <!-- <span class="badge badge-primary" id="data-length"></span> -->
                                 <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -119,9 +119,6 @@
                                     <div class="float-right badge rounded-pill bg-primary"  id="data-length" ></div>
                                     <!-- <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary" id="data-length"></span></h4> -->
                                 </button>
-                                <!-- <button type="button" class="btn btn-tool" data-card-widget="remove">
-                                    <i class="fas fa-times"></i>
-                                </button> -->
                             </div>            
                         </div>            
                         <div class="card-body">
@@ -134,18 +131,20 @@
                                 @csrf                        
                                 <input type="hidden" name="user_id" class="form-control" value="{{auth()->user()->id}}" >
                             <div id="errorContainer" ></div>
-                            <div class="row">                    
-                                <!-- inicio seccion de area y categorias -->         
-                                        <div class="col-xs-12 col-sm-12 col-md-4 pb-2 d-flex justify-content-end" > 
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" value="1" name="cerrar" >
-                                            <label class="form-check-label text-danger" for="status_id"><strong>Cerrar Ticket</strong></label>            
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" value="2" name="reopen" >
-                                            <label class="form-check-label text-success" for="status_id"><strong>Reabrir Ticket</strong></label>            
-                                        </div>
-                                        </div>
+                            <div class="row" style="display: none;">                    
+                                <!-- inicio seccion de area y categorias -->                                
+                                <div class="col-xs-12 col-sm-12 col-md-4 pb-2 d-flex justify-content-end" > 
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="1" name="cerrar" >
+                                        <label class="form-check-label text-danger" for="status_id"><strong>Cerrar Ticket</strong></label>            
+                                    </div>
+                                
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="2" name="reopen" >
+                                        <label class="form-check-label text-success" for="status_id"><strong>Reabrir Ticket</strong></label>            
+                                    </div>
+                                </div>
+                            
                                 </div> 
                                 <!-- fin de seccion de botones de cerrar y reabrir ticket -->
                                 <div class="input-group">
@@ -244,9 +243,13 @@
             var ticketId = $(this).data('ticket-id');
             var ticketTitle = $(this).data('ticket-title');            
             var ticketDescription = $(this).data('ticket-description');
+            var ticketStatus = $(this).data('ticket-status');
+            var ticketDepartmet_id = $(this).data('ticket-department_id');
+
             $('#modal-gestion-ticket').find('#ticket-id').val(ticketId);            
             $('#modal-gestion-ticket').find('#ticket-name-title').text(ticketTitle);
             $('#modal-gestion-ticket').find('#ticket-description').text(ticketDescription);
+            // $('#modal-gestion-ticket').find('#ticket-status').text(ticketStatus);
             $('#modal-gestion-ticket').modal('show');
         });
         

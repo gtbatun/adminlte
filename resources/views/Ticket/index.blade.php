@@ -92,10 +92,84 @@
         </div>
     </div>
 </div>
+
+<!-- Modal para gestionar los tickets -->
+<div class="modal" id="modal-gestion-ticket">
+    <div class="modal-dialog modal-fullscreen-xxl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="form-group" >
+                <h5 class="modal-title">Gestionar ticket </h5>
+                <strong class="text-danger"><span id="ticket-name-title"></span></strong>
+                </div>                
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <span id="ticket-description"></span>                
+                        <div class="container-fuid">
+                    <div class="card direct-chat direct-chat-primary">
+                        <div class="card-header">
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-tool" title="Contacts">
+                                    <i class="fas fa-comments"></i>
+                                    <div class="float-right badge rounded-pill bg-primary"  id="data-length" ></div>
+                                </button>
+                            </div>            
+                        </div>            
+                        <div class="card-body">
+                            <div class="direct-chat-messages" id="gestiones-container1">
+                                <!-- Messages will be appended here -->
+                            </div>
+                        </div>      
+                        <div class="card-header">
+                            <form id="gestionform" method="POST" enctype="multipart/form-data">
+                                @csrf                        
+                                <input type="hidden" name="user_id" class="form-control" value="{{auth()->user()->id}}" >
+                            <div id="errorContainer" ></div>
+                            <div class="row">                    
+                                <!-- inicio seccion de area y categorias -->                                
+                                <div class="col-xs-12 col-sm-12 col-md-4 pb-2 d-flex justify-content-end" > 
+                                    <div class="form-check" id="cerrar" style="display: none;">
+                                        <input class="form-check-input" type="checkbox" value="1" name="cerrar" >
+                                        <label class="form-check-label text-danger" for="status_id"><strong>Cerrar Ticket</strong></label>            
+                                    </div>
+                                
+                                    <div class="form-check" id="reopen" style="display: none;">
+                                        <input class="form-check-input" type="checkbox" value="2" name="reopen" >
+                                        <label class="form-check-label text-success" for="status_id"><strong>Reabrir Ticket</strong></label>            
+                                    </div>
+                                </div>
+                            
+                                </div> 
+                                <!-- fin de seccion de botones de cerrar y reabrir ticket -->
+                                <div class="input-group">
+                                    <textarea name="coment" placeholder="Type Message ..." class="form-control" id="messageInput" rows="1"></textarea>
+                                    <span class="input-group-append">
+                                        <button type="button" class="btn btn-primary" id="sendMessageButton">Send</button>
+                                        <button type="button" class="btn btn-secondary" id="addImageButton"><i class="fas fa-image"></i></button>
+                                    </span>
+                                </div>
+                                <input type="file" name="image[]" id="fileInput" accept="image/*" multiple style="display: none;">
+                                </form>
+                            <div id="imagePreviewContainer" class="mt-3"></div>
+                        </div>
+                    </div>        
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @section('js')
 <script>
+     var userIsAdmin = @json(auth()->user()->is_admin);
+     var userDepartmentId = @json(auth()->user()->department_id);
+
     $(document).ready(function() {
         var table;
         let audio = new Audio('/storage/images/user/notification-sound.mp3');
@@ -221,11 +295,11 @@
             });
         } 
          // Función para reproducir sonido de notificación
-        function sonido() {
-            audio.play().catch(function(error) {
-                console.error('Error al reproducir el sonido de notificación:', error);
-            });
-        }
+        // function sonido() {
+        //     audio.play().catch(function(error) {
+        //         console.error('Error al reproducir el sonido de notificación:', error);
+        //     });
+        // }
          // Establecer el intervalo de recarga     
         setReloadInterval();  
         
@@ -280,6 +354,34 @@
         $('#area').change(function() {
             var areaId = $(this).val();
             loadCategories(areaId);
+        });
+
+        // manejar el boton de agregar gestion a un ticket
+        $(document).on('click','.modal-gestion-btn',function(){
+            var ticketId = $(this).data('ticket-id');
+            var ticketTitle = $(this).data('ticket-title');            
+            var ticketDescription = $(this).data('ticket-description');
+            var ticketStatus = $(this).data('ticket-status');
+            var ticketDepartmet_id = $(this).data('ticket-department-id');
+
+            $('#modal-gestion-ticket').find('#ticket-id').val(ticketId);            
+            $('#modal-gestion-ticket').find('#ticket-name-title').text(ticketTitle);
+            $('#modal-gestion-ticket').find('#ticket-description').text(ticketDescription);
+
+            if(userIsAdmin == 10 || userDepartmentId == ticketDepartmet_id ){
+            
+                if(ticketStatus != 4){
+                    $('#cerrar').show();
+                }else{
+                    $('#reopen').show();
+                }
+
+            }
+
+            
+
+            $('#modal-gestion-ticket').modal('show');
+
         });
 
     });

@@ -23,7 +23,8 @@ class UserController extends Controller
         $users = User::where('name', 'LIKE', '%' . $request->input('query') . '%')->get();
         return response()->json($users);
     }
-    public function getUserDevices($userId)
+
+    public function getUserDevices111($userId)
     {
         // Obtener los registros de Inventory con los IDs de device
     $devicesUser = Inventory::where('user_id', $userId)
@@ -60,6 +61,27 @@ class UserController extends Controller
 
         return response()->json($result);
     }
+
+    // --------------------------------------------------------
+    public function getUserDevices($userId)
+    {
+        // Obtener los dispositivos del usuario con los detalles del dispositivo y tipo de dispositivo
+        $devicesUser = Inventory::join('device', 'device_user.device_id', '=', 'device.id')
+            ->join('devicedetail', 'device.tipo_equipo_id', '=', 'devicedetail.id')
+            ->where('device_user.user_id', $userId)
+            ->where('device_user.enable', 1)
+            ->select(
+                'device_user.id as inventory_id',
+                'device.id as id',
+                'device.name as name',
+                'device.user_id as user_id',
+                'devicedetail.name as tipodevice'
+            )
+            ->get();
+
+        return response()->json($devicesUser);
+    }
+// ------------------------------------------------
  // $devices = Device::whereIn('id', $devicesUser)->with('tipodevice')->get(); 
     // $devices = Device::where('user_id', $userId)->with('tipodevice')->get(); // Obtén los dispositivos asignados al usuario
     public function getUsers()

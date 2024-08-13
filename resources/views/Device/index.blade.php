@@ -4,19 +4,17 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.min.css">
 <div>    
     @if(Session::get('success'))
-        <!-- <div class="alert alert-success mt-2"> -->
-        <!-- <strong>{{Session::get('success')}} </strong> -->
-        <!-- </div> -->
+
     @endif
-    <!-- @include('partials.validation-errors')     -->
-    <!-- <div class="d-grid gap-2 d-md-flex justify-content-md-end m-2">
-    <a href="{{route('device.create')}}" type="button" class="btn btn-primary p-2 ">Nuevo equipo</a>
-    </div>  -->
+
     <div class="d-grid gap-2 d-md-flex justify-content-md-end m-2"><!-- Botón para abrir el modal -->
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createModal">Nuevo equipo</button> 
     </div>
     <!-- Incluir el modal -->
     @include('Device.createmodal')
+    <!-- Modal de mantenimientos  -->
+    @include('Inventory.manttomodal')
+    
       
     @isset($devices)  
     <div class="container-fluid">
@@ -50,8 +48,6 @@
     <p>No hay Usuarios creados</p>
    @endisset
 </div>
-
-
 <!-- Modal de asignacion de device  -->
 <div class="modal" id="modal-asignar-device">
     <div class="modal-dialog">
@@ -87,11 +83,13 @@
         </div>
     </div>
 </div>
+
 @endsection
 @section('js')
-<script>    
+<script>   
+var table; 
 $(document).ready(function() {
-        var table = $('#tb-invent').DataTable({
+       table = $('#tb-invent').DataTable({
         ajax: {
             url: "{{ route('api.devices') }}",
             dataSrc: ''
@@ -116,16 +114,31 @@ $(document).ready(function() {
                 className: "center",
                 defaultContent: '',
                 render: function(data, type, row) {
+                    // Variables para controlar la visibilidad de los botones
+                    var asignarButton = '';
+                    var manttoButton = '';
+                    
+                    if (row.statusdevice.name === 'EN REPARACION'){
+                        asignarButton = `
+                        <button class="btn btn-success add_mantto" data-user_id="${row.user_id}" data-device_id="${row.id}" data-inventory_id="${row.inventory_id ? row.inventory_id: ''}">                                
+                            <i class="fas fa-tools"></i>
+                        </button>`;
+                    }
+                    // Condición para mostrar el botón de mantenimiento si el equipo está en reparación
+                    if (row.statusdevice.name === 'EN STOCK') {
+                        manttoButton = `
+                            <button type="button" class="btn btn-warning asignar-device" data-toggle="modal" data-target="#modal-asignar-device" 
+                            data-device-id="${row.id}" data-device-name="${row.name}" data-device-tipodevice="${row.tipodevice.name}">Asignar</button>`;
+                    }
                     return `
-                        <button type="button" class="btn btn-warning asignar-device" data-toggle="modal" data-target="#modal-asignar-device" 
-                            data-device-id="${row.id}" data-device-name="${row.name}" data-device-tipodevice="${row.tipodevice.name}">Asignar</button> 
-                        <a href="device/${row.id}/edit" class="btn btn-info">Editar <i class='fas fa-edit'></i></a>
-                        
-                        <form action="/device/${row.id}" method="post" class="d-inline delete-device-form">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger">Eliminar <i class='fas fa-eraser'></i></button>
-                        </form>                                        
+                    ${manttoButton}
+                    ${asignarButton}
+                    <a href="device/${row.id}/edit" class="btn btn-info">Editar <i class='fas fa-edit'></i></a>                        
+                    <form action="/device/${row.id}" method="post" class="d-inline delete-device-form">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger">Eliminar <i class='fas fa-eraser'></i></button>
+                    </form>                                        
                     `;
                 }
             },
@@ -284,6 +297,7 @@ $(document).ready(function() {
 });  
 
 </script>
+
 
 @endsection
 

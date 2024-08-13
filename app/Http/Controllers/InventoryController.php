@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Models\Inventory;
 use Illuminate\Http\Request;
 use App\Models\Department;
@@ -11,6 +12,12 @@ use App\Models\User;
 use Illuminate\Support\Facades\DB;
 class InventoryController extends Controller
 {
+    public function getAssignByDevice($deviceIdToMantto){
+        $device_mantto = Inventory::where('device_id', $deviceIdToMantto)
+        ->where('tipo','entrega')->get();
+        return response()->json($device_mantto);
+    }
+    
     public function deleteDevice(Request $request, $deviceId)
     {
         $comment = $request->input('comment');

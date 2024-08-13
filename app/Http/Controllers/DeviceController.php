@@ -18,6 +18,7 @@ class DeviceController extends Controller
         $status = Devicedetail::where('type_device', 5)->pluck('name', 'id');
         $department = Department::pluck('name', 'id');
         $sucursal = Sucursal::pluck('name', 'id');
+        
 
         return response()->json(compact('tipo_equipo', 'marca', 'almacenamiento', 'procesador', 'status', 'department', 'sucursal'));
     }

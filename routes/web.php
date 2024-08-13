@@ -6,12 +6,10 @@ use App\Http\Controllers\AreaController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\GestionController;
-use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\StatusController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\SucursalController;
-use App\Http\Controllers\ManttoController;
 
 
 use App\Http\Controllers\UserController;
@@ -22,11 +20,14 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ChartJSController;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\DeviceController;
 
+use App\Http\Controllers\DeviceController;
+use App\Http\Controllers\ManttoController;
+use App\Http\Controllers\InventoryController;
+
+//sin agregar en web
 use App\Http\Controllers\NotificationController;
-use App\Models\Inventory;
-use App\Models\Ticket;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -145,7 +146,7 @@ Route::get('/notifications/mark-as-read/{id}', [NotificationController::class, '
 //Exporta a un documento excel los tickets seleccionados
 Route::get('/report/search', [ReportController::class, 'search'])->name('report.search'); ///**** */
 Route::get('reporte-excel/{start_date}/{end_date}', [ReportController::class, 'reportexcel'])->name('reporte.excel');
-Route::get('reporte-device/{start_date}/{end_date}', [ReportController::class, 'reportexcel_device'])->name('reporte.excel_device');
+Route::get('reporte-device/{start_date}/{end_date}', [ReportController::class, 'reportexcel_device'])->name('reporte.excel_device'); //****************
 
 /**Ruta para nueva grafica */
 /**solicitar los tickets creados o cerrado de un determinado mes, segun el mes seleccionado */
@@ -154,7 +155,7 @@ Route::get('/chart-per-month-department', [ChartJSController::class, 'getDepartm
 Route::get('/chart-per-month-day', [ChartJSController::class, 'getDayDataMonth'])->name('ticketsDayPerMonth');/**Dia por dep */
 
 /** Seccion inventario */
-/**Solicitar todos los usuarios */
+/**Solicitar todos los usuarios -- seccion asignar en los equipos */
 Route::get('/users', [UserController::class, 'getUsers'])->name('users.list');
 /**Solicitar los dispositivos que tienen asignado el usuario */
 Route::get('/user/{id}/devices', [UserController::class, 'getUserDevices'])->name('user.devices');
@@ -172,15 +173,20 @@ Route::post('/device-assignment/assign', [InventoryController::class, 'assignDev
 Route::get('/device-assignment/user-details/{userId}', [UserController::class, 'getUserDetails'])->name('device-assignment.user-details');
 
 Route::post('/device-assignment/delete-device/{deviceId}', [InventoryController::class, 'deleteDevice']);
-/** Ruta para encontrar los estatus de los devices en devicesdetail */
-Route::get('/statuses', [DeviceController::class, 'getStatuses']);
+
 /** consultar los datos necesarios para poder crear un nuevo device */
 Route::get('/device-data', [DeviceController::class, 'getDeviceData']);
 
 /** Guardado del mantenimiento de los equipos*/
 Route::resource('mantto',ManttoController::class);
-
+/** Ruta para encontrar los estatus de los devices en devicesdetail */
+Route::get('/statuses', [DeviceController::class, 'getStatuses']);
+/**Solicitar a la tabla devicedetail los tasks */
 Route::get('/tasks', [DeviceController::class, 'getTasks']);
+/**Solicitar los tasks segun el device */ //  /device/{deviceId}/tasks   getTasksByDevice
+Route::get('/device/{deviceId}/tasks-and-assignments', [ManttoController::class, 'getTasksAndAssignByDevice']);
+/**Solicitar los movimientos del device */
+// Route::get('/hist_device/{deviceId}', [InventoryController::class, 'getAssignByDevice']);
 
 
 /** tickets por dia */
