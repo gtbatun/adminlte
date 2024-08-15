@@ -268,7 +268,7 @@ class TicketController extends Controller
                 
                 $color = 'rgba(46, 204, 133,0.4)'; // Azul
             } elseif ($ticket->department_id == $user->department_id) {
-                $type = '<strong>Asigado</strong>';
+                $type = '<strong>Asignado</strong>';
                 $color = 'rgba(231, 76, 60,0.4)'; // Naranja
             } else {
                 $type = '<strong>'.$ticket->department->name.'</strong>';

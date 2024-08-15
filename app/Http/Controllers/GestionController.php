@@ -72,6 +72,11 @@ class GestionController extends Controller
         if (isset($add_gestion->status_id)) {
             $update_ticket = Ticket::find($request->ticket_id);
             $update_ticket->status_id = $add_gestion->status_id;
+            $update_ticket->last_updated_at = now();
+           $update_ticket->update();
+        }
+        if (isset($add_gestion->category_id)) {
+            $update_ticket = Ticket::find($request->ticket_id);
             $update_ticket->category_id = $request->category_id;
             $update_ticket->area_id = $request->area_id;
             $update_ticket->last_updated_at = now();
