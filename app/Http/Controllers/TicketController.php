@@ -25,6 +25,16 @@ use Yajra\DataTables\DataTables;
 
 class TicketController extends Controller
 {
+    public function getDetails($id)
+{
+    $ticket = Ticket::find($id);
+
+    if ($ticket) {
+        return response()->json($ticket);
+    }
+
+    return response()->json(['error' => 'Ticket not found'], 404);
+}
     /** constructor para ver y solicitar que todos esten autenticados y evitar error de datatable */ 
     public function __construct(){
         $this->middleware('auth');

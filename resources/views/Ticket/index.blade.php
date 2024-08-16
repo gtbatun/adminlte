@@ -96,10 +96,10 @@
 @endsection
 
 @section('js')
-<script>     
+<script>   
+    var table;  
 
-    $(document).ready(function() {
-        var table;
+    $(document).ready(function() {       
         let audio = new Audio('/storage/images/user/notification-sound.mp3');
 
         function loadTickets() {

@@ -23,7 +23,7 @@ class NotificationController extends Controller
         return view('Inventory.index', compact('notifications', 'unreadNotifications'));
     }
 
-    public function markAsRead($id)
+    public function markAsRead11($id)
     {
         // Obtener el usuario autenticado
         $user = auth()->user()->department_id;
@@ -36,6 +36,24 @@ class NotificationController extends Controller
 
         // Redirigir a la lista de notificaciones o donde sea necesario
         return redirect()->route('Ticket.index')->with('success', 'Notificación marcada como leída.');
+    }
+
+    public function markAsRead(Request $request)
+    {
+        dd($request);
+        $ticketId = $request->input('ticket_id');
+        
+        // Obtener todas las notificaciones no leídas del usuario actual que tienen el mismo ticket_id
+        $user = Auth::user();
+        $notifications = $user->unreadNotifications()->where('data->id', $ticketId)->get();
+        
+
+        // Marcar cada notificación como leída
+        foreach ($notifications as $notification) {
+            $notification->markAsRead();
+        }
+
+        return response()->json(['message' => 'Notificaciones marcadas como leídas.']);
     }
 
 }

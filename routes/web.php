@@ -202,6 +202,8 @@ Route::get('/device/{deviceId}/tasks-and-assignments', [ManttoController::class,
 
 // Route::get('ticket-export/', [TicketController::class, 'export'])->name('ticket-export');
 
+/**Ruta para solicitar lñainfo del tickets y ver el modal desde notificaciones */
+Route::get('/tickets/{id}/details', [TicketController::class, 'getDetails'])->name('tickets.details');
 
 
 

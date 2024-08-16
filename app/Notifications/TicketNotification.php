@@ -49,6 +49,7 @@ class TicketNotification extends Notification
             'ticket_id' => $this->ticket->id,
             'title' => 'Nuevo ticket asignado',
             'message' => 'Se ha asignado un nuevo ticket: ' . $this->ticket->title,
+            'url' => route('ticket.show', ['ticket' => $this->ticket->id]), // Aquí agregas la URL al ticket
             'status' => $this->ticket->status,
         ];
     }

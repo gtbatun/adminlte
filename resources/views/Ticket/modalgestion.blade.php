@@ -34,7 +34,7 @@
                             <form id="gestionform" method="POST" enctype="multipart/form-data">
                                 @csrf                        
                                 <input type="hidden" name="user_id" id="user_id" class="form-control" value="{{auth()->user()->id}}" >
-                                <input type="hidden"  class="form-control" id="ticket-id" name="ticket_id">
+                                <input type="text"  class="form-control" id="ticket-id" name="ticket_id">
                                 <div id="errorContainer" ></div>
                                 <div class="row"> 
                                     <!-- inicio seccion de area y categorias -->                                
@@ -74,10 +74,13 @@
 $(document).ready(function() {
     var userIsAdmin = @json(auth()->user()->is_admin);
     var userDepartmentId = @json(auth()->user()->department_id);
-    var ticketId;
+    var ticketId; 
 
-    // Manejar el botón de agregar gestión a un ticket
-    $(document).on('click','.modal-gestion-btn',function(){
+    // boton desde mi tabla y con datos necesarios a mostarar en el modal
+    $(document).on('click','.notification-btn, .modal-gestion-btn',function(){
+        ticketId = $(this).data('ticket-id');
+
+    if ($(this).hasClass('modal-gestion-btn')) {
         ticketId = $(this).data('ticket-id');
         var ticketTitle = $(this).data('ticket-title');            
         var ticketDescription = $(this).data('ticket-description');
@@ -86,10 +89,56 @@ $(document).ready(function() {
         $('#modal-gestion-ticket').find('#ticket-id').val(ticketId);            
         $('#modal-gestion-ticket').find('#ticket-name-title').text(ticketTitle);
         $('#modal-gestion-ticket').find('#ticket-description').text(ticketDescription);
-
         handleTicketStatus(ticketStatus, ticketDepartmetId);
-        loadGestiones();
+
+    } else if ($(this).hasClass('notification-btn')) {
+        ticketId = $(this).data('ticket-id');
+        // Caso desde la notificación, solo tenemos el ticketId
+        // Realizar la llamada AJAX para marcar como leídas las notificaciones relacionadas con el mismo ticket_id
+        $.ajax({
+            url: '/notifications/mark-as-read',
+            method: 'POST',
+            data: {
+                ticket_id: ticketId,
+                _token: '{{ csrf_token() }}' // Asegúrate de incluir el token CSRF
+            },
+            success: function(response) {
+            console.log('Notificaciones marcadas como leídas.');
+            // Luego de marcar las notificaciones como leídas, continuar con la lógica del modal
+            $('#modal-gestion-ticket').find('#ticket-id').val(ticketId);
+
+            $.ajax({
+                url: '/tickets/' + ticketId + '/details',
+                method: 'GET',
+                success: function(ticket) {
+                    // Asignar los datos al modal
+
+                    $('#modal-gestion-ticket').find('#ticket-id').val(ticket.id);            
+                    $('#modal-gestion-ticket').find('#ticket-name-title').text(ticket.title);
+                    $('#modal-gestion-ticket').find('#ticket-description').text(ticket.description);
+                    handleTicketStatus(ticket.status_id, ticket.department_id);
+                    // Mostrar el modal
+                    $('#modal-gestion-ticket').modal('show');
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error fetching ticket details:', error);
+                }
+            });
+        },
+        error: function(xhr, status, error) {
+            console.error('Error marking notifications as read:', error);
+        }
+        });
+        
+    }
+
+        // loadGestiones();
         $('#modal-gestion-ticket').modal('show');
+
+        $(document).ready(function() {
+            loadGestiones();             
+            setInterval(loadGestiones, 60000);  
+        });
 
     });
 
@@ -229,7 +278,7 @@ $(document).ready(function() {
         if (!validateForm()) return;
 
         var formData = new FormData($('#gestionform')[0]);
-        console.log([...formData.entries()]); // Esto imprime todos los datos que estás enviando
+        // console.log([...formData.entries()]); // Esto imprime todos los datos que estás enviando
         // sendMessage(formData);
         $('#imagePreviewContainer img').each(function(index, img) {
             var blob = dataURLToBlob($(img).attr('src'));
@@ -247,6 +296,8 @@ $(document).ready(function() {
                 $('#messageInput').val('');
                 $('#fileInput').val('');
                 $('#imagePreviewContainer').empty();
+                // Refrescar la tabla de equipos después de guardar    
+                $('#tickets-table').DataTable().ajax.reload();                
             },
             error: function(xhr, status, error) {
                 console.error('Error sending message:', error);
