@@ -79,6 +79,7 @@ $(document).ready(function() {
     // boton desde mi tabla y con datos necesarios a mostarar en el modal
     $(document).on('click','.notification-btn, .modal-gestion-btn',function(){
         ticketId = $(this).data('ticket-id');
+        console.log('iniciando: '+ticketId);
 
     if ($(this).hasClass('modal-gestion-btn')) {
         ticketId = $(this).data('ticket-id');
@@ -90,45 +91,55 @@ $(document).ready(function() {
         $('#modal-gestion-ticket').find('#ticket-name-title').text(ticketTitle);
         $('#modal-gestion-ticket').find('#ticket-description').text(ticketDescription);
         handleTicketStatus(ticketStatus, ticketDepartmetId);
+        console.log('dentro del if: '+ticketId);
 
     } else if ($(this).hasClass('notification-btn')) {
-        ticketId = $(this).data('ticket-id');
-        // Caso desde la notificación, solo tenemos el ticketId
-        // Realizar la llamada AJAX para marcar como leídas las notificaciones relacionadas con el mismo ticket_id
-        $.ajax({
-            url: '/notifications/mark-as-read',
-            method: 'POST',
-            data: {
-                ticket_id: ticketId,
-                _token: '{{ csrf_token() }}' // Asegúrate de incluir el token CSRF
-            },
-            success: function(response) {
-            console.log('Notificaciones marcadas como leídas.');
-            // Luego de marcar las notificaciones como leídas, continuar con la lógica del modal
-            $('#modal-gestion-ticket').find('#ticket-id').val(ticketId);
+        // ticketId = $(this).data('ticket-id');
+        console.log('dentro del else: '+ticketId);
+        
 
             $.ajax({
-                url: '/tickets/' + ticketId + '/details',
-                method: 'GET',
-                success: function(ticket) {
-                    // Asignar los datos al modal
+                url: "{{ route('notifications.markAsRead') }}",
+                method: 'POST',
+                data: {
+                    ticket_id: ticketId,
+                    _token: '{{ csrf_token() }}' // Asegúrate de incluir el token CSRF
+                },
+                success: function(response) {
+                    // console.log('Notificaciones marcadas como leídas.');
+                    // console.log(response);
+                    // Luego de marcar las notificaciones como leídas, continuar con la lógica del modal
+                    // $('#modal-gestion-ticket').find('#ticket-id').val(ticketId);
 
-                    $('#modal-gestion-ticket').find('#ticket-id').val(ticket.id);            
-                    $('#modal-gestion-ticket').find('#ticket-name-title').text(ticket.title);
-                    $('#modal-gestion-ticket').find('#ticket-description').text(ticket.description);
-                    handleTicketStatus(ticket.status_id, ticket.department_id);
-                    // Mostrar el modal
-                    $('#modal-gestion-ticket').modal('show');
+                    
+                    // Obtener los detalles del ticket si es necesario
+                    /**** */
+                    $.ajax({
+                        url: '/tickets/' + ticketId + '/details',
+                        method: 'GET',
+                        success: function(ticket) {
+                            // Asignar los datos al modal
+                            $('#modal-gestion-ticket').find('#ticket-id').val(ticket.id);            
+                            $('#modal-gestion-ticket').find('#ticket-name-title').text(ticket.title);
+                            $('#modal-gestion-ticket').find('#ticket-description').text(ticket.description);
+                            handleTicketStatus(ticket.status_id, ticket.department_id);
+                            // Mostrar el modal
+                            $('#modal-gestion-ticket').modal('show');
+                            updateNotificationCount();
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error fetching ticket details:', error);
+                        }
+                    });
+
+                    /*** */
+
                 },
                 error: function(xhr, status, error) {
-                    console.error('Error fetching ticket details:', error);
+                    console.error('Error marking notifications as read:', error);
                 }
             });
-        },
-        error: function(xhr, status, error) {
-            console.error('Error marking notifications as read:', error);
-        }
-        });
+        
         
     }
 
@@ -361,6 +372,20 @@ $(document).ready(function() {
             'dd': String(date.getDate()).padStart(2, '0')
         };
         return format.replace(/hh|mm|ss|yyyy|MM|dd/g, matched => map[matched]);
+    }
+
+    /** */ 
+    function updateNotificationCount() {
+        $.ajax({
+            url: '{{ route("notifications.count") }}',
+            method: 'GET',
+            success: function(response) {
+                $('#contadorNotificacion').text(response.unread_notifications_count);
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
     }
 
 });

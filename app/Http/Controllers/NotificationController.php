@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use App\Models\User;
 
 class NotificationController extends Controller
 {
@@ -40,12 +41,19 @@ class NotificationController extends Controller
 
     public function markAsRead(Request $request)
     {
-        dd($request);
+        
+        
         $ticketId = $request->input('ticket_id');
         
         // Obtener todas las notificaciones no leídas del usuario actual que tienen el mismo ticket_id
-        $user = Auth::user();
-        $notifications = $user->unreadNotifications()->where('data->id', $ticketId)->get();
+        // $user = Auth::user();
+        $userId = Auth::user()->id;
+        $user = User::find($userId);
+        $notifications = $user->unreadNotifications()->where('data->ticket_id', $ticketId)->get();
+
+        if ($notifications->isEmpty()) {
+            return response()->json(['message' => 'No se encontraron notificaciones para el ticket especificado.']);
+        }
         
 
         // Marcar cada notificación como leída
@@ -53,7 +61,16 @@ class NotificationController extends Controller
             $notification->markAsRead();
         }
 
+        $unreadNotificationsCount = $user->unreadNotifications()->count();
+        session(['unread_notifications_count' => $unreadNotificationsCount]);
+
         return response()->json(['message' => 'Notificaciones marcadas como leídas.']);
     }
+    public function getUnreadNotificationsCount()
+    {
+        $unreadNotificationsCount = session('unread_notifications_count', 0);
+        return response()->json(['unread_notifications_count' => $unreadNotificationsCount]);
+    }
+
 
 }

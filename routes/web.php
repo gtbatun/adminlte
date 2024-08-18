@@ -27,7 +27,7 @@ use App\Http\Controllers\InventoryController;
 
 //sin agregar en web
 use App\Http\Controllers\NotificationController;
-
+use Illuminate\Notifications\Notification;
 
 /*
 |--------------------------------------------------------------------------
@@ -141,7 +141,7 @@ Route::get('/tickets/check-updates', [TicketController::class, 'checkUpdates'])-
 
 /** Consultar notificaciones de tickets */
 Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
-Route::get('/notifications/mark-as-read/{id}', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
+Route::post('notifications/mark-as-read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
 
 //Exporta a un documento excel los tickets seleccionados
 Route::get('/report/search', [ReportController::class, 'search'])->name('report.search'); ///**** */
@@ -204,6 +204,7 @@ Route::get('/device/{deviceId}/tasks-and-assignments', [ManttoController::class,
 
 /**Ruta para solicitar lñainfo del tickets y ver el modal desde notificaciones */
 Route::get('/tickets/{id}/details', [TicketController::class, 'getDetails'])->name('tickets.details');
+Route::get('/notifications/count', [NotificationController::class, 'getUnreadNotificationsCount'])->name('notifications.count');
 
 
 
