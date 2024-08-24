@@ -81,6 +81,7 @@
                         <h5 class="profile-username text-center" id="employee-name"></h5>
                         <span id="employee-department"></span>
                         <span id="employee-branch"></span>
+                        <span id="employee-id"></span> <!-- Se muestra id del usuario o empleado seleccionado -->
                     </div>
                 </div>
             </div>
@@ -115,7 +116,7 @@
                                 <button id="add-device" class="btn btn-primary "><i class="fas fa-shopping-cart"></i></button>
                             </div>
                             <div class="btn-group"><!-- Botón para abrir el modal -->                            
-                                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#createModal"><i class="fas fa-plus"></i></button> 
+                                <button type="button" class="btn btn-success"  data-user-id="" data-toggle="modal" data-target="#createModal"><i class="fas fa-plus"></i></button> 
                             </div>
                             <!-- Incluir el modal -->
                             @include('Device.createmodal')
@@ -139,7 +140,7 @@
                 <div class="card-body p-0">
                     <table class="table table-hover table-bordered">
                         <thead>
-                            <!-- <tr> <th>Id-device</th>                           -->
+                            <!-- <tr> <th>Id-device</th> -->
                                 <th>Categoria</th>
                                 <th>Nombre</th>
                                 <th>Comentario</th>
@@ -280,26 +281,9 @@
         selectedUserId = $(this).data('id');
         $('#user-search').val($(this).text());
         $('#user-results').empty();
-
+        // console.log('desdeleselec: '+selectedUserId);
         resetSelections();
-
         cargarDatosUsuario(selectedUserId);
-
-        // $.ajax({  
-        //     url: `/device-assignment/user-details/${selectedUserId}`,
-        //     method: 'GET',
-        //     success: function(data) {
-        //         $('#employee-name').text(data.name);
-        //         $('#employee-department').text(data.department ? data.department.name : 'N/A');
-        //         $('#employee-branch').text(data.sucursal ? data.sucursal.name : 'N/A');
-        //         $('#user-image').attr('src','../storage/images/user/'+data.image); // Asegúrate de que `data.image` contiene la URL de la imagen
-        //         $('#user-details').show();
-        //         $('#device-asignados').show();
-
-        //         // Cargar dispositivos asignados al usuario
-        //         loadUserDevices(selectedUserId);
-        //     }
-        // });
     });
 
     // Cargar dispositivos según el tipoequipo seleccionada
@@ -366,7 +350,6 @@
         const deviceId = $(this).closest('tr').data('id');
         // console.log("Intentando eliminar dispositivo con ID:", deviceId); 
         // console.log("Antes de eliminar:", selectedDevices);
-
         // Filtrar la lista para eliminar el dispositivo
         selectedDevices = selectedDevices.filter(item => item.deviceId != deviceId); // deberian ser === pero solo funciono corectamente con !=
         $(this).closest('tr').remove();
@@ -534,13 +517,17 @@
                     $('#employee-name').text(data.name);
                     $('#employee-department').text(data.department ? data.department.name : 'N/A');
                     $('#employee-branch').text(data.sucursal ? data.sucursal.name : 'N/A');
+                    $('#employee-id').text(data.id);
                     $('#user-image').attr('src', '../storage/images/user/' + data.image);
                     $('#user-details').show();
                     $('#device-asignados').show();
-
+                    
+                    // Actualiza el data-user-id del botón que abre el modal
+                    $('.btn-success[data-target="#createModal"]').data('user-id', data.id);
                     // Cargar dispositivos asignados al usuario
                     loadUserDevices(userId);
-
+                    // Asignar el user-id al botón que abre el modal
+                    $('button[data-target="#createModal"]').data('user-name', data.name);
                     // Cargar categorías de tipoequipo
                     searchCategories();
 

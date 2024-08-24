@@ -1,9 +1,12 @@
-<!-- Modal -->
+<!-- Modal --> 
 <div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="createModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog ">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Formulario de Equipo</h5>
+        <div class="form-group">
+          <h5 class="modal-title" id="exampleModalLabel">Formulario de Equipo</h5>        
+          <h4 id="search-user-name1" value="" class="text-danger" ></h4>
+        </div>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -11,6 +14,8 @@
       <div class="modal-body">
         <form id="createDeviceForm" method="POST">
           @csrf
+          <input type="hidden" id="search-user-id" value="">
+          <!-- <input type="text" id="search-user-name" value=""> -->
           <div class="form-group">
             <label for="tipo_equipo_id">Tipo de equipo</label>
             <select id="tipo_equipo" class="form-control">
@@ -64,12 +69,20 @@
 <script>
 $(document).ready(function() {
     $('#createModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Botón que activó el modal
+        var userId = button.data('user-id'); // Extrae la información de data-user-id
+        
+        $('#search-user-id').val(userId);
+        // $('#search-user-name').val(button.data('user-name'));
+        $('#search-user-name1').text(button.data('user-name'));
+        // console.log(userId);
+
         $.ajax({
             url: '/device-data',
             type: 'GET',
             dataType: 'json',
             success: function(data) {
-                console.log(data);
+                // console.log(data);
                 // Llenar los campos del modal con los datos obtenidos
                 fillSelectOptions('#tipo_equipo', data.tipo_equipo);
                 fillSelectOptions('#marca', data.marca);
@@ -86,6 +99,7 @@ $(document).ready(function() {
     });
     $('#createModal').on('hidden.bs.modal', function (event) {
         resetForm('#createDeviceForm');
+        
     });
     function fillSelectOptions(selector, options) {
         var select = $(selector);
@@ -113,8 +127,8 @@ $(document).ready(function() {
             almacenamiento_id: $('#almacenamiento').val(),
             procesador_id: $('#procesador').val(),
             statusdevice_id: $('#status').val(),
-            // department: $('#department').val(),
             sucursal_id: $('#sucursal').val(),
+            user_id: $('#search-user-id').val(),
             _token: '{{ csrf_token() }}'
         };
 

@@ -99,6 +99,9 @@ class DeviceController extends Controller
             'sucursal_id' => 'required',
             // Agrega más validaciones según sea necesario
         ]);
+        if(isset($request->user_id)){
+            $device->user_id = $request->user_id;
+        }
 
         // Crear el nuevo dispositivo
         $device = new Device;
