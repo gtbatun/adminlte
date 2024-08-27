@@ -1,9 +1,8 @@
 @extends('adminlte::page')
-
 @section('content')
 <style>
     .floating-button {            
-            position: absolute;
+            position: fixed;
             border-radius: 50%;
             background-color: green;
             color: white;
@@ -19,10 +18,8 @@
 </style>
 <script src="{{asset('assets/js/plugins/jquery-3.7.1.min.js')}}"></script>
 <script src="{{asset('assets/js/plugins/toastr.min.js')}}"></script>
-<!-- Incluye Toastr si deseas notificaciones visuales -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 
-
+<a class="btn btn-primary" href="{{ route('ticket.create') }}">Crear Ticket <i class='far fa-file'></i></a>  
 
 <div class="row">
     <div class="col-12 mt-0 d-flex justify-content-between ">
@@ -31,10 +28,10 @@
         @else
             <h3>@lang('Tickets')</h3>
         @endisset
-        <a class="btn btn-primary" href="{{ route('ticket.create') }}">Crear Ticket <i class='far fa-file'></i></a>        
+              
     </div>
     <!-- Boton para ver notificaciones -->
-    <button class="floating-button" ><span>+</span></button>
+    <!-- <button class="floating-button" ><span>+</span></button> -->
 
     @if(Session::get('success'))
     <div class="container-fluid">
@@ -221,7 +218,8 @@
         function getReloadInterval() {
             var now = new Date();
             var hours = now.getHours();
-            return (hours >= 8 && hours < 17) ? 60000 : 1800000;
+            return (hours >= 8 && hours > 17) ? 60000 : 1800000;
+            // return (hours >= 8 && hours < 17) ? 60000 : 1800000;
         } 
         // Función para verificar actualizaciones y reproducir sonido
         function checkForUpdates() {

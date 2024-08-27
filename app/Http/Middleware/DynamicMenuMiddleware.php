@@ -31,7 +31,8 @@ class DynamicMenuMiddleware
             foreach ($unreadNotifications as $notification) {
                 if (isset($notification->data['ticket_id'], $notification->data['message'])) {
                     $notificationSubmenu[] = [
-                        'text' => $notification->data['message'],
+                        // 'text' => $notification->data['ticket_id'],$notification->data['message'],
+                        'text' => $notification->data['ticket_id'] . ' - ' . $notification->data['message'],
                         'url' => '#',
                         'icon' => 'fas fa-fw fa-bell',
                         'data' => [

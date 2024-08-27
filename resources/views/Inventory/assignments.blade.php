@@ -81,7 +81,7 @@
                         <h5 class="profile-username text-center" id="employee-name"></h5>
                         <span id="employee-department"></span>
                         <span id="employee-branch"></span>
-                        <span id="employee-id"></span> <!-- Se muestra id del usuario o empleado seleccionado -->
+                        <!-- <span id="employee-id"></span> Se muestra id del usuario o empleado seleccionado -->
                     </div>
                 </div>
             </div>

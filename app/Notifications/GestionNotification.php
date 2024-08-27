@@ -8,17 +8,19 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 
-class TicketNotification extends Notification
+class GestionNotification extends Notification
 {
     use Queueable;
 
+    public $gestion;
     public $ticket;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct($ticket)
+    public function __construct($gestion,$ticket)
     {
+        $this->gestion = $gestion;
         $this->ticket = $ticket;
     }
 
@@ -32,6 +34,7 @@ class TicketNotification extends Notification
         return ['database'];
     }
 
+    
     /**
      * Get the mail representation of the notification.
      */
@@ -47,10 +50,11 @@ class TicketNotification extends Notification
     {
         return [
             'ticket_id' => $this->ticket->id,
-            'title' => 'Nuevo ticket asignado',
-            'message' => 'Nuevo ticket: ' . $this->ticket->title,
+            'gestion_id' => $this->gestion->id,
+            'title' => 'Nueva gestion de ticket',
+            'message' => 'Gestion del ticket: ' . $this->ticket->title,
             'url' => route('ticket.show', ['ticket' => $this->ticket->id]), // Aquí agregas la URL al ticket
-            'status' => $this->ticket->status,
+            'coment' => $this->gestion->coment,
         ];
     }
     /**

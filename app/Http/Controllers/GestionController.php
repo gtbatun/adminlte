@@ -7,6 +7,9 @@ use App\Models\Ticket; //se agrega para poder actualizar el status del ticket
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
+use App\Notifications\GestionNotification;
+use App\Models\Department;
+use Illuminate\Support\Facades\Log;
 
 class GestionController extends Controller
 {
@@ -82,6 +85,26 @@ class GestionController extends Controller
             $update_ticket->last_updated_at = now();
            $update_ticket->update();
         }
+        /** */
+        /**Obtener los datos de la persona que lo gestiono */
+        $usuario = $request->user_id;  // que agrego la gestion
+        // Obtener el departamento del ticket
+        // $department = Department::find($request->department_id);
+        $department = Department::find(21);
+        // Suponiendo que `Ticket` es el modelo del ticket
+        $ticket = Ticket::find($request->ticket_id);
+        
+
+        // Notificar a todos los usuarios del departamento
+        if ($department) {
+            foreach ($department->users as $user) {
+                $user->notify(new GestionNotification($add_gestion,$ticket));
+            }
+        } else {
+            Log::error('Departamento no encontrado: ' . $request->department_id);
+            return response()->json(['message' => 'Departamento no encontrado'], 404);
+        }
+        /** */
 
         return response()->json([
             'message' => 'Message created successfully',

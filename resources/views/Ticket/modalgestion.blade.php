@@ -1,12 +1,13 @@
 <!-- Modal para gestionar los tickets -->
 <div class="modal fade" id="modal-gestion-ticket" tabindex="-1" role="dialog" aria-labelledby="createModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg"> 
+    <div class="modal-dialog modal-lg">  
         <!-- modal-lg  modal-fullscreen-xxl-->
         <div class="modal-content">
             <div class="modal-header">
                 <div class="form-group" >
                 <h5 class="modal-title">Gestionar ticket </h5>
                 <strong class="text-danger"><span id="ticket-name-title"></span></strong>
+                
                 </div>                
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
@@ -86,12 +87,16 @@ $(document).ready(function() {
         var ticketTitle = $(this).data('ticket-title');            
         var ticketDescription = $(this).data('ticket-description');
         var ticketStatus = $(this).data('ticket-status');
-        var  ticketDepartmetId = $(this).data('ticket-department-id');
+        var ticketDepartmetId = $(this).data('ticket-department-id');
+
         $('#modal-gestion-ticket').find('#ticket-id').val(ticketId);            
         $('#modal-gestion-ticket').find('#ticket-name-title').text(ticketTitle);
-        $('#modal-gestion-ticket').find('#ticket-description').text(ticketDescription);
+        $('#modal-gestion-ticket').find('#ticket-description').text(ticketDescription);        
+
         handleTicketStatus(ticketStatus, ticketDepartmetId);
         console.log('dentro del if: '+ticketId);
+        console.log('department del if: '+ $(this).data('ticket-department-id'));
+        console.log('type_id del if: '+ $(this).data('ticket-type'));
 
     } else if ($(this).hasClass('notification-btn')) {
         // ticketId = $(this).data('ticket-id');
@@ -118,6 +123,7 @@ $(document).ready(function() {
                         url: '/tickets/' + ticketId + '/details',
                         method: 'GET',
                         success: function(ticket) {
+                            console.log(ticket);
                             // Asignar los datos al modal
                             $('#modal-gestion-ticket').find('#ticket-id').val(ticket.id);            
                             $('#modal-gestion-ticket').find('#ticket-name-title').text(ticket.title);
