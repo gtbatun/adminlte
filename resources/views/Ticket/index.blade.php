@@ -1,7 +1,22 @@
 @extends('adminlte::page')
 
 @section('content')
-
+<style>
+    .floating-button {            
+            position: absolute;
+            border-radius: 50%;
+            background-color: green;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            font-size: 26px;
+            bottom: 15px;
+            right: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease;
+        }
+</style>
 <script src="{{asset('assets/js/plugins/jquery-3.7.1.min.js')}}"></script>
 <script src="{{asset('assets/js/plugins/toastr.min.js')}}"></script>
 <!-- Incluye Toastr si deseas notificaciones visuales -->
@@ -18,6 +33,9 @@
         @endisset
         <a class="btn btn-primary" href="{{ route('ticket.create') }}">Crear Ticket <i class='far fa-file'></i></a>        
     </div>
+    <!-- Boton para ver notificaciones -->
+    <button class="floating-button" ><span>+</span></button>
+
     @if(Session::get('success'))
     <div class="container-fluid">
         <div class="alert alert-success mt-2">

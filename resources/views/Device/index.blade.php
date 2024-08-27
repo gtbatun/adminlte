@@ -45,7 +45,7 @@
     </div>
        
     @else
-    <p>No hay Usuarios creados</p>
+    <p>No hay Equipos creados</p>
    @endisset
 </div>
 <!-- Modal de asignacion de device  -->

@@ -113,10 +113,10 @@
                     <div class="col-md-3"> 
                         <div class="form-group">
                             <div class="btn-group">                       
-                                <button id="add-device" class="btn btn-primary "><i class="fas fa-shopping-cart"></i></button>
+                                <button id="add-device" class="btn btn-primary " title="Agegar al carrito">Agregar <i class="fas fa-shopping-cart"></i></button>
                             </div>
                             <div class="btn-group"><!-- Botón para abrir el modal -->                            
-                                <button type="button" class="btn btn-success"  data-user-id="" data-toggle="modal" data-target="#createModal"><i class="fas fa-plus"></i></button> 
+                                <button type="button" class="btn btn-success"  data-user-id="" data-toggle="modal" data-target="#createModal" title="Agregar nuevo equipo y asignar al usuario seleccionado">Nuevo  <i class="fas fa-desktop"></i></button> 
                             </div>
                             <!-- Incluir el modal -->
                             @include('Device.createmodal')
@@ -442,37 +442,7 @@
         }
     });
 
-    // Función para recargar los dispositivos asignados al usuario
-    function loadUserDevices(userId) {
-        $.ajax({
-            url: `/user/${userId}/devices`,
-            method: 'GET',
-            success: function(data) {
-                // console.log(data);
-                var devicesList = $('#user-devices');
-                devicesList.empty(); // Limpia la lista de dispositivos
-
-                if (data.length > 0) {
-                    $.each(data, function(index, device) {
-                        devicesList.append(`<tr>
-                        <td>${device.tipodevice}</td>
-                        <td>${device.name}</td>
-                        <td>
-                            <button class="btn btn-sm btn-success add_mantto" data-user_id="${device.user_id}" data-device_id="${device.id}" data-inventory_id="${device.inventory_id}">                                
-                                <i class="fas fa-tools"></i>
-                            </button>
-                            <button class="btn btn-sm btn-danger remove-deviceAssing" data-device_id="${device.id}" data-inventory_id="${device.inventory_id}">
-                                <i class="far fa-trash-alt"></i>
-                            </button>
-                        </td>
-                        </tr>`);
-                    });
-                } else {
-                    devicesList.append('<tr><td colspan="3">No tiene dispositivos asignados.</td></tr>');
-                }
-            }
-        });
-    }
+   
 
     // Función para resetear las selecciones
     function resetSelections() {
@@ -541,6 +511,38 @@
         }
 
 });
+
+ // Función para recargar los dispositivos asignados al usuario
+ function loadUserDevices(userId) {
+        $.ajax({
+            url: `/user/${userId}/devices`,
+            method: 'GET',
+            success: function(data) {
+                // console.log(data);
+                var devicesList = $('#user-devices');
+                devicesList.empty(); // Limpia la lista de dispositivos
+
+                if (data.length > 0) {
+                    $.each(data, function(index, device) {
+                        devicesList.append(`<tr>
+                        <td>${device.tipodevice}</td>
+                        <td>${device.name}</td>
+                        <td>
+                            <button class="btn btn-sm btn-success add_mantto" data-user_id="${device.user_id}" data-device_id="${device.id}" data-inventory_id="${device.inventory_id}">                                
+                                <i class="fas fa-tools"></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger remove-deviceAssing" data-device_id="${device.id}" data-inventory_id="${device.inventory_id}">
+                                <i class="far fa-trash-alt"></i>
+                            </button>
+                        </td>
+                        </tr>`);
+                    });
+                } else {
+                    devicesList.append('<tr><td colspan="3">No tiene dispositivos asignados.</td></tr>');
+                }
+            }
+        });
+    }
 </script>
 @endsection
 

@@ -68,9 +68,10 @@
 
 <script>
 $(document).ready(function() {
+  var userId;
     $('#createModal').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget); // Botón que activó el modal
-        var userId = button.data('user-id'); // Extrae la información de data-user-id
+        userId = button.data('user-id'); // Extrae la información de data-user-id
         
         $('#search-user-id').val(userId);
         // $('#search-user-name').val(button.data('user-name'));
@@ -128,9 +129,15 @@ $(document).ready(function() {
             procesador_id: $('#procesador').val(),
             statusdevice_id: $('#status').val(),
             sucursal_id: $('#sucursal').val(),
-            user_id: $('#search-user-id').val(),
+            // user_id: $('#search-user-id').val(),
             _token: '{{ csrf_token() }}'
         };
+
+        // Verifica si user_id tiene un valor antes de agregarlo a formData
+        var userId = $('#search-user-id').val();
+        if (userId) {
+            formData.user_id = userId;
+        }
 
         $.each(formData, function(key, value) {
             if (key !== '_token' && value === '') {
@@ -158,8 +165,9 @@ $(document).ready(function() {
                     // alert(response.message);
                     $('#createModal').modal('hide');
                     // Refrescar la tabla de equipos después de guardar    
-                    $('#tb-invent').DataTable().ajax.reload();
-                    // Aquí puedes agregar código para actualizar la tabla principal si es necesario                    
+                    // $('#tb-invent').DataTable().ajax.reload();
+                    // Aquí puedes agregar código para actualizar la tabla principal si es necesario 
+                    loadUserDevices(userId);               
                 } else {
                     alert('Error al crear el dispositivo.');
                 }

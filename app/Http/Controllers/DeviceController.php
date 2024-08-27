@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Department;
 use App\Models\Sucursal;
 use App\Models\Devicedetail;
+use App\Models\Inventory;
+use App\Models\User;
 
 class DeviceController extends Controller
 {
@@ -84,10 +86,6 @@ class DeviceController extends Controller
      */
     public function store(Request $request)
     {
-        // return $request;
-        // Device::create($request->all());
-        // return redirect()->route('device.index')->with('success', 'Nuevo equipo creado exitosamente');
-
          // Validar los datos
          $request->validate([
             'name' => 'required',
@@ -98,10 +96,7 @@ class DeviceController extends Controller
             'statusdevice_id' => 'required',
             'sucursal_id' => 'required',
             // Agrega más validaciones según sea necesario
-        ]);
-        if(isset($request->user_id)){
-            $device->user_id = $request->user_id;
-        }
+        ]);        
 
         // Crear el nuevo dispositivo
         $device = new Device;
@@ -115,7 +110,24 @@ class DeviceController extends Controller
         $device->statusdevice_id = $request->statusdevice_id;
         $device->sucursal_id = $request->sucursal_id;
         // Guarda más campos según sea necesario
+        if(isset($request->user_id)){
+            $device->user_id = $request->user_id;
+            $user = User::find($request->user_id);
+            $device->department_id = $user->department_id;   
+        }
         $device->save();
+        // Ahora puedes obtener el ID del dispositivo recién creado
+        $deviceId = $device->id;
+
+        if(isset($request->user_id)){
+            $inventory = new Inventory();
+            $inventory->device_id = $deviceId; // Aquí obtienes el ID del dispositivo recién creado
+            $inventory->user_id = $request->user_id;
+            $inventory->coment = $request->coment;
+            $inventory->tipo = 'entrega';
+            $inventory->enable = 1;
+            $inventory->save();
+        }
 
         // Retornar una respuesta JSON
         return response()->json(['success' => true, 'message' => 'Dispositivo creado correctamente']);

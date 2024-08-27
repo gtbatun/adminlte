@@ -7,6 +7,7 @@
     <form id="reportForm" method="GET" action="{{ route('report.search') }}">
         @csrf
         <div class="container d-flex justify-content-between" >
+
         <div class="col-3 mb-1">
             <label class="form-label" for="reporttype">De:</label>
             <select class="form-control" id="reporttype" name="reporttype">
@@ -16,11 +17,13 @@
         </div>
         <div class="col-3 mb-1">
         <label class="form-label" for="start_date">Fecha Inicio:</label>
-        <input class="form-control" type="date" id="start_date" name="start_date" required>
+        <input class="form-control" type="datetime-local" id="start_date" name="start_date" required>
+       
         </div>
         <div class="col-3 mb-1">
         <label class="form-label" for="end_date">Fecha Fin:</label>
-        <input class="form-control" type="date" id="end_date" name="end_date" required>
+        <input class="form-control" type="datetime-local" id="end_date" name="end_date" required>
+        
         </div>
         <div class="col-3 mb-3">
         <button class="btn btn-outline-primary  mt-3" type="submit">Buscar</button>

@@ -363,25 +363,29 @@ return [
         [
             'text'    => 'Inventario',
             'url'     => 'Inventario',            
-            'icon'   => 'far fa-fw fa-hdd',
+            'icon'   => 'fas fa-server',
             'can' => 'admin-access', 
             'submenu' => [
                 [
                     'text' => 'Equipos',
                     'route'  => 'device.index',
                     'can' => 'admin-access',
+                    'icon'   => 'fas fa-desktop',
                 ],
                 [
-                    'text' => 'Asignar',
+                    'text' => ' Asignar',
                     'route'  => 'inventory.create',
                     'can' => 'admin-access',
+                    'icon'   => 'fas fa-laptop',
+                    'icon_color' => 'green',
                 ],
                 
                 [
-                    'text' => 'Asignados',
+                    'text' => ' Asignados',
                     'can' => 'admin-access',
                     'route'  => 'inventory.index',
-                    // 'icon_color' => 'red', 
+                    'icon' => 'fas fa-laptop',
+                    'icon_color' => 'red',
 
                 ],
             ],
@@ -395,13 +399,13 @@ return [
             'icon'   => 'fas fa-lock-open',
             // 'icon_color' => 'green'  
         ],
-        [
-            'text'   => 'Ticket2',
-            'route'  => 'ticket.index1',
-            // 'icon'   => 'far fa-fw fa-file',
-            'icon'   => 'fas fa-lock-open',
-            // 'icon_color' => 'green'  
-        ],
+        // [
+        //     'text'   => 'Ticket2',
+        //     'route'  => 'ticket.index1',
+        //     // 'icon'   => 'far fa-fw fa-file',
+        //     'icon'   => 'fas fa-lock-open',
+        //     // 'icon_color' => 'green'  
+        // ],
         [
             'text'   => ' Ticket cerrados',
             'route'  => 'ticket.closed',
