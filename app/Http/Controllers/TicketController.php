@@ -23,6 +23,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
 
+
+
 class TicketController extends Controller
 {
     public function getDetails($id)
@@ -193,23 +195,7 @@ class TicketController extends Controller
             return response()->json(['error' => 'Unauthorized'], 401);
         }        
         $user = Auth::user();        
-        if($user->is_admin == 10 || $user->is_admin == 5){
-            $tickets1 = Ticket::with('area','category','status','department')
-            ->where('status_id', '!=', 4 )
-            ->get();
-            
-        }else{ 
-            $tickets1 = Ticket::with(['area', 'category', 'status', 'department'])
-                ->where(function($query) {
-                    $query->where('department_id', auth()->user()->department_id)
-                        ->orWhere('type', auth()->user()->department_id);
-                })
-                ->where('status_id', '!=', 4)
-                ->whereHas('user', function($query) {
-                    $query->where('sucursal_id', auth()->user()->sucursal_id);
-                })
-                ->get();
-        }  
+ 
         // Obtener el campo ver_ticket del usuario autenticado y decodificarlo
         $ver_ticket = json_decode(Auth::user()->ver_ticket, true);
         // return $ver_ticket;
@@ -268,10 +254,6 @@ class TicketController extends Controller
         }
 
         $tickets = $tickets->map(function($ticket){
-            $userDepartmentId = auth()->user()->department_id;
-            // $typeString = ($ticket->department_id == $userDepartmentId) ?  'Asignado':'Creado'; // En este caso, ambos retornos son 'creado'
-            // $typeColor = ($ticket->department_id == $userDepartmentId) ?  'rgba(209, 90, 13)' : 'rgba(5, 47, 233)' ;
-
             $user = auth()->user();           
             if ($ticket->user_id == $user->id) {
                 $type = '<strong>Creado</strong>'; 
@@ -340,6 +322,15 @@ class TicketController extends Controller
                         $gestionTime = $ticket->created_at; // Formato de fecha y hora
                     }
                 }
+                /**----------------------------------------------------- */
+                $unreadNotificationCount = $user->unreadNotifications()
+                ->where('data->ticket_id', $ticket->id)
+                ->count();
+
+
+                
+                /**--------------------------------------------------------- */
+                
 /**------------------------------------------------------------------------------------------------------------------------------- */
        // $typeColorback = ($ticket->status == 'Nuevo') ? 'rgba(0, 0, 255, 0.2)' : 'rgba(0, 255, 0, 0.2)'; // Azul para Asignado, Verde para Creado
 
@@ -347,7 +338,7 @@ class TicketController extends Controller
                 'id' => $ticket->id,
                 // 'id' => $messageStatus,
                 // 'title' => view('Ticket.Partials.title', ['ticket' => $ticket])->render(),
-                'title' => view('Ticket.Partials.title', ['ticket' => $ticket,'messageStatus' => $messageStatus,'gestionTime' => $gestionTime,'messageClass' => $messageClass])->render(),
+                'title' => view('Ticket.Partials.title', ['ticket' => $ticket,'messageStatus' => $messageStatus,'gestionTime' => $gestionTime,'messageClass' => $messageClass,'notifications' => $unreadNotificationCount])->render(),
                 'category' => view('Ticket.Partials.dep', ['ticket' => $ticket])->render(),
                 // 'category' => $ticket->category->name,
                 'sucursal' => $ticket->usuario->sucursal->name,
@@ -362,6 +353,7 @@ class TicketController extends Controller
                 'actions' => view('Ticket.Partials.actions', ['ticket' => $ticket])->render()
             ];
             // return $messageStatus;
+            
         });        
         /**Fucnion para retornar el ultimo gestion, si es tuyo o ya fue respondido */        
         return response()->json(['data' => $tickets]);        
@@ -561,8 +553,7 @@ class TicketController extends Controller
         Log::error('Error al crear el ticket: ' . $e->getMessage());
         return response()->json(['message' => 'Error al crear el ticket', 'error' => $e->getMessage()], 500);
     }
-}
-    
+}    
 
 
     /**

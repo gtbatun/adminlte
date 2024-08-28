@@ -1,21 +1,6 @@
 @extends('adminlte::page')
 @section('content')
-<style>
-    .floating-button {            
-            position: fixed;
-            border-radius: 50%;
-            background-color: green;
-            color: white;
-            border: none;
-            width: 40px;
-            height: 40px;
-            font-size: 26px;
-            bottom: 15px;
-            right: 15px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            transition: background-color 0.3s ease;
-        }
-</style>
+
 <script src="{{asset('assets/js/plugins/jquery-3.7.1.min.js')}}"></script>
 <script src="{{asset('assets/js/plugins/toastr.min.js')}}"></script>
 
@@ -30,8 +15,6 @@
         @endisset
               
     </div>
-    <!-- Boton para ver notificaciones -->
-    <!-- <button class="floating-button" ><span>+</span></button> -->
 
     @if(Session::get('success'))
     <div class="container-fluid">
@@ -218,7 +201,7 @@
         function getReloadInterval() {
             var now = new Date();
             var hours = now.getHours();
-            return (hours >= 8 && hours > 17) ? 60000 : 1800000;
+            return (hours >= 8 && hours < 18) ? 60000 : 1800000;
             // return (hours >= 8 && hours < 17) ? 60000 : 1800000;
         } 
         // Función para verificar actualizaciones y reproducir sonido

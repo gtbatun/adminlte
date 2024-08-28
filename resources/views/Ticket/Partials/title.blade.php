@@ -30,9 +30,15 @@
     </div>
     <div class="direct-chat-infos">    
         <span class="direct-chat-name float-left">{{$ticket->usuario->name}}</span>
-        <span class="{{ $messageClass }} float-right">{{$messageStatus}}</span>
+        <div class="form-group">   
+            @if($notifications > 0)     
+        <span class="{{ $messageClass }} float-right"><i class="fas fa-comments"></i>{{$notifications}}</span>
+            @endif
+        <!-- <span class="{{ $messageClass }} float-right">{{$messageStatus}}  <i class="fas fa-comments"></i>3</span> -->
+        </div>
     </div>
 </div>
+
 
 
 <!-- seccion copiada del cpanel -->

@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 
 use App\Notifications\GestionNotification;
 use App\Models\Department;
+use App\Models\User;
 use Illuminate\Support\Facades\Log;
 
 class GestionController extends Controller
@@ -85,14 +86,39 @@ class GestionController extends Controller
             $update_ticket->last_updated_at = now();
            $update_ticket->update();
         }
+        //  departamentos involucrados en el ticket ['producion','soporte']
+        // usuario que contesta ['dayana']
+        // comparar el departamento quien contesta
+        // notificar al departamento != al que contesto
+
+        //USUARIO QUE AGREGA LA GESTION
+        $dep_user_gestion = User::find($request->user_id);
+        //Ticket que se esta contestando
+        $ticket = Ticket::find($request->ticket_id);
+      
+        if ($dep_user_gestion->department_id == $ticket->department_id) {
+            // Si el departamento que agrega el comentario es el mismo que el departamento del ticket, notificar al receptor
+            $NotDepartment = $ticket->type; // Suponiendo que el receptor tiene su propio campo en el ticket
+        } else {
+            // Si el departamento que agrega el comentario es diferente al departamento del ticket, notificar al creador
+            $NotDepartment = $ticket->department_id;
+        }
+
+        Log::error('reslutado: '.$NotDepartment.'
+        ,quienagregalagestion: '.$dep_user_gestion->department_id.' 
+        ,depasignadoticket: '.$ticket->department_id.'
+        ,tickettype: '.$ticket->type.'
+        ticketdeparment_id: '.$ticket->department_id );
+
+        
         /** */
         /**Obtener los datos de la persona que lo gestiono */
         $usuario = $request->user_id;  // que agrego la gestion
         // Obtener el departamento del ticket
         // $department = Department::find($request->department_id);
-        $department = Department::find(21);
+        $department = Department::find($NotDepartment);
         // Suponiendo que `Ticket` es el modelo del ticket
-        $ticket = Ticket::find($request->ticket_id);
+        // $ticket = Ticket::find($request->ticket_id);
         
 
         // Notificar a todos los usuarios del departamento

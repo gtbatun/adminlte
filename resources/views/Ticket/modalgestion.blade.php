@@ -80,7 +80,7 @@ $(document).ready(function() {
     // boton desde mi tabla y con datos necesarios a mostarar en el modal
     $(document).on('click','.notification-btn, .modal-gestion-btn',function(){
         ticketId = $(this).data('ticket-id');
-        console.log('iniciando: '+ticketId);
+        // console.log('iniciando: '+ticketId);
 
     if ($(this).hasClass('modal-gestion-btn')) {
         ticketId = $(this).data('ticket-id');
@@ -94,9 +94,6 @@ $(document).ready(function() {
         $('#modal-gestion-ticket').find('#ticket-description').text(ticketDescription);        
 
         handleTicketStatus(ticketStatus, ticketDepartmetId);
-        console.log('dentro del if: '+ticketId);
-        console.log('department del if: '+ $(this).data('ticket-department-id'));
-        console.log('type_id del if: '+ $(this).data('ticket-type'));
 
     } else if ($(this).hasClass('notification-btn')) {
         // ticketId = $(this).data('ticket-id');
@@ -111,11 +108,6 @@ $(document).ready(function() {
                     _token: '{{ csrf_token() }}' // Asegúrate de incluir el token CSRF
                 },
                 success: function(response) {
-                    // console.log('Notificaciones marcadas como leídas.');
-                    // console.log(response);
-                    // Luego de marcar las notificaciones como leídas, continuar con la lógica del modal
-                    // $('#modal-gestion-ticket').find('#ticket-id').val(ticketId);
-
                     
                     // Obtener los detalles del ticket si es necesario
                     /**** */
@@ -123,7 +115,7 @@ $(document).ready(function() {
                         url: '/tickets/' + ticketId + '/details',
                         method: 'GET',
                         success: function(ticket) {
-                            console.log(ticket);
+                            // console.log(ticket);
                             // Asignar los datos al modal
                             $('#modal-gestion-ticket').find('#ticket-id').val(ticket.id);            
                             $('#modal-gestion-ticket').find('#ticket-name-title').text(ticket.title);
