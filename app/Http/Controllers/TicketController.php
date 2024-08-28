@@ -349,6 +349,7 @@ class TicketController extends Controller
                 'typeColorback' => $typeColorback, // Include the color in the response
                 'area' => $ticket->area->name,
                 'status' => $ticket->status->name,
+                'gestionTime' => $gestionTime,
                 // 'created_at' => $ticket->created_at->diffForHumans(),
                 'actions' => view('Ticket.Partials.actions', ['ticket' => $ticket])->render()
             ];

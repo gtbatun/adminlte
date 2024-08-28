@@ -32,6 +32,7 @@
                     <table id="tickets-table" class="table table-striped table-bordered dt-responsive nowrap" style="width:98%">
                         <thead class="table-dark">
                             <tr class="text-center">
+                                <th>TIEMPO</th>
                                 <th>ID</th>
                                 <th>TICKET</th>
                                 <th>CATEGORIA</th>
@@ -131,6 +132,7 @@
                     }
                 },
                 columns: [
+                    { data: 'gestionTime', visible: false },
                     { data: 'id', render: function(data, type, row, meta) {
                         return row.status === 'Nuevo' ? 
                             '<span style="color:orange" class="pending-id">' + data + '</span>' : 
@@ -201,7 +203,7 @@
         function getReloadInterval() {
             var now = new Date();
             var hours = now.getHours();
-            return (hours >= 8 && hours < 18) ? 60000 : 1800000;
+            return (hours >= 8 && hours > 18) ? 30000 : 1800000;
             // return (hours >= 8 && hours < 17) ? 60000 : 1800000;
         } 
         // Función para verificar actualizaciones y reproducir sonido

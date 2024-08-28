@@ -10,7 +10,7 @@ use Illuminate\Support\Str;
 use App\Notifications\GestionNotification;
 use App\Models\Department;
 use App\Models\User;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Log; 
 
 class GestionController extends Controller
 {
@@ -83,7 +83,7 @@ class GestionController extends Controller
             $update_ticket = Ticket::find($request->ticket_id);
             $update_ticket->category_id = $request->category_id;
             $update_ticket->area_id = $request->area_id;
-            $update_ticket->last_updated_at = now();
+            // $update_ticket->last_updated_at = now();
            $update_ticket->update();
         }
         //  departamentos involucrados en el ticket ['producion','soporte']
