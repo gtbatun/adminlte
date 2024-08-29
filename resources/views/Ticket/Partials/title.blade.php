@@ -32,7 +32,7 @@
         <span class="direct-chat-name float-left">{{$ticket->usuario->name}}</span>
         <div class="form-group">   
             @if($notifications > 0)     
-        <span class="{{ $messageClass }} float-right"><i class="fas fa-comments"></i>{{$notifications}}</span>
+                <span class="{{ $messageClass }} float-right"><i class="fas fa-comments"></i>{{$notifications}}</span>
             @endif
         <!-- <span class="{{ $messageClass }} float-right">{{$messageStatus}}  <i class="fas fa-comments"></i>3</span> -->
         </div>

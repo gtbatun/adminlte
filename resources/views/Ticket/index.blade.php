@@ -91,7 +91,7 @@
         </div>
     </div>
 </div>
-@include('Ticket.modalgestion')
+@include('Gestion.modalgestion')
 @endsection
 
 @section('js')
@@ -99,7 +99,7 @@
     var table;  
 
     $(document).ready(function() {       
-        let audio = new Audio('/storage/images/user/notification-sound.mp3');
+        // let audio = new Audio('/storage/images/user/notification-sound.mp3');
 
         function loadTickets() {
             table = $('#tickets-table').DataTable({
@@ -203,7 +203,7 @@
         function getReloadInterval() {
             var now = new Date();
             var hours = now.getHours();
-            return (hours >= 8 && hours > 18) ? 30000 : 1800000;
+            return (hours >= 8 && hours < 18) ? 30000 : 1800000;
             // return (hours >= 8 && hours < 17) ? 60000 : 1800000;
         } 
         // Función para verificar actualizaciones y reproducir sonido
@@ -233,22 +233,22 @@
         setReloadInterval();  
         
         // Manejar la habilitación de notificaciones de sonido
-        if (localStorage.getItem('soundNotificationsEnabled') === 'true') {
-            $('#enable-sound-notifications').hide();
+        // if (localStorage.getItem('soundNotificationsEnabled') === 'true') {
+        //     $('#enable-sound-notifications').hide();
             // setInterval(checkForUpdates, 5000);
-        }
+        // }
 
-        $('#enable-sound-notifications').on('click', function() {
-            audio.play().then(() => {
-                audio.pause();
-                audio.currentTime = 0;
-                $('#enable-sound-notifications').hide();
-                localStorage.setItem('soundNotificationsEnabled', 'true');
-                // setInterval(checkForUpdates, 5000);
-            }).catch(function(error) {
-                console.error('Error al iniciar el audio:', error);
-            });
-        });      
+        // $('#enable-sound-notifications').on('click', function() {
+        //     audio.play().then(() => {
+        //         audio.pause();
+        //         audio.currentTime = 0;
+        //         $('#enable-sound-notifications').hide();
+        //         localStorage.setItem('soundNotificationsEnabled', 'true');
+        //         // setInterval(checkForUpdates, 5000);
+        //     }).catch(function(error) {
+        //         console.error('Error al iniciar el audio:', error);
+        //     });
+        // });      
 
         // $('#tickets-table').on('error.dt', function(e, settings, techNote, message) {
         //     console.log('DataTables error: ', message);

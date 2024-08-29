@@ -35,11 +35,11 @@
                             <form id="gestionform" method="POST" enctype="multipart/form-data">
                                 @csrf                        
                                 <input type="hidden" name="user_id" id="user_id" class="form-control" value="{{auth()->user()->id}}" >
-                                <input type="text"  class="form-control" id="ticket-id" name="ticket_id">
+                                <input type="hidden"  class="form-control" id="ticket-id" name="ticket_id">
                                 <div id="errorContainer" ></div>
                                 <div class="row"> 
                                     <!-- inicio seccion de area y categorias -->                                
-                                    <div class="col-xs-12 col-sm-12 col-md-4 mt-1 d-flex justify-content-end" > 
+                                    <div class="col-xs-12 col-sm-12 col-md-12 mb-2 d-flex justify-content-end" > 
                                         <div class="form-check" id="cerrar" style="display: none;">
                                             <input class="form-check-input" type="checkbox" value="1" name="cerrar" >
                                             <label class="form-check-label text-danger" for="status_id"><strong>Cerrar Ticket</strong></label>            
@@ -52,7 +52,7 @@
                                 </div> 
                                 <!-- fin de seccion de botones de cerrar y reabrir ticket -->
                                 <div class="input-group">
-                                    <textarea name="coment" placeholder="Type Message ..." class="form-control" id="messageInput" rows="1"></textarea>
+                                    <textarea name="coment" placeholder="Type Message ..." class="form-control" id="messageInput" rows="2"></textarea>
                                     <span class="input-group-append">
                                         <button type="button" class="btn btn-primary" id="sendMessageButton">Send</button>
                                         <button type="button" class="btn btn-secondary" id="addImageButton"><i class="fas fa-image"></i></button>
@@ -77,10 +77,30 @@ $(document).ready(function() {
     var userDepartmentId = @json(auth()->user()->department_id);
     var ticketId; 
 
+    var  TicketComments = {};
+
     // boton desde mi tabla y con datos necesarios a mostarar en el modal
     $(document).on('click','.notification-btn, .modal-gestion-btn',function(){
         ticketId = $(this).data('ticket-id');
         // console.log('iniciando: '+ticketId);
+
+        // Guardar el comentario actual si existe
+        var currentTicketId =$(this).find('#ticket-id').val();
+        var currentTicketComment = $(this).find('#messageInput').val();
+        if(currentTicketId) {
+            TicketComments[currentTicketId] = currentTicketComment;
+        }
+
+        
+
+        // Rellenar el comentario si existe para el dispositivo seleccionado
+        if (TicketComments[currentTicketId]) {
+            $(this).find('#messageInput').val(TicketComments[currentTicketId]);
+        }else{
+            $(this).find('#messageInput').val('');
+        }
+
+        
 
     if ($(this).hasClass('modal-gestion-btn')) {
         ticketId = $(this).data('ticket-id');
@@ -91,7 +111,9 @@ $(document).ready(function() {
 
         $('#modal-gestion-ticket').find('#ticket-id').val(ticketId);            
         $('#modal-gestion-ticket').find('#ticket-name-title').text(ticketTitle);
-        $('#modal-gestion-ticket').find('#ticket-description').text(ticketDescription);        
+        $('#modal-gestion-ticket').find('#ticket-description').text(ticketDescription);   
+        
+           
 
         handleTicketStatus(ticketStatus, ticketDepartmetId);
 
