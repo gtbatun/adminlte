@@ -22,34 +22,32 @@
 </style>
 <div class="direct-chat-msg" >    
     <div class="direct-chat-infos">
-    <a class="d-inline-block text-truncate" style="max-width: 300px; font-size: 1.2em;" href="{{ route('ticket.show', $ticket) }}" title="{{ $ticket->description }}">        
-         <span>{{ $ticket->title }}</span>
+    <a class="d-inline-block text-truncate notification-btn" data-ticket-id="{{ $ticket->id }}" 
+        data-ticket-title="{{ $ticket->title }}" data-ticket-description="{{ $ticket->description }}" 
+        style="max-width: 300px; font-size: 1.2em;" href="{{ route('ticket.show', $ticket) }}" 
+        title="{{ $ticket->description }}">        
+        <span>{{ $ticket->title }}</span>
     </a>
-    <span class="float-right">{{$gestionTime->diffForHumans()}}</span>
+    
+    
+        <!-- <div class="form-group">    -->
+        @if($notifications > 0)           
+        <span class="badge rounded-circle bg-danger  float-right"> {{$notifications}}</span>  
+        <i style="color: green; font-size: 20px;" class="fas fa-comments float-right">
+            <!-- <span class="badge rounded-circle bg-success position-relative "> {{$notifications}}</span> -->
+        </i>
+           <!-- <span type="button" class="btn btn-primary rounded-pill float-right"><i class="fas fa-comments"></i>
+                <span class="badge bg-secondary ">{{$notifications}}</span>
+        </span> -->
+        @endif
+        <!-- <span class="{{ $messageClass }} float-right">{{$messageStatus}}  <i class="fas fa-comments"></i>3</span> -->
+        <!-- </div> -->
        
     </div>
     <div class="direct-chat-infos">    
         <span class="direct-chat-name float-left">{{$ticket->usuario->name}}</span>
-        <div class="form-group">   
-            @if($notifications > 0)     
-                <span class="{{ $messageClass }} float-right"><i class="fas fa-comments"></i>{{$notifications}}</span>
-            @endif
-        <!-- <span class="{{ $messageClass }} float-right">{{$messageStatus}}  <i class="fas fa-comments"></i>3</span> -->
-        </div>
+        <span class="float-right">{{$gestionTime->diffForHumans()}}</span>        
     </div>
 </div>
 
 
-
-<!-- seccion copiada del cpanel -->
-<!-- <div style="max-height: 15px" class="pb-2">
-    <div class="d-flex w-100 justify-content-between">
-        <h5>{{ $ticket->usuario->name }}</h5>
-        <small class="text-success">{{ $ticket->updated_at->diffForHumans() }}</small>
-    </div>
-    <div class="text-truncate">
-        <a href="{{ route('ticket.show', $ticket) }}" title="{{ $ticket->title }}">
-            <p  style="max-width: 300px; max-height: 15px;">{{ $ticket->title }}</p>
-        </a>
-    </div>
-</div> -->

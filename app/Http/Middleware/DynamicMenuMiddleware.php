@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 class DynamicMenuMiddleware
 {
+    
     /**
      * Handle an incoming request.
      *

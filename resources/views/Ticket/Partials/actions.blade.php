@@ -1,7 +1,6 @@
 <div class="d-flex justify-content-center  align-items-center">
-    <a href="{{ route('ticket.show', $ticket) }}" title="Gestionar" class="btn btn-success mr-2"> Ver <i class='fas fa-eye'></i></a>
-    <button type="button" class="btn btn-secondary modal-gestion-btn mr-2" data-toggle="modalgestion" 
-    data-target="#modal-gestion-ticket" 
+    <!-- <a href="{{ route('ticket.show', $ticket) }}" title="Gestionar" class="btn btn-success modal-gestion-btn mr-2"> Ver <i class='fas fa-eye'></i></a> -->
+    <button type="button" class="btn btn-success modal-gestion-btn mr-2"
     data-ticket-id="{{ $ticket->id }}" 
     data-ticket-title="{{ $ticket->title }}" 
     data-ticket-description="{{ $ticket->description }}" 

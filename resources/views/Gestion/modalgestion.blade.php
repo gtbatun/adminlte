@@ -77,28 +77,28 @@ $(document).ready(function() {
     var userDepartmentId = @json(auth()->user()->department_id);
     var ticketId; 
 
-    var  TicketComments = {};
+    // var  TicketComments = {};
 
     // boton desde mi tabla y con datos necesarios a mostarar en el modal
     $(document).on('click','.notification-btn, .modal-gestion-btn',function(){
         ticketId = $(this).data('ticket-id');
-        // console.log('iniciando: '+ticketId);
+        console.log('iniciando: '+ticketId);
 
         // Guardar el comentario actual si existe
-        var currentTicketId =$(this).find('#ticket-id').val();
-        var currentTicketComment = $(this).find('#messageInput').val();
-        if(currentTicketId) {
-            TicketComments[currentTicketId] = currentTicketComment;
-        }
+        // var currentTicketId =$(this).find('#ticket-id').val();
+        // var currentTicketComment = $(this).find('#messageInput').val();
+        // if(currentTicketId) {
+        //     TicketComments[currentTicketId] = currentTicketComment;
+        // }
 
         
 
         // Rellenar el comentario si existe para el dispositivo seleccionado
-        if (TicketComments[currentTicketId]) {
-            $(this).find('#messageInput').val(TicketComments[currentTicketId]);
-        }else{
-            $(this).find('#messageInput').val('');
-        }
+        // if (TicketComments[currentTicketId]) {
+        //     $(this).find('#messageInput').val(TicketComments[currentTicketId]);
+        // }else{
+        //     $(this).find('#messageInput').val('');
+        // }
 
         
 
@@ -112,10 +112,28 @@ $(document).ready(function() {
         $('#modal-gestion-ticket').find('#ticket-id').val(ticketId);            
         $('#modal-gestion-ticket').find('#ticket-name-title').text(ticketTitle);
         $('#modal-gestion-ticket').find('#ticket-description').text(ticketDescription);   
-        
+        $('#messageInput').val('');
            
 
         handleTicketStatus(ticketStatus, ticketDepartmetId);
+        // 
+        $.ajax({
+            url: "{{ route('notifications.markAsRead') }}",
+                method: 'POST',
+                data: {
+                    ticket_id: ticketId,
+                    _token: '{{ csrf_token() }}' // Asegúrate de incluir el token CSRF
+                },
+                success: function(response) {
+                    /// talvez agregar que recargue la pagina o algo chido
+                    $('#modal-gestion-ticket').modal('show');
+                    $('#tickets-table').DataTable().ajax.reload();
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error marking notifications as read:', error);
+                }
+            });
+            // 
 
     } else if ($(this).hasClass('notification-btn')) {
         // ticketId = $(this).data('ticket-id');
@@ -133,26 +151,27 @@ $(document).ready(function() {
                     
                     // Obtener los detalles del ticket si es necesario
                     /**** */
-                    $.ajax({
-                        url: '/tickets/' + ticketId + '/details',
-                        method: 'GET',
-                        success: function(ticket) {
-                            // console.log(ticket);
-                            // Asignar los datos al modal
-                            $('#modal-gestion-ticket').find('#ticket-id').val(ticket.id);            
-                            $('#modal-gestion-ticket').find('#ticket-name-title').text(ticket.title);
-                            $('#modal-gestion-ticket').find('#ticket-description').text(ticket.description);
-                            handleTicketStatus(ticket.status_id, ticket.department_id);
-                            // Mostrar el modal
-                            $('#modal-gestion-ticket').modal('show');
-                            updateNotificationCount();
-                        },
-                        error: function(xhr, status, error) {
-                            console.error('Error fetching ticket details:', error);
-                        }
-                    });
+                    // $.ajax({
+                    //     url: '/tickets/' + ticketId + '/details',
+                    //     method: 'GET',
+                    //     success: function(ticket) {
+                    //         // console.log(ticket);
+                    //         // Asignar los datos al modal
+                    //         $('#modal-gestion-ticket').find('#ticket-id').val(ticket.id);            
+                    //         $('#modal-gestion-ticket').find('#ticket-name-title').text(ticket.title);
+                    //         $('#modal-gestion-ticket').find('#ticket-description').text(ticket.description);
+                    //         handleTicketStatus(ticket.status_id, ticket.department_id);
+                    //         // Mostrar el modal
+                    //         $('#modal-gestion-ticket').modal('show');
+                    //         updateNotificationCount();
+                    //     },
+                    //     error: function(xhr, status, error) {
+                    //         console.error('Error fetching ticket details:', error);
+                    //     }
+                    // });
 
                     /*** */
+                    // $('#modal-gestion-ticket').modal('show');
 
                 },
                 error: function(xhr, status, error) {
@@ -164,7 +183,7 @@ $(document).ready(function() {
     }
 
         // loadGestiones();
-        $('#modal-gestion-ticket').modal('show');
+        // $('#modal-gestion-ticket').modal('show');
 
         $(document).ready(function() {
             loadGestiones();             
@@ -394,10 +413,10 @@ $(document).ready(function() {
         return format.replace(/hh|mm|ss|yyyy|MM|dd/g, matched => map[matched]);
     }
 
-    /** */ 
+    /** Muestra la contidad de notificaciones sin leer dentro del ticket */ 
     function updateNotificationCount() {
         $.ajax({
-            url: '{{ route("notifications.count") }}',
+            url: '{{ route("notifications.count") }}', //------------------------
             method: 'GET',
             success: function(response) {
                 $('#contadorNotificacion').text(response.unread_notifications_count);
