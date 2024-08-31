@@ -40,5 +40,11 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('sup-access', function ($user) {
             return $user->is_admin == 5;
         });
+
+        Gate::define('access-inventory', function ($user) {
+            return $user->is_admin == 10 || $user->is_admin == 5;
+        });
+
+
     }
 }

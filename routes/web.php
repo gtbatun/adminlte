@@ -67,8 +67,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
         
         //Ruta para el reset de contraseña de los usuarios
         Route::post('/user/update/password', [UserController::class, 'updatePassword'])->name('user.update.password');
-        //Ruta para crear vista index de reporte de tickets 
-        Route::get('/reportes', [ReportController::class,'index'])->name('report.index');
+        
         //Genera la previsualizacion de tickets a exportar segun las fechas 
         Route::post('/reportes/generar', [ReportController::class,'generar'])->name('reportes.generar');
         // Route::get('/report/search', [ReportController::class, 'search2'])->name('report.search'); ///**** */
@@ -81,6 +80,9 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
         
         });
 
+        //Ruta para crear vista index de reporte de tickets 
+        Route::get('/reportes', [ReportController::class,'index'])->name('report.index');
+        
 // ruta agregad para visualizar las imagenes sin el link en cpanel
 Route::get('storage/{archivo}', function ($archivo) {
     $rutaArchivo = storage_path('app/public/' . $archivo);
@@ -96,8 +98,10 @@ Route::get('storage/{archivo}', function ($archivo) {
 Route::resource('user', UserController::class);
 Route::resource('gestion',GestionController::class);
 Route::resource('ticket',TicketController::class);
-Route::resource('inventory',InventoryController::class);
 Route::resource('device',DeviceController::class);
+Route::resource('inventory',InventoryController::class)->middleware('can:access-inventory');
+
+
 
 Route::get('/tickets/data', [TicketController::class, 'data'])->name('tickets.data');
 /** Consultar las gestiones de cada ticket */
