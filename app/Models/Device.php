@@ -19,7 +19,8 @@ class Device extends Model
         'description',
         'sucursal_id',
         'department_id',
-        'statusdevice_id'];
+        'statusdevice_id',
+        'qr_code'];
     
     public function marca()
     {

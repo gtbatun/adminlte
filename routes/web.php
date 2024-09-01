@@ -210,8 +210,8 @@ Route::get('/device/{deviceId}/tasks-and-assignments', [ManttoController::class,
 Route::get('/tickets/{id}/details', [TicketController::class, 'getDetails'])->name('tickets.details');
 Route::get('/notifications/count', [NotificationController::class, 'getUnreadNotificationsCount'])->name('notifications.count');
 
-
-
+// ruta para generar los codigos de barra de los equipos ya dados de alta
+Route::get('/generate-qrcodes', [DeviceController::class, 'generateQRCodes']);
 
 
 });

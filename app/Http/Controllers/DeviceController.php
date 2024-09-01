@@ -9,8 +9,44 @@ use App\Models\Devicedetail;
 use App\Models\Inventory;
 use App\Models\User;
 
+/** para generar los codigos qr*/
+use Endroid\QrCode\Builder\Builder;
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Writer\PngWriter;
+
 class DeviceController extends Controller
 {
+    public function generateQRCodes()
+    {
+        // Obtener todos los dispositivos sin código QR
+        $devices = Device::whereNull('qr_code')->get();
+
+        foreach ($devices as $device) {
+            // Generar el código QR basado en la URL del equipo
+            // $qrCode = Builder::create()
+            //     ->data(route('devices.show', $device->id))
+            //     ->size(300)
+            //     ->margin(10)
+            //     ->build();
+
+            // Convertir el código QR a Base64
+            // $qrCodeBase64 = base64_encode($qrCode->getString());
+
+            // Guardar el código QR en la base de datos
+            // $device->qr_code_base64 = $qrCodeBase64;
+            // Generar el código QR
+            $qrCode = new QrCode($device->name);
+            $qrCode->setSize(200);
+            $writer = new PngWriter();
+            $result = $writer->write($qrCode);
+
+            // Codificar la imagen QR en Base64
+            $device->qr_code = base64_encode($result->getString());
+            $device->save();
+        }
+
+        return redirect()->back()->with('success', 'Códigos QR generados exitosamente.');
+    }
     public function getDeviceData()
     {
         $tipo_equipo = Devicedetail::where('type_device', 1)->pluck('name', 'id');
@@ -115,6 +151,27 @@ class DeviceController extends Controller
             $user = User::find($request->user_id);
             $device->department_id = $user->department_id;   
         }
+
+        // Generar el código QR como Base64
+            // $qrCode = Builder::create()
+            // ->data(route('device.show', $device->id)) // URL para buscar el equipo
+            // ->size(300)
+            // ->margin(10)
+            // ->build();
+
+        // Generar el código QR
+        $qrCode = new QrCode($request->name);
+        $qrCode->setSize(200);
+        $writer = new PngWriter();
+        $result = $writer->write($qrCode);
+
+        // Codificar la imagen QR en Base64
+        $device->qr_code = base64_encode($result->getString());
+
+        //generar el codigo-qr
+        // $qrCodeBase64 = base64_encode($qrCode->getString());
+        // $device->qr_code = $qrCodeBase64;
+
         $device->save();
         // Ahora puedes obtener el ID del dispositivo recién creado
         $deviceId = $device->id;

@@ -26,6 +26,7 @@
                                 <thead  class="table-dark ">
                                     <tr>
                                         <th>ID</th>
+                                        <th>QRCODE</th>
                                         <th>TIPO</th>
                                         <th>NOMBRE</th>
                                         <th>DEPARTAMENTO</th>
@@ -96,6 +97,12 @@ $(document).ready(function() {
         },
         columns: [
             { data: 'id' },
+            { data: 'qr_code',
+                render: function(data, type, row) {
+                // Retornar la imagen usando la cadena Base64
+                return '<img src="data:image/png;base64,' + data + '" alt=" QR Code" style="width: 100px; height: 100px;">';
+            }
+            },
             { data: 'tipodevice.name' },
             { data: 'name'}, // Asumiendo que type es una relación
             { data: 'departamento.name' ,
