@@ -68,12 +68,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
         //Ruta para el reset de contraseña de los usuarios
         Route::post('/user/update/password', [UserController::class, 'updatePassword'])->name('user.update.password');
         
-        //Genera la previsualizacion de tickets a exportar segun las fechas 
-        Route::post('/reportes/generar', [ReportController::class,'generar'])->name('reportes.generar');
-        // Route::get('/report/search', [ReportController::class, 'search2'])->name('report.search'); ///**** */
-        //Exporta a un documento excel los tickets seleccionados
-        Route::get('report-export/{fechaInicio}/{fechaFin}', [ReportController::class, 'reportexport'])->name('report-export');
-        // Route::get('reporte-excel/{start_date}/{end_date}', [ReportController::class, 'reportexcel'])->name('reporte.excel');
+
         Route::get('setting', [SettingController::class,'index'])->name('setting.index');
         /**seccion para autorizar la verificacion de correo */
         Route::get('/admin/verify-email/{userId}', [UserController::class, 'verifyUserEmail'])->name('admin.verify-email');
@@ -81,7 +76,13 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
         });
 
         //Ruta para crear vista index de reporte de tickets 
-        Route::get('/reportes', [ReportController::class,'index'])->name('report.index');
+        Route::get('/reportes', [ReportController::class,'index'])->name('report.index')->middleware('can:access-report');
+        //Genera la previsualizacion de tickets a exportar segun las fechas 
+        Route::post('/reportes/generar', [ReportController::class,'generar'])->name('reportes.generar');
+        // Route::get('/report/search', [ReportController::class, 'search2'])->name('report.search'); ///**** */
+        //Exporta a un documento excel los tickets seleccionados
+        Route::get('report-export/{fechaInicio}/{fechaFin}', [ReportController::class, 'reportexport'])->name('report-export');
+        // Route::get('reporte-excel/{start_date}/{end_date}', [ReportController::class, 'reportexcel'])->name('reporte.excel');
         
 // ruta agregad para visualizar las imagenes sin el link en cpanel
 Route::get('storage/{archivo}', function ($archivo) {

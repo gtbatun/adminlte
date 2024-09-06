@@ -45,6 +45,10 @@ class AuthServiceProvider extends ServiceProvider
             return $user->is_admin == 10 || $user->is_admin == 5;
         });
 
+        Gate::define('access-report', function ($user) {
+            return $user->is_admin == 10 || $user->is_admin == 5;
+        });
+
 
     }
 }

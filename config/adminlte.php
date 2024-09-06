@@ -364,24 +364,24 @@ return [
             'text'    => 'Inventario',
             'url'     => 'Inventario',            
             'icon'   => 'fas fa-server',
-            'can' => ['admin-access','sup-access'], 
+            'can' => 'access-inventory', 
             'submenu' => [
                 [
                     'text' => 'Equipos',
                     'route'  => 'device.index',
-                    'can' => ['admin-access','sup-access'],
+                    'can' => 'access-inventory',
                     'icon'   => 'fas fa-desktop',
                 ],
                 [
                     'text' => ' Asignar',
                     'route'  => 'inventory.create',
-                    'can' => ['admin-access','sup-access'],
+                    'can' => 'access-inventory',
                     'icon'   => 'fas fa-laptop',
                     'icon_color' => 'green',
                 ],                
                 [
                     'text' => ' Asignados',
-                    'can' => ['admin-access','sup-access'],
+                    'can' => 'access-inventory',
                     'route'  => 'inventory.index',
                     'icon' => 'fas fa-laptop',
                     'icon_color' => 'red',
@@ -414,7 +414,7 @@ return [
         [
             'text'   => ' Reportes',
             'route'  => 'report.index',
-            'can' => ['admin-access','sup-access'],
+            'can' => 'access-report',
             'icon'   => 'far fa-file' 
         ],
         // [
