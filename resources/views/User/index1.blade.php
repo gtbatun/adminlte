@@ -2,6 +2,9 @@
 @section('content')
 <script src="{{asset('assets/js/plugins/jquery.min.js')}}"></script>
 <script src="{{asset('assets/js/core/bootstrap.bundle.min.js')}}"></script>
+
+
+
 <div>    
     @if(Session::get('success'))
         <div class="alert alert-success mt-2">
@@ -13,7 +16,6 @@
     <a href="{{route('user.create')}}" type="button" class="btn btn-primary p-2 ">Nuevo Usuario</a>
     </div>    
     @isset($users)  
-
     <div class="container-fluid">
             <div class="col-12 mt-1">
                 <div class="card fluid">
@@ -22,60 +24,52 @@
                         <table id="tb-users" class="table table-bordered dt-responsive mt-2 table-striped  ">
                             <thead  class="table-dark ">
                                 <tr>
-                                    <th class="d-none d-sm-table-cell">ID</th>
+                                    <th>ID</th>
                                     <th>NOMBRE</th>
-                                    <th class="d-none d-xl-table-cell">EMAIL</th>
+                                    <th class="d-none d-md-table-cell">EMAIL</th>
                                     <th class="d-none d-md-table-cell">SUCURSAL</th>
-                                    <th class="d-none d-lg-table-cell">VERIFICADO</th>
-                                    <th class="d-none d-lg-table-cell">DEPARTAMENTO</th>
+                                    <th class="d-none d-md-table-cell">VERIFICADO</th>
+                                    <th class="d-none d-md-table-cell">DEPARTAMENTO</th>
                                     <th>ACCION</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($users as $userItem)
-                                <tr>
+                                @foreach($users as $userItem)                    
+                                <!-- <tr data-bs-toggle="collapse" data-bs-target="#details{{ $userItem->id }}" aria-expanded="false" aria-controls="details{{ $userItem->id }}"> -->
                                 <tr class="clickable-row" data-bs-toggle="collapse" data-bs-target="#details{{ $userItem->id }}" aria-expanded="false" aria-controls="details{{ $userItem->id }}">
-                                    <td class="d-none d-sm-table-cell">{{$userItem->id}}</td>  
+                                    <td>{{$userItem->id}}</td>  
                                     <td>{{$userItem->name}}</td>
-                                    <td class="d-none d-xl-table-cell">{{$userItem->email}}</td>
+                                    <td class="d-none d-md-table-cell">{{$userItem->email}}</td>
                                     <td class="d-none d-md-table-cell">
-                                    @if (is_null($userItem->sucursal_id))  Sin sucursal @else {{$userItem->sucursal->name}} @endif
+                                    @if (is_null($userItem->sucursal_id))                                        
+                                            Sin sucursal
+                                        @else
+                                            {{$userItem->sucursal->name}}
+                                        @endif
                                     </td>
-                                    <td class="d-none d-lg-table-cell">
+                                    <td class="d-none d-md-table-cell">
                                         @if (is_null($userItem->email_verified_at))
                                             <a href="{{ route('admin.verify-email', $userItem->id) }}" class="btn btn-primary">Verificar</a>
-                                        @else  Verificado @endif
+                                        @else
+                                            Verificado
+                                        @endif
                                     </td>
-                                    <td class="d-none d-lg-table-cell">
+                                    <td class="d-none d-md-table-cell">
                                         @if(isset($userItem->department->name))
                                             {{$userItem->department->name }}                   
                                         @else
                                             Sin Departamento
                                         @endif 
                                     </td>
-                                    <td >
-                                    <div class="btn-group justify-content-center">
-                                        <a href="{{route('user.edit',$userItem)}}" class="btn btn-info d-none d-sm-table-cell m-1"><i class='fas fa-edit'></i></a>
-                                        <button type="button" class="btn btn-warning edit-password-btn d-none d-sm-table-cell m-1" data-toggle="modal" data-target="#modal-update-password" data-user-id="{{ $userItem->id }}" data-user-name="{{ $userItem->name }}"><i class='fas fa-key'></i></button> 
+                                    <td>
+                                    <a href="{{route('user.edit',$userItem)}}" class="btn btn-info">Ed <i class='fas fa-edit'></i></a>
+                                    <button type="button" class="btn btn-warning edit-password-btn " data-toggle="modal" data-target="#modal-update-password" data-user-id="{{ $userItem->id }}" data-user-name="{{ $userItem->name }}">Pass</button>            
                                         <form action="{{route('user.destroy',$userItem)}}" method="post" class="d-inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger d-none d-sm-table-cell m-1"><i class='fas fa-times'></i></button>
-                                            </form>
-                                        <button type="submit" class="btn btn-danger d-block d-sm-none m-1 clickable-row"><i class='fas fa-plus'></i></button>   
-                                    </div>                                    
-                                    </td>
-                                </tr>
-                                <tr class="collapse" id="details{{ $userItem->id }}">
-                                    <td colspan="4">
-                                        <div>
-                                            <strong>Correo electrónico:</strong> {{ $userItem->email }}<br>
-                                            <strong>Restricciones:</strong> {{ $userItem->restrictions }}<br>
-                                            <strong>Storage Used:</strong> {{ $userItem->storage_used }}<br>
-                                            <button class="btn btn-primary btn-sm mt-2">Check Email</button>
-                                            <button class="btn btn-info btn-sm mt-2">Connect Devices</button>
-                                            <button class="btn btn-danger btn-sm mt-2">Eliminar</button>
-                                        </div>
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger ">Dell <i class='fas fa-eraser'></i></button>
+                                        </form>
+                                       
                                     </td>
                                 </tr>
                                 @endforeach
@@ -118,7 +112,21 @@
 </div>
 @endsection
 @section('js')
-<script>    
+<!--  -->
+<script>
+    $(document).ready(function() {
+        $('.edit-password-btn').click(function() {
+            var userId = $(this).data('user-id');
+            var userName = $(this).data('user-name');
+            $('#modal-update-password').find('#user-id').val(userId);
+
+            $('#modal-update-password').find('#user-name-title').text(userName);
+
+        });
+     });
+</script>
+<script>
+    
 $(document).ready(function() {
     $('#tb-users').DataTable({
         "order": [[ 0,"desc" ]],
@@ -144,32 +152,6 @@ $(document).ready(function() {
             //     { "width": "20%", "targets": 2 },
             //     { "width": "5%", "targets": 3 }]
     } );
-
-    $('.edit-password-btn').click(function() {
-        var userId = $(this).data('user-id');
-        var userName = $(this).data('user-name');
-        $('#modal-update-password').find('#user-id').val(userId);
-
-        $('#modal-update-password').find('#user-name-title').text(userName);
-
-    });
-    // -----------------------------
-    function handleRowClick() {
-            if (window.innerWidth < 768) {
-                $('.clickable-row').off('click'); // Deshabilitar clic en pantallas pequeñas
-                $('.show-details-btn').on('click', function() {
-                    var target = $(this).data('bs-target');
-                    $(target).collapse('toggle');
-                });
-            } else {
-                $('.show-details-btn').off('click'); // Deshabilitar clic en pantallas grandes
-                $('.collapse').collapse('hide');
-            }
-        }
-
-        handleRowClick();
-        $(window).on('resize', handleRowClick);
-
 } );
 </script>
 @endsection
