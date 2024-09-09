@@ -3,6 +3,11 @@
 
 <script src="{{asset('assets/js/plugins/jquery-3.7.1.min.js')}}"></script>
 <script src="{{asset('assets/js/plugins/toastr.min.js')}}"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+<script src="{{asset('assets/js/datatables.min.js')}}"></script>
+<link rel="stylesheet" href="{{asset('assets/css/datatables.min.css')}}">
+
 
 <a class="btn btn-primary" href="{{ route('ticket.create') }}">Crear Ticket <i class='far fa-file'></i></a>  
 
@@ -29,9 +34,9 @@
         <div class="card fluid">   
             <div class="card-body">  
                 <div class="table-responsive">
-                    <table id="tickets-table" class="table table-striped table-bordered dt-responsive nowrap" style="width:98%">
+                    <table id="tickets-table" class="table table-striped nowrap table-bordered">
                         <thead class="table-dark">
-                            <tr class="text-center">
+                            <tr>
                                 <th>TIEMPO</th>
                                 <th>ID</th>
                                 <th>TICKET</th>
@@ -102,7 +107,8 @@
         // let audio = new Audio('/storage/images/user/notification-sound.mp3');
 
         function loadTickets() {
-            table = $('#tickets-table').DataTable({
+            //table = $('#tickets-table').DataTable({
+            table = new DataTable('#tickets-table',{
                 "order": [[0, "desc"]],
                 "language": {
                     "search": "Buscar",
@@ -133,11 +139,7 @@
                 },
                 columns: [
                     { data: 'gestionTime', visible: false },
-                    { data: 'id', render: function(data, type, row, meta) {
-                        return row.status === 'Nuevo' ? 
-                            '<span style="color:orange" class="pending-id">' + data + '</span>' : 
-                            '<span style="color:green" class="default-id">' + data + '</span>';
-                    }},
+                    { data: 'id'},
                     { data: 'title' },
                     { data: 'category' },
                     { data: 'type' },

@@ -14,6 +14,13 @@ use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
 
+
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\ErrorCorrectionLevel;
+use Endroid\QrCode\Label\LabelAlignment;
+use Endroid\QrCode\Label\Font\NotoSans;
+use Endroid\QrCode\RoundBlockSizeMode;
+
 class DeviceController extends Controller
 {
     public function generateQRCodes()
@@ -123,6 +130,62 @@ class DeviceController extends Controller
     public function store(Request $request)
     {
          // Validar los datos
+         $validatedData = $request->validate([
+            'name' => 'required',
+            'tipo_equipo_id' => 'required',
+            'marca_id' => 'required',
+            'almacenamiento_id' => 'required',
+            'procesador_id' => 'required',
+            'statusdevice_id' => 'required',
+            'sucursal_id' => 'required',
+            // Agrega más validaciones según sea necesario
+        ]);        
+
+        // Crear el nuevo dispositivo
+        $device = new Device($validatedData);  // Asignar datos directamente desde el arreglo validado
+        $device->serie = $request->serie;
+        $device->description = $request->description;
+
+        // Guarda más campos según sea necesario
+        if(isset($request->user_id)){
+            $device->user_id = $request->user_id;
+            $user = User::find($request->user_id);
+            $device->department_id = $user->department_id;   
+        }
+        $device->save();
+
+        // Ahora puedes obtener el ID del dispositivo recién creado
+        $deviceId = $device->id;
+
+        $qrCode = new QrCode($deviceId);        
+        $qrCode->setSize(200);
+        $writer = new PngWriter();
+        $result = $writer->write($qrCode);
+
+        // Codificar la imagen QR en Base64 y actualizar el dispositivo con el código QR
+        $device->qr_code = base64_encode($result->getString());
+
+        $device->save();  // Guardar el dispositivo nuevamente con el código QR
+
+
+        if(isset($request->user_id)){
+            $inventory = new Inventory();
+            $inventory->device_id = $deviceId; // Aquí obtienes el ID del dispositivo recién creado
+            $inventory->user_id = $request->user_id;
+            $inventory->coment = $request->coment;
+            $inventory->tipo = 'entrega';
+            $inventory->enable = 1;
+            $inventory->save();
+        }
+
+        // Retornar una respuesta JSON
+        return response()->json(['success' => true, 'message' => 'Dispositivo creado correctamente']);
+
+    }
+
+    public function store2(Request $request)
+    {
+         // Validar los datos
          $request->validate([
             'name' => 'required',
             'tipo_equipo_id' => 'required',
@@ -160,7 +223,10 @@ class DeviceController extends Controller
             // ->build();
 
         // Generar el código QR
+        // $qrCode = new QrCode($request->name);
         $qrCode = new QrCode($request->name);
+        // $qrCode = new QrCode($device->id);
+        
         $qrCode->setSize(200);
         $writer = new PngWriter();
         $result = $writer->write($qrCode);
