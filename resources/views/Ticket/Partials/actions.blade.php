@@ -3,7 +3,8 @@
     <button type="button" class="btn btn-success modal-gestion-btn mr-2"
     data-ticket-id="{{ $ticket->id }}" 
     data-ticket-title="{{ $ticket->title }}" 
-    data-ticket-description="{{ $ticket->description }}" 
+    data-ticket-description="{{ $ticket->description }}"
+    data-notifications="{{ $notifications}}"
     >Gestion</button>
     @if($ticket->department_id == auth()->user()->department_id || in_array(auth()->user()->is_admin,['10','5']))  
     <button type="button" class="btn btn-secondary modal-reasig-btn mr-2" data-toggle="modalreasig" data-target="#modal-reasig-ticket" 

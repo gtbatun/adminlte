@@ -82,7 +82,24 @@ $(document).ready(function() {
     // boton desde mi tabla y con datos necesarios a mostarar en el modal
     $(document).on('click','.notification-btn, .modal-gestion-btn',function(){
         ticketId = $(this).data('ticket-id');
-        // console.log('iniciando: '+ticketId);
+        console.log('iniciando: '+ticketId);
+
+        // Guardar el comentario actual si existe
+        // var currentTicketId =$(this).find('#ticket-id').val();
+        // var currentTicketComment = $(this).find('#messageInput').val();
+        // if(currentTicketId) {
+        //     TicketComments[currentTicketId] = currentTicketComment;
+        // }
+
+        
+
+        // Rellenar el comentario si existe para el dispositivo seleccionado
+        // if (TicketComments[currentTicketId]) {
+        //     $(this).find('#messageInput').val(TicketComments[currentTicketId]);
+        // }else{
+        //     $(this).find('#messageInput').val('');
+        // }
+
         
 
     if ($(this).hasClass('modal-gestion-btn')) {
@@ -91,36 +108,36 @@ $(document).ready(function() {
         var ticketDescription = $(this).data('ticket-description');
         var ticketStatus = $(this).data('ticket-status');
         var ticketDepartmetId = $(this).data('ticket-department-id');
-        var notifications = $(this).data('notifications');
-        console.log('hjhjhj'.notifications);
 
         $('#modal-gestion-ticket').find('#ticket-id').val(ticketId);            
         $('#modal-gestion-ticket').find('#ticket-name-title').text(ticketTitle);
         $('#modal-gestion-ticket').find('#ticket-description').text(ticketDescription);   
         $('#messageInput').val('');
-           
+           console.log(ticketId);
 
         handleTicketStatus(ticketStatus, ticketDepartmetId);
         // 
-        if(notifications > 0){
         $.ajax({
             url: "{{ route('notifications.markAsRead') }}",
                 method: 'POST',
                 data: {
                     ticket_id: ticketId,
-                     _token: '{{ csrf_token() }}' // Asegúrate de incluir el token CSRF
+                    _token: '{{ csrf_token() }}' // Asegúrate de incluir el token CSRF
+                },
+                success: function(response) {
+                    /// talvez agregar que recargue la pagina o algo chido
+                    $('#modal-gestion-ticket').modal('show');
+                    $('#tickets-table').DataTable().ajax.reload();
                 },
                 error: function(xhr, status, error) {
                     console.error('Error marking notifications as read:', error);
                 }
             });
             // 
-        }
-            $('#modal-gestion-ticket').modal('show');
 
     } else if ($(this).hasClass('notification-btn')) {
         // ticketId = $(this).data('ticket-id');
-        // console.log('dentro del else: '+ticketId);
+        console.log('dentro del else: '+ticketId);
         
 
             $.ajax({
@@ -130,6 +147,33 @@ $(document).ready(function() {
                     ticket_id: ticketId,
                     _token: '{{ csrf_token() }}' // Asegúrate de incluir el token CSRF
                 },
+                success: function(response) {
+                    
+                    // Obtener los detalles del ticket si es necesario
+                    /**** */
+                    // $.ajax({
+                    //     url: '/tickets/' + ticketId + '/details',
+                    //     method: 'GET',
+                    //     success: function(ticket) {
+                    //         // console.log(ticket);
+                    //         // Asignar los datos al modal
+                    //         $('#modal-gestion-ticket').find('#ticket-id').val(ticket.id);            
+                    //         $('#modal-gestion-ticket').find('#ticket-name-title').text(ticket.title);
+                    //         $('#modal-gestion-ticket').find('#ticket-description').text(ticket.description);
+                    //         handleTicketStatus(ticket.status_id, ticket.department_id);
+                    //         // Mostrar el modal
+                    //         $('#modal-gestion-ticket').modal('show');
+                    //         updateNotificationCount();
+                    //     },
+                    //     error: function(xhr, status, error) {
+                    //         console.error('Error fetching ticket details:', error);
+                    //     }
+                    // });
+
+                    /*** */
+                    // $('#modal-gestion-ticket').modal('show');
+
+                },
                 error: function(xhr, status, error) {
                     console.error('Error marking notifications as read:', error);
                 }
@@ -138,7 +182,8 @@ $(document).ready(function() {
         
     }
 
-
+        // loadGestiones();
+        // $('#modal-gestion-ticket').modal('show');
 
         $(document).ready(function() {
             loadGestiones();             
@@ -302,8 +347,7 @@ $(document).ready(function() {
                 $('#fileInput').val('');
                 $('#imagePreviewContainer').empty();
                 // Refrescar la tabla de equipos después de guardar    
-                // $('#tickets-table').DataTable().ajax.reload(); // comentar esta seccion y verificar que es lo que esta pasando
-                // table.reload();                 
+                $('#tickets-table').DataTable().ajax.reload();                
             },
             error: function(xhr, status, error) {
                 console.error('Error sending message:', error);

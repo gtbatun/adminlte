@@ -64,13 +64,32 @@ class GestionController extends Controller
              $add_gestion->image = $concatenatedNamesPas;
          }
         
-        if(!isset($request->cerrar) && !isset($request->reopen)){
-            $add_gestion->status_id = 2; // 2 es el id del status en proceso
-        }elseif(isset($request->cerrar)){
-            $add_gestion->status_id = 4; //4 es el id del status Finalizado
-        }elseif(isset($request->reopen)){
-            $add_gestion->status_id = 5; //4 es el id del status Finalizado
-        } 
+        // if(!isset($request->cerrar) && !isset($request->reopen)){
+        //      $add_gestion->status_id = 2; // 2 es el id del status en proceso
+        //     /** Agregar una validacion extra en la seccion de tickets cerrados, para no abrir de nuevo el ticket */
+        // }elseif(isset($request->cerrar)){
+        //     $add_gestion->status_id = 4; //4 es el id del status Finalizado
+        // }elseif(isset($request->reopen)){
+        //     $add_gestion->status_id = 5; //4 es el id del status Finalizado
+        // } 
+
+       
+            //si el estatus es nuevo, aasignar un estatus
+            if(!isset($request->cerrar) && !isset($request->reopen)){
+                if($request->status_id != 4 ){
+                    $add_gestion->status_id = 2; // 2 es el id del status en proceso
+                }
+            }elseif(isset($request->cerrar)){
+                $add_gestion->status_id = 4; //4 es el id del status Finalizado
+            }elseif(isset($request->reopen)){
+                $add_gestion->status_id = 5; //4 es el id del status Finalizado
+            } 
+
+        
+
+
+
+
         $add_gestion->save();
 
         if (isset($add_gestion->status_id)) {
@@ -79,7 +98,8 @@ class GestionController extends Controller
             // $update_ticket->last_updated_at = now();
            $update_ticket->update();
         }
-        if (isset($add_gestion->category_id)) {
+        /** Revisar el cambio de categoria y area de los tickets */
+        if (isset($request->category_id)) {
             $update_ticket = Ticket::find($request->ticket_id);
             $update_ticket->category_id = $request->category_id;
             $update_ticket->area_id = $request->area_id;

@@ -121,6 +121,7 @@
                         @csrf
                         <input type="hidden" name="ticket_id" class="form-control" value="{{$ticket->id}}" >
                         <input type="hidden" name="user_id" class="form-control" value="{{auth()->user()->id}}" >
+                        <input type="hidden" name="status_id" class="form-control" value="{{$ticket->status_id}}" >
                     <div id="errorContainer" ></div>
                     <div class="row">                    
                         <!-- inicio seccion de area y categorias -->

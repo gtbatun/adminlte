@@ -350,8 +350,9 @@ class TicketController extends Controller
                 'area' => $ticket->area->name,
                 'status' => $ticket->status->name,
                 'gestionTime' => $gestionTime,
+                // 'unreadNotificationCount' => $unreadNotificationCount,
                 // 'created_at' => $ticket->created_at->diffForHumans(),
-                'actions' => view('Ticket.Partials.actions', ['ticket' => $ticket])->render()
+                'actions' => view('Ticket.Partials.actions', ['ticket' => $ticket,'notifications' => $unreadNotificationCount])->render()
             ];
             // return $messageStatus;
             

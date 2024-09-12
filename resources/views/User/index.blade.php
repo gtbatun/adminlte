@@ -13,11 +13,11 @@
  
 <!-- <script src="https://cdn.datatables.net/v/bs4/dt-2.1.6/r-3.0.3/datatables.min.js"></script>  -->
 
-<link href="https://cdn.datatables.net/v/bs4/jszip-3.10.1/dt-2.1.6/b-3.1.2/b-colvis-3.1.2/b-html5-3.1.2/b-print-3.1.2/r-3.0.3/datatables.min.css" rel="stylesheet">
+<!-- <link href="https://cdn.datatables.net/v/bs4/jszip-3.10.1/dt-2.1.6/b-3.1.2/b-colvis-3.1.2/b-html5-3.1.2/b-print-3.1.2/r-3.0.3/datatables.min.css" rel="stylesheet">
  
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-<script src="https://cdn.datatables.net/v/bs4/jszip-3.10.1/dt-2.1.6/b-3.1.2/b-colvis-3.1.2/b-html5-3.1.2/b-print-3.1.2/r-3.0.3/datatables.min.js"></script>
+<script src="https://cdn.datatables.net/v/bs4/jszip-3.10.1/dt-2.1.6/b-3.1.2/b-colvis-3.1.2/b-html5-3.1.2/b-print-3.1.2/r-3.0.3/datatables.min.js"></script> -->
 
 
 <div>    
@@ -164,24 +164,10 @@ $(document).ready(function() {
         $('#modal-update-password').find('#user-id').val(userId);
 
         $('#modal-update-password').find('#user-name-title').text(userName);
+        $('#modal-update-password').modal('show'); // Asegúrate de mostrar el modal
 
     });
-    // -----------------------------
-    function handleRowClick() {
-            if (window.innerWidth < 768) {
-                $('.clickable-row').off('click'); // Deshabilitar clic en pantallas pequeñas
-                $('.show-details-btn').on('click', function() {
-                    var target = $(this).data('bs-target');
-                    $(target).collapse('toggle');
-                });
-            } else {
-                $('.show-details-btn').off('click'); // Deshabilitar clic en pantallas grandes
-                $('.collapse').collapse('hide');
-            }
-        }
 
-        handleRowClick();
-        $(window).on('resize', handleRowClick);
 
 } );
 </script>

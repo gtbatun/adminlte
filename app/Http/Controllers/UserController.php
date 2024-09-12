@@ -11,7 +11,6 @@ use App\Models\Inventory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 
-
 use Yajra\DataTables\Facades\DataTables; //se agrego para las graficas segun
 
 use Illuminate\Support\Facades\Storage;
