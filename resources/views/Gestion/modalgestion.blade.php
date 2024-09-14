@@ -92,7 +92,7 @@ $(document).ready(function() {
         var ticketStatus = $(this).data('ticket-status');
         var ticketDepartmetId = $(this).data('ticket-department-id');
         var notifications = $(this).data('notifications');
-        console.log('hjhjhj'.notifications);
+        // console.log('hjhjhj'.notifications);
 
         $('#modal-gestion-ticket').find('#ticket-id').val(ticketId);            
         $('#modal-gestion-ticket').find('#ticket-name-title').text(ticketTitle);

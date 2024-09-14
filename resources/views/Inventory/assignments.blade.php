@@ -54,15 +54,7 @@
     }
 
 </style>
-<section class="content-header">
-<!-- <div class="container-fluid">
-    <div class="row mb-2">
-        <div class="col-sm-6">
-            <h1>Asignar</h1>
-        </div>
-    </div>
-</div> -->
-</section>
+
 
 <div class="container-fluid">
     <div class="row">
@@ -162,7 +154,15 @@
             <div id="device-asignados" style="display: none;" class="card card-success card-outline" >
                 <div class="card-header">
                     <h5 class="card-title">Dispositivos Asignados</h5>
+                    
                     <div class="card-tools">
+                        <!-- <button class="btn btn-sm btn-success add_mantto" data-user_id="${device.user_id}" data-device_id="${device.id}" data-inventory_id="${device.inventory_id}">                                
+                            <i class="fas fa-tools"></i>
+                        </button> -->
+                        <button class="btn btn-sm btn-danger " id="remove-all" data-toggle="modal" data-target="#modal-remove-all">
+                            <i class="far fa-trash-alt"></i>
+                        </button>
+                        <!-- <button type="button" class="btn btn-tool" ><i class="fa fa-check-square"></i></button> -->
                         <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse"><i class="fas fa-minus"></i></button>
                     </div>
                 </div>
@@ -170,8 +170,9 @@
                     <table class="table table-hover table-bordered">
                         <thead>
                             <tr> 
-                                <!-- <th>Inventory_Id</th> -->
-                                <!-- <th>Id-device</th> -->
+                                <th>Id-device</th>
+                                <th>Inventory_Id</th>
+                                 <th></th>
                                 <th>Categoria</th>
                                 <th>Nombre</th>
                                 <th>Acciones</th>
@@ -179,11 +180,13 @@
                         </thead>
                         <tbody id="user-devices">
                         </tbody>
-                        <button class="floating-button" id="show-device-section"><span>+</span></button>
+                        <!-- <button class="floating-button" id="show-device-section"><span>+</span></button> -->
                     </table>
-                </div>                
+                </div>
                 <button class="floating-button" id="show-device-section"><i class="fas fa-plus"></i></button>
             </div>
+            
+            <!-- <button  id="show-device-section"><i class="fas fa-user"></i></button>  -->
         </div>
     </div>
 </div>
@@ -203,7 +206,7 @@
             <div class="modal-body">
             <div class="form-group">
                 <!-- <label for="">inventory_id</label> -->
-                <input type="hidden" id="delete-inventory-id">
+                <input type="text" id="delete-inventory-id">
             </div>
             <div class="form-group">
                 <!-- <label for="">device_id</label> -->
@@ -232,6 +235,41 @@
     </div>
 </div>
 
+<!-- Modal para reasignar todos los equipos -->
+<div class="modal fade" id="modal-remove-all" tabindex="-1" role="dialog" aria-labelledby="reassignModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="reassignModalLabel">Reasignar Dispositivos</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                
+            
+            <div class="form-group">
+            <p>Selecciona el usuario al que deseas asignar los dispositivos seleccionados:</p>
+                
+                <!-- Selección de nuevo usuario -->
+                <select id="newUserId" class="form-control">
+                    <option value="">Seleccione un usuario</option>
+                </select>
+            </div>
+                
+            <div class="form-group">
+                <label for="delete-comment">Comentario:</label>
+                <textarea id="delete_comment" class="form-control" rows="3"></textarea>
+            </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="confirmReassignBtn" class="btn btn-primary">Confirmar Reasignación</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
 @section('js')
 
@@ -240,7 +278,6 @@
     let selectedUserId = null;
     let selectedDevices = [];
     let deviceIdToDelete = null;
-    // console.log(selectedDevices);
 
     // Verificar si hay un parámetro user_id en la URL
     const urlParams = new URLSearchParams(window.location.search);
@@ -256,6 +293,79 @@
     $(document).on('click', '#show-device-section', function() {
         $('#device-section').toggle();
     })
+
+
+    /*** -------------- script para modal de reasignacion de equipso en modal remove-all -----------------------*/
+    // Manejar la apertura del modal
+    $('#remove-all').on('click', function() {
+
+        // Recolectar los checkboxes seleccionados
+        $('.device-checkbox:checked').each(function() {
+            selectedDevices.push($(this).val());
+        });
+
+        if (selectedDevices.length > 0) {
+            // Guardar los dispositivos seleccionados en una variable global o en un input oculto si es necesario
+            window.selectedDevices = selectedDevices;  // Puedes ajustar esto según tus necesidades
+        } else {
+            alert('Por favor, selecciona al menos un dispositivo.');
+            return false;  // Evitar que el modal se abra si no hay dispositivos seleccionados
+        }
+        // seccion para solicitar la lista de usuarios
+        // Rellenar el select de estados
+        $.ajax({
+            url: '/users', // usuarios activos
+            method: 'GET',
+            success: function(data) {
+                let userSelect = $('#newUserId');
+                // userSelect.empty(); // Limpia el select                
+                // userSelect.append(`<option value="">Seleccione un dispositivo</option>`);
+                data.forEach(user => {
+                    userSelect.append(`<option value="${user.id}">${user.name}</option>`);
+                });
+            }
+        });
+    });
+
+    // Manejar la confirmación dentro del modal
+    $('#confirmReassignBtn').on('click', function() {
+        let newUserId = $('#newUserId').val();
+
+        if (!newUserId) {
+            alert('Por favor, selecciona un usuario.');
+            return;
+        }
+
+        // Hacer la solicitud AJAX para reasignar los dispositivos seleccionados
+        $.ajax({
+           url: '/unassign-devices',  // Cambia a tu ruta en Laravel 
+            method: 'POST',
+            data: {
+                deviceIds: window.selectedDevices,  // Usar los dispositivos seleccionados
+                newUserId: newUserId,
+                coment: delete_comment,
+                _token: '{{ csrf_token() }}' // Token CSRF para seguridad
+            },
+            success: function(response) {
+                // alert(response.success);
+                $('#modal-remove-all').modal('hide');  // Cerrar el modal
+                // location.reload();  // Actualizar la página si es necesario
+                // console.log(response);
+            },
+            error: function(response) {
+                alert('Error al reasignar los dispositivos.');
+            }
+        });
+    });
+
+    
+    $('#modal-remove-all').on('hidden.bs.modal', function () {
+        $('.modal-backdrop').remove();  // Elimina el fondo oscuro cuando el modal se cierre
+        selectedDevices = [];
+    });
+
+
+    /** ----------------------------------------------------------------- */
 
     // Buscar usuarios
     $('#user-search').on('input', function() {
@@ -525,6 +635,9 @@
                 if (data.length > 0) {
                     $.each(data, function(index, device) {
                         devicesList.append(`<tr>
+                        <td>${device.id}</td>
+                        <td>${device.inventory_id}</td>
+                        <td><input type="checkbox" class="device-checkbox" value="${device.inventory_id}"></td>
                         <td>${device.tipodevice}</td>
                         <td>${device.name}</td>
                         <td>

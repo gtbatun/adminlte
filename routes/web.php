@@ -214,6 +214,11 @@ Route::get('/notifications/count', [NotificationController::class, 'getUnreadNot
 // ruta para generar los codigos de barra de los equipos ya dados de alta
 Route::get('/generate-qrcodes', [DeviceController::class, 'generateQRCodes']);
 
+//ruta para la desasignacion y asignacion masiva
+// Route::post('/assign-devices', [InventoryController::class, 'assignDevicesMassive']);
+Route::post('/unassign-devices', [InventoryController::class, 'unassignDevicesMassive']);
+// Route::post('/reassign-devices', [InventoryController::class, 'markAsRead'])->name('notifications.markAsRead');
+
 
 });
 

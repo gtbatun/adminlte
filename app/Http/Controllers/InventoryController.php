@@ -10,8 +10,15 @@ use App\Models\Sucursal;
 use App\Models\Device;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+
+use Illuminate\Support\Facades\Log;
 class InventoryController extends Controller
 {
+    public function unassignDevicesMassive(Request $request){
+        // return response()->json(['success' => 'Dispositivo eliminado correctamente.'.$request->deviceIds]);
+        return response()->json([$request]);
+
+    }
     public function getAssignByDevice($deviceIdToMantto){
         $device_mantto = Inventory::where('device_id', $deviceIdToMantto)
         ->where('tipo','entrega')->get();
@@ -41,8 +48,6 @@ class InventoryController extends Controller
             'tipo' => 'devolucion',
             'enable' => 0,
         ]);
-        // return $request;
-               
 
         return response()->json(['success' => 'Dispositivo eliminado correctamente.']);
     }

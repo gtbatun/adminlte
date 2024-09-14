@@ -11,6 +11,7 @@
                 <tr>
                     <th style="width: 20%">Usuario</th>
                     <th>Equipos Asignados</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -42,6 +43,9 @@
                         </ul>  -->
                         
                     </td>
+                    <td>
+                        <button class="btn btn-danger" id="reasignar-btn">Reasignar</button>                        
+                    </td>
                 </tr>                    
                 @endforeach
             </tbody>
@@ -50,6 +54,30 @@
     </div>
 </div>
 
+<div class="modal fade" id="reassignModal" tabindex="-1" role="dialog" aria-labelledby="reassignModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="reassignModalLabel">Reasignar Equipo</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Selecciona el usuario al que deseas asignar los dispositivos seleccionados:</p>                
+                <!-- Selección de nuevo usuario -->
+                <select id="newUserId" class="form-control">
+                    <option value="">Seleccione un usuario</option>
+                    
+                </select>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="confirmReassignBtn" class="btn btn-primary">Confirmar Reasignación</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 @endsection
 @section('js')
@@ -73,6 +101,10 @@
                         },
             },
             responsive: true,
+        });
+
+        $("#reasignar-btn").on("click", function(){
+            $('#reassignModal').modal('show');
         });
 
     });
