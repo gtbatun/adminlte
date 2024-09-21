@@ -249,8 +249,7 @@
                 
             
             <div class="form-group">
-            <p>Selecciona el usuario al que deseas asignar los dispositivos seleccionados:</p>
-                
+                <p>Selecciona el usuario al que deseas asignar los dispositivos seleccionados:</p>                
                 <!-- Selección de nuevo usuario -->
                 <select id="newUserId" class="form-control">
                     <option value="">Seleccione un usuario</option>
