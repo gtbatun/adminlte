@@ -31,6 +31,8 @@
         @endisset
               
     </div>
+    
+<button id="enable-sound-notifications" class="btn btn-warning">Habilitar notificaciones de sonido</button>
 
     @if(Session::get('success'))
     <div class="container-fluid">
@@ -65,7 +67,6 @@
         </div>
     </div>
 </div>
-<!-- <button id="enable-sound-notifications" class="btn btn-warning">Habilitar notificaciones de sonido</button> -->
 
 
 <!---------------------------------- Modal de reasignar ticket  ---------------------->
@@ -116,7 +117,7 @@
 
     $(document).ready(function() {    
         // document.addEventListener("DOMContentLoaded", function() {   
-        // let audio = new Audio('/storage/images/user/notification-sound.mp3');
+        let audio = new Audio('/storage/images/user/notification-sound.mp3');
 
         function loadTickets() {
             // table = $('#tickets-table').DataTable({
@@ -209,7 +210,9 @@
             var interval = getReloadInterval();
             setInterval(function() {
                 if (table) {
-                    table.ajax.reload(null, false);
+                    // table.ajax.reload(null, false);
+                    // checkForUpdates();
+                    checkNewNotifications();
                 }
             }, interval);
         }
@@ -217,15 +220,18 @@
         function getReloadInterval() {
             var now = new Date();
             var hours = now.getHours();
-            return (hours >= 8 && hours < 18) ? 30000 : 1800000;
+            return (hours >= 8 && hours < 18) ? 3000 : 1800000;
             // return (hours >= 8 && hours < 17) ? 60000 : 1800000;
         } 
+        /** Script para notificar los cambio en los tickets con sonido */
+        let lastUpdateTime = null;
         // Función para verificar actualizaciones y reproducir sonido
         function checkForUpdates() {
             $.ajax({
                 url: "{{ route('tickets.check-updates') }}",
                 method: "GET",
                 success: function(data) {
+                    // console.log(data);
                     if (lastUpdateTime !== null && lastUpdateTime !== data.last_updated_at) {
                         sonido();
                         alert('Función de captura de pantalla no implementada');
@@ -237,39 +243,60 @@
                 }
             });
         } 
+        /** --------------------------------------------------------------  */
+        // let lastUpdateTime = null;
+        // Función para verificar actualizaciones y reproducir sonido
+        function checkNewNotifications() {
+            $.ajax({
+                url: "{{ route('tickets.check-new-notifications') }}",
+                method: "GET",
+                success: function(data) {
+                    console.log(data);
+                    if (data.unread_notifications_count > 0) {
+                        sonido();
+                        // alert('Función de captura de pantalla no implementada');
+                    }
+                    lastUpdateTime = data.last_updated_at;
+                },
+                error: function() {
+                    console.error("Error al verificar actualizaciones");
+                }
+            });
+        } 
+
+        /** ------------------------------------------------------------------- */
          // Función para reproducir sonido de notificación
-        // function sonido() {
-        //     audio.play().catch(function(error) {
-        //         console.error('Error al reproducir el sonido de notificación:', error);
-        //     });
-        // }
+        function sonido() {
+            audio.play().catch(function(error) {
+                console.error('Error al reproducir el sonido de notificación:', error);
+            });
+        }
          // Establecer el intervalo de recarga     
         setReloadInterval();  
         
         // Manejar la habilitación de notificaciones de sonido
-        // if (localStorage.getItem('soundNotificationsEnabled') === 'true') {
-        //     $('#enable-sound-notifications').hide();
+        if (localStorage.getItem('soundNotificationsEnabled') === 'true') {
+            $('#enable-sound-notifications').hide();
             // setInterval(checkForUpdates, 5000);
-        // }
+        }
 
-        // $('#enable-sound-notifications').on('click', function() {
-        //     audio.play().then(() => {
-        //         audio.pause();
-        //         audio.currentTime = 0;
-        //         $('#enable-sound-notifications').hide();
-        //         localStorage.setItem('soundNotificationsEnabled', 'true');
+        $('#enable-sound-notifications').on('click', function() {
+            audio.play().then(() => {
+                audio.pause();
+                audio.currentTime = 0;
+                $('#enable-sound-notifications').hide();
+                localStorage.setItem('soundNotificationsEnabled', 'true');
         //         // setInterval(checkForUpdates, 5000);
-        //     }).catch(function(error) {
-        //         console.error('Error al iniciar el audio:', error);
-        //     });
-        // });      
+            }).catch(function(error) {
+                console.error('Error al iniciar el audio:', error);
+            });
+        });      
 
         // $('#tickets-table').on('error.dt', function(e, settings, techNote, message) {
         //     console.log('DataTables error: ', message);
         // });        
 
-        /** Script para notificar los cambio en los tickets con sonido */
-        // let lastUpdateTime = null;
+        
 
         // Manejar el clic en el botón de reasignar
         $(document).on('click', '.modal-reasig-btn', function() {
