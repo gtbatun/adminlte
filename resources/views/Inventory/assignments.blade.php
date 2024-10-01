@@ -3,6 +3,10 @@
 @section('content')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.min.css">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- <script src="{{asset('assets/js/plugins/jquery-3.7.1.min.js')}}"></script> -->
+<!-- <script src="{{asset('assets/js/plugins/toastr.min.js')}}"></script> -->
+
+<!-- <script src="{{asset('assets/js/datatables.min.js')}}"></script> -->
 <style>
     .floating-button {            
             position: fixed;
@@ -294,9 +298,10 @@
     })
 
 
-    /*** -------------- script para modal de reasignacion de equipso en modal remove-all -----------------------*/
+    /*** ---------------------- script para modal de reasignacion de equipso en modal remove-all ----------------------- --------------------------------------------------------------*/
     // Manejar la apertura del modal
     $('#remove-all').on('click', function() {
+        selectedDevices = [];  // Asegúrate de limpiar el arreglo antes de usarlo
 
         // Recolectar los checkboxes seleccionados
         $('.device-checkbox:checked').each(function() {
@@ -329,27 +334,36 @@
     // Manejar la confirmación dentro del modal
     $('#confirmReassignBtn').on('click', function() {
         let newUserId = $('#newUserId').val();
+        let delete_comment = $('#delete_comment').val();
 
         if (!newUserId) {
             alert('Por favor, selecciona un usuario.');
             return;
         }
+        console.log(selectedDevices);
+        console.log(delete_comment);
 
         // Hacer la solicitud AJAX para reasignar los dispositivos seleccionados
         $.ajax({
-           url: '/unassign-devices',  // Cambia a tu ruta en Laravel 
+           url: `/device/unassign-devices`,  // Cambia a tu ruta en Laravel            
             method: 'POST',
             data: {
                 deviceIds: window.selectedDevices,  // Usar los dispositivos seleccionados
                 newUserId: newUserId,
-                coment: delete_comment,
+                delete_comment: delete_comment,
                 _token: '{{ csrf_token() }}' // Token CSRF para seguridad
+                
             },
             success: function(response) {
-                // alert(response.success);
-                $('#modal-remove-all').modal('hide');  // Cerrar el modal
-                // location.reload();  // Actualizar la página si es necesario
-                // console.log(response);
+                if (response && response.success) {
+                    alert('Dispositivos reasignados exitosamente.');
+                    $('#modal-remove-all').modal('hide');
+                    $('#delete_comment').val('');
+                    $('#newUserId').val('');
+                    loadUserDevices(selectedUserId);
+                } else {
+                    alert('Error en la respuesta del servidor.');
+                }
             },
             error: function(response) {
                 alert('Error al reasignar los dispositivos.');
@@ -364,7 +378,7 @@
     });
 
 
-    /** ----------------------------------------------------------------- */
+    /** -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 
     // Buscar usuarios
     $('#user-search').on('input', function() {
