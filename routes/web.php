@@ -215,9 +215,11 @@ Route::get('/notifications/count', [NotificationController::class, 'getUnreadNot
 Route::get('/generate-qrcodes', [DeviceController::class, 'generateQRCodes']);
 
 //ruta para la desasignacion y asignacion masiva
-// Route::post('/assign-devices', [InventoryController::class, 'assignDevicesMassive']);
-Route::post('/unassign-devices', [InventoryController::class, 'unassignDevicesMassive']);
-// Route::post('/reassign-devices', [InventoryController::class, 'markAsRead'])->name('notifications.markAsRead');
+// Route::post('/assign-devicesjjj', [InventoryController::class, 'assignDevicesMassive']);
+Route::post('/device/unassign-devices', [InventoryController::class, 'unassignDevicesMassive']);
+// Route::post('/reassign-devicesmm', [InventoryController::class, 'markAsRead'])->name('notifications.markAsRead');
+
+
 
 
 });

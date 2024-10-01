@@ -15,8 +15,23 @@ use Illuminate\Support\Facades\Log;
 class InventoryController extends Controller
 {
     public function unassignDevicesMassive(Request $request){
-        // return response()->json(['success' => 'Dispositivo eliminado correctamente.'.$request->deviceIds]);
-        return response()->json([$request]);
+        $deviceIds = $request->input('deviceIds');
+        $newUserId = $request->input('newUserId');
+        if (is_array($deviceIds) && count($deviceIds) > 0) {
+
+             // Lógica para reasignar los dispositivos
+            foreach ($deviceIds as $deviceId) {
+            // Asigna el dispositivo al nuevo usuario y realiza otras operaciones necesarias
+            // Ejemplo: 
+            $device = Device::find($deviceId);
+                if ($device) {
+                    $device->user_id = $newUserId;
+                    $device->save();
+                }
+            }
+            return response()->json(['success' => true]);
+        }  
+        return response()->json(['error' => 'No se encontraron dispositivos seleccionados.'], 400); 
 
     }
     public function getAssignByDevice($deviceIdToMantto){
