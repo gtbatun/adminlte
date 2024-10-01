@@ -6,6 +6,11 @@ use App\Models\User;
 
 class NotificationController extends Controller
 {
+    public function checkNewNotifications(){
+        $unreadNotificationsCount = session('unread_notifications_count', 0);
+        return response()->json(['unread_notifications_count' => $unreadNotificationsCount]);
+
+    }
     public function index()
     {
         // Obtener el usuario autenticado
@@ -17,7 +22,6 @@ class NotificationController extends Controller
         // Obtener solo las notificaciones no leídas
         $unreadNotifications = $user->unreadNotifications;
         // $unreadNotifications = Notification::all();
-
         // Pasar las notificaciones a la vista
         // return $notifications;
         return view('Inventory.index', compact('notifications', 'unreadNotifications'));
@@ -39,11 +43,8 @@ class NotificationController extends Controller
     }
 
     public function markAsRead(Request $request)
-    {
-        
-        
-        $ticketId = $request->input('ticket_id');
-        
+    {      
+        $ticketId = $request->input('ticket_id');        
         // Obtener todas las notificaciones no leídas del usuario actual que tienen el mismo ticket_id
         // $user = Auth::user();
         $userId = Auth::user()->id;
@@ -52,8 +53,7 @@ class NotificationController extends Controller
 
         if ($notifications->isEmpty()) {
             return response()->json(['message' => 'No se encontraron notificaciones para el ticket especificado.']);
-        }
-        
+        }        
 
         // Marcar cada notificación como leída
         foreach ($notifications as $notification) {

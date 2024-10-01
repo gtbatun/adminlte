@@ -141,8 +141,7 @@ Route::get('/tickets/data2', [TicketController::class, 'data2'])->name('tickets.
 
 /**ver tickets cerrados */
 Route::get('/ticket-closed',[TicketController::class,'closed'])->name('ticket.closed');
-/** Consultar los tickets cerrados */
-Route::get('/tickets/check-updates', [TicketController::class, 'checkUpdates'])->name('tickets.check-updates');
+
 
 /** Consultar notificaciones de tickets */
 Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
@@ -221,6 +220,12 @@ Route::post('/device/unassign-devices', [InventoryController::class, 'unassignDe
 
 
 
+/** Consultar las notificaciones sin leer o nuevas (version antigua de la verificacion  de nuevos tickets) */
+Route::get('/tickets/check-updates', [TicketController::class, 'checkUpdates'])->name('tickets.check-updates');
+
+
+/**ruta para conmsultar las nuevas notificaciones y mostrar una alerta o recargar la tabla de datos */
+Route::get('/tickets/check-new-notifications', [NotificationController::class, 'checkNewNotifications'])->name('tickets.check-new-notifications');
 
 });
 

@@ -20,41 +20,33 @@
     color: purple;
 }
 </style>
-<!-- <div> -->
+
 <div class="direct-chat-msg" >    
     <div class="direct-chat-infos">
-    <a class="d-inline-block notification-btn" data-ticket-id="{{ $ticket->id }}" 
-        data-ticket-title="{{ $ticket->title }}" data-ticket-description="{{ $ticket->description }}" 
-        style="max-width: 300px; font-size: 1.2em;" href="{{ route('ticket.show', $ticket) }}" 
-        title="{{ $ticket->description }}">        
-        <span class="text-wrap">{{ $ticket->title }}</span>
-    </a>      
-    </div>
-    <div class="direct-chat-infos">   
-        @if($notifications > 0)           
-            <span class="badge rounded-circle bg-danger  float-right"> {{$notifications}}</span>  
-            <i style="color: green; font-size: 20px;" class="fas fa-comments float-right">
-            </i>
+        <a class="d-inline-block notification-btn" data-ticket-id="{{ $ticket->id }}" 
+            data-ticket-title="{{ $ticket->title }}" data-ticket-description="{{ $ticket->description }}" 
+            style="max-width: 300px; font-size: 1.2em;" href="{{ route('ticket.show', $ticket) }}" 
+            title="{{ $ticket->description }}">        
+            <span class="text-wrap">{{ $ticket->title }}</span>
+        </a>      
+    <!-- </div> -->
+    <!-- <div class="direct-chat-infos">    -->
+        @if($notifications > 0)
+            <div class="modal-gestion-btn" data-ticket-id="{{ $ticket->id }}" data-ticket-title="{{ $ticket->title }}" data-ticket-description="{{ $ticket->description }}">
+            <span class="badge rounded-circle bg-danger  float-right "> {{$notifications}}</span>  
+            <i style="color: green; font-size: 20px;" class="fas fa-comments float-right"></i>
+        </div>
         @else
-            <span class="{{ $messageClass }} float-left">{{$messageStatus}}  <i class="fas fa-comments"></i>3</span>
+            <span class="{{ $messageClass }} float-right">{{$messageStatus}} </span>
         @endif 
 
     </div>
 
     <div class="direct-chat-infos">    
         <span class="direct-chat-name float-left">{{$ticket->usuario->name}}</span>
-        <span class="float-left">{{$gestionTime->diffForHumans(null, null, true)}}</span>         
+        <span class="float-right">{{$gestionTime->diffForHumans(null, null, true)}}</span>         
     </div>
-    <!-- <div class="direct-chat-infos">
-        <a class=" notification-btn" data-ticket-id="{{ $ticket->id }}" 
-            data-ticket-title="{{ $ticket->title }}" data-ticket-description="{{ $ticket->description }}" 
-            style="max-width: 300px; font-size: 1.2em;" href="{{ route('ticket.show', $ticket) }}" 
-            title="{{ $ticket->description }}">
-        </a>  -->
-                
-        <!-- <p class="text-wrap">{{ $ticket->title }}</p> -->
 
-    <!-- </div>  -->
 </div>
 
 <!-- ------------- -->
