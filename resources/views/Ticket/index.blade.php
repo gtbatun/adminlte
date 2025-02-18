@@ -108,7 +108,10 @@
         </div>
     </div>
 </div>
+
+
 @include('Gestion.modalgestion')
+@include('Ticket.modalagendarcita')
 @endsection
 
 @section('js')
@@ -157,7 +160,16 @@
                     { data: 'category' },
                     { data: 'type' },
                     { data: 'sucursal' },
-                    { data: 'status' },
+                    // { data: 'status' },
+                    {
+                        data: null, // Usamos `null` para procesar los datos con render
+                        render: function(data, type, row) {
+                            let status = row.status ? `<strong>${row.status}</strong>` : "Sin estado";
+                            let date = row.due_date ? `<br><small>${row.due_date}</small>` : "";
+
+                            return status + date;
+                        }
+                    },
                     { data: 'actions', orderable: false, searchable: false}
                 ],
                 createdRow: function(row, data, dataIndex) {
@@ -212,7 +224,7 @@
                 if (table) {
                     // table.ajax.reload(null, false);
                     // checkForUpdates();
-                    checkNewNotifications();
+                    // checkNewNotifications();
                 }
             }, interval);
         }
@@ -220,7 +232,7 @@
         function getReloadInterval() {
             var now = new Date();
             var hours = now.getHours();
-            return (hours >= 8 && hours < 18) ? 3000 : 1800000;
+            return (hours >= 8 && hours < 18) ? 30000 : 1800000;
             // return (hours >= 8 && hours < 17) ? 60000 : 1800000;
         } 
         /** Script para notificar los cambio en los tickets con sonido */
@@ -312,6 +324,9 @@
 
             $('#modal-reasig-ticket').modal('show');
         });
+
+
+
             
         // Manejar el cambio de departamento
         $('#departamento').change(function() {

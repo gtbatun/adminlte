@@ -53,7 +53,7 @@
 
         <input type="hidden" name="status_id" class="form-control" value="1" >
         <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-3 mt-2">
+        <div class="col-xs-12 col-sm-12 col-md-12 mt-2">
                 <div class="form-group">
                     <strong>Ticket:</strong>
                     <input type="text" name="title" class="form-control" placeholder="Titulo" value="{{old ('title')}}" >
@@ -62,7 +62,7 @@
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12 mt-2">
                 <div class="form-group">
-                    <strong>Descripción:</strong>
+                    <strong>Descripción de la consulta o capacitacion solicitada:</strong>
                     <textarea class="form-control" style="height:150px" name="description" placeholder="Descripción...">{{old ('description')}}</textarea>
                     </div>
             </div>

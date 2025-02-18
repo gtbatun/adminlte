@@ -1,8 +1,31 @@
 @extends('adminlte::page')
 @section('content')
 
-<script src="{{asset('assets/js/plugins/jquery.min.js')}}"></script>
+<style>
+.floating-button2 {
+    position: fixed;
+    bottom: 600px; /* Ajusta la distancia desde la parte inferior */
+    right: 20px;  /* Ajusta la distancia desde la derecha */
+    /* z-index: 1000; Asegura que esté por encima del contenido */
+    border-radius: 50px; /* Hace el botón más redondeado */
+    padding: 10px 20px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease-in-out;
+}
+.floating-button {
+    position: fixed;
+    left: auto;  /* En lugar de `right: 20px;` */
+    right: 50px; /* Asegura que no haya conflicto con `right` */
+}
+/* Agrega un efecto de elevación al pasar el cursor */
+.floating-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.3);
+}
+</style>
 
+
+<script src="{{asset('assets/js/plugins/jquery.min.js')}}"></script>
 <div class="container">
         @if ($errors->any())
             <div class="alert alert-danger">
@@ -88,8 +111,70 @@
                 </div>
             </div>
         @endif
+
+        <button type="button" class="btn btn-success modal-minuta floating-button" data-toggle="modalagendarcita" data-target="#modal-minuta" 
+    data-ticket-id="{{ $ticket->id }}" data-ticket-title="{{ $ticket->title }}" data-ticket-department="{{ $ticket->department_id }}">Agregar Minuta</button>
+   @include('Minuta.modalminuta')
         </div>
 <!-- {{$ticket}} -->
+@if ($ticket->department_id === 1)
+    
+
+        <!-- <div class="container-fluid">
+            <div class="card">
+                @include('partials.validation-errors')
+                <div class="card-header">
+                </div>
+                <div class="card-body">
+                <form action="">
+                @csrf
+                <input type="hidden" name="user_id" class="form-control" value="{{auth()->user()->id}}" >
+                <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 mt-2">
+                    <div class="form-group">
+                        <strong>Descripción de la consulta o capacitacion solicitada:</strong>
+                        <textarea class="form-control" style="height:50px" name="respuesta" placeholder="Descripción...">{{$ticket->description}}</textarea>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-12 mt-2">
+                    <div class="form-group">
+                        <strong>Respuesta y solucion brindada:</strong>
+                        <textarea class="form-control" style="height:50px" name="respuesta" placeholder="Descripción...">{{old ('description')}}</textarea>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-12 mt-2">
+                    <div class="form-group">
+                        <strong>Acciones a realizar y responsable de realizar:</strong>
+                        <textarea class="form-control" style="height:50px" name="acciones" placeholder="Descripción...">{{old ('description')}}</textarea>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-12 mt-2">
+                    <div class="form-group">
+                        <strong>Seguimiento o verificacion:</strong>
+                        <textarea class="form-control" style="height:50px" name="seguimiento" placeholder="Descripción...">{{old ('description')}}</textarea>
+                    </div>
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-md-12 mt-2">
+                    <label class="form-label">Confirmacion de recepcion y conformidad con la informacion:</label>
+                    <div>
+                        <input type="radio" name="confirmacion" value="Si" id="confirmacion_si" onclick="toggleInput('terminos', false)">
+                        <label for="terminos_si">Sí</label>
+
+                        <input type="radio" name="confirmacion" value="No" id="confirmacion_no" onclick="toggleInput('terminos', true)">
+                        <label for="terminos_no">No</label>
+                    </div>
+
+                    <input type="text" name="confirmacion_motivo" id="confirmacion_motivo" class="form-control mt-2 d-none" placeholder="Especificar motivo">
+                </div>
+                </div>
+                </form>
+                </div>
+            </div>
+        </div> -->
+@endif
+
+<!-- @if ($ticket->department_id != 100) -->
 
     <!-- vista resumida -->
         <div class="container-fuid">
@@ -115,7 +200,8 @@
                         <div class="direct-chat-messages" id="gestiones-container1">
                             <!-- Messages will be appended here -->
                         </div>
-                </div>      
+                </div> 
+                     
                 <div class="card-header">
                     <form id="gestionform" method="POST" enctype="multipart/form-data">
                         @csrf
@@ -182,11 +268,37 @@
             </div>        
         </div> 
 
+        
+    
+        <!-- @endif -->
     </div>
 </div>
+
+
+
+
+
  @endsection
  <!-- para el boton de enviar -->
  @section('js')
+
+
+<!-- SEccion recien agregada para insertar  los datos solicitado por angelica -->
+
+<script>
+function toggleInput(name, show) {
+    let inputField = document.getElementById("confirmacion_motivo");
+    if (show) {
+        inputField.classList.remove("d-none");
+        inputField.setAttribute("required", "required"); // Hacer obligatorio si se selecciona "No"
+    } else {
+        inputField.classList.add("d-none");
+        inputField.removeAttribute("required"); // Quitar la obligatoriedad si es "Sí"
+        inputField.value = ""; // Limpiar el campo
+    }
+}
+</script>
+
  <script>
     document.addEventListener('DOMContentLoaded', (event) => {
     const messageInput = document.getElementById('messageInput');
@@ -266,9 +378,9 @@
                         gestionesHtml += '<span class="direct-chat-name float-' + (isCurrentUser ? 'right' : 'left') + '">' + gestion.usuario.name + '</span>';
                         gestionesHtml += '<span class="direct-chat-timestamp float-' + (isCurrentUser ? 'left' : 'right') + '">' + formatDate('MM dd hh:mm:ss',gestion.created_at) + '</span>';
                         gestionesHtml += '</div>';
-                        if(gestion.usuario.image){
-                            gestionesHtml += '<img class="direct-chat-img" src="/storage/images/user/' + (gestion.usuario.image || 'default.png') + '" alt="' + gestion.usuario.id + '" onerror="this.src=\'/storage/images/user/default.PNG\'">';
-                            } 
+                        //if(gestion.usuario.image){
+                        //    gestionesHtml += '<img class="direct-chat-img" src="/storage/images/user/' + (gestion.usuario.image || 'default.png') + '" alt="' + gestion.usuario.id + '" onerror="this.src=\'/storage/images/user/default.PNG\'">';
+                        //    } 
                         gestionesHtml += '<div class="direct-chat-text float-' + (isCurrentUser ? 'right' : 'left') + '">';
                         gestionesHtml += gestion.coment;
                         gestionesHtml += '</div>';

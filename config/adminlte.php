@@ -398,6 +398,13 @@ return [
             'icon'   => 'fas fa-lock-open',
             // 'icon_color' => 'green'  
         ],
+        [
+            'text'   => 'Citas',
+            'route'  => 'cita.index',
+            // 'icon'   => 'far fa-fw fa-file',
+            'icon'   => 'fas fa-lock-open',
+            // 'icon_color' => 'green'  
+        ],
         // [
         //     'text'   => 'Ticket2',
         //     'route'  => 'ticket.index1',

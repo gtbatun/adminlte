@@ -29,6 +29,9 @@ use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\NotificationController;
 use Illuminate\Notifications\Notification;
 
+
+use App\Http\Controllers\MinutaController;
+use App\Http\Controllers\CitaController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -226,6 +229,20 @@ Route::get('/tickets/check-updates', [TicketController::class, 'checkUpdates'])-
 
 /**ruta para conmsultar las nuevas notificaciones y mostrar una alerta o recargar la tabla de datos */
 Route::get('/tickets/check-new-notifications', [NotificationController::class, 'checkNewNotifications'])->name('tickets.check-new-notifications');
+
+//nueva ruta para las solicitudes
+
+Route::post('/agendarcita', [TicketController::class, 'agendarcita'])->name('ticket.agendarcita');
+
+Route::resource('minuta', MinutaController::class);
+
+Route::resource('cita', CitaController::class);
+
+Route::get('/citasagendadas', [CitaController::class, 'fetchcitas'])->name('cita.citasagendadas');
+Route::get('/unablefech', [CitaController::class, 'unablefech'])->name('cita.unablefech');
+
+Route::put('cita/update/{id}', [CitaController::class, 'update'])->name('cita.update');
+
 
 });
 

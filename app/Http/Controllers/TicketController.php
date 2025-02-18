@@ -122,9 +122,18 @@ class TicketController extends Controller
                 return ($ticket->user_id == auth()->user()->id || $ticket->department_id == auth()->user()->department_id) 
                     ? 'rgba(46, 204, 133,0.4)' : '';
             })
-            ->addColumn('typeColorback', function($ticket) {
-                return $ticket->status->name == 'Nuevo' ? 'rgba(255, 0, 0, 0.2)' : ($ticket->status->name == 'En proceso' ? 'rgba(255, 165, 0, 0.2)' : '');
-            })
+            
+            // ->addColumn('typeColorback', function($ticket) {
+            //     if ($ticket->status->name == 'Nuevo') {
+            //         return 'rgba(255, 0, 0, 0.2)'; // Rojo
+            //     } elseif ($ticket->status->name == 'En proceso') {
+            //         return 'rgba(255, 165, 0, 0.2)'; // Naranja
+            //     } elseif ($ticket->status->name === 'Cita Agendada') {
+            //         return 'rgba(255, 213, 0, 0.2)'; // Azul
+            //     } else {
+            //         return ''; // Sin color
+            //     }
+            // })            
             ->addColumn('area', function($ticket) {
                 return $ticket->area->name;
             })
@@ -268,8 +277,21 @@ class TicketController extends Controller
                 $color = '';
             }            
             
-            $color1 = ($ticket->status->name == 'Nuevo') ? 'rgba(255, 0, 0, 0.2)' : 'rgba(0, 0, 0, 0.0)';
-            $typeColorback = ($ticket->status->name == 'En proceso') ? 'rgba(255, 165, 0, 0.2)' : $color1;
+            // $color1 = ($ticket->status->name == 'Nuevo') ? 'rgba(255, 0, 0, 0.2)' : 'rgba(0, 0, 0, 0.0)';
+            // $typeColorback = ($ticket->status->name == 'En proceso') ? 'rgba(255, 165, 0, 0.2)' : $color1;
+
+                $typeColorback = 'rgba(0, 0, 0, 0.0)'; // Color por defecto
+                switch ($ticket->status->name) {
+                    case 'Nuevo':
+                        $typeColorback = 'rgba(255, 0, 0, 0.2)'; // Rojo
+                        break;
+                    case 'En proceso':
+                        $typeColorback = 'rgba(255, 165, 0, 0.2)'; // Naranja
+                        break;
+                    case 'Cita Agendada':
+                        $typeColorback = 'rgba(0, 128, 255, 0.2)'; // Azul
+                        break;
+                }
 
             /** script para seleccionar el o obtener la ultima persona que contesto el tikcet */
             // Obtener el ticket
@@ -349,6 +371,7 @@ class TicketController extends Controller
                 'typeColorback' => $typeColorback, // Include the color in the response
                 'area' => $ticket->area->name,
                 'status' => $ticket->status->name,
+                'due_date' => $ticket->due_date,
                 'gestionTime' => $gestionTime,
                 // 'unreadNotificationCount' => $unreadNotificationCount,
                 // 'created_at' => $ticket->created_at->diffForHumans(),
@@ -718,6 +741,24 @@ class TicketController extends Controller
         // fin de seccion de lamacenamiento y procesado de imagenes
         $ticket->save();
         return redirect()->route('ticket.index', $ticket)->with('success','El ticket fue actualizado con exito');
+    }
+
+    public function agendarcita(Request $request){
+        $usuario = User::find($request->user_id);
+        
+        $insert_gestion = new Gestion();
+        $insert_gestion->ticket_id = $request->ticket_id;
+        $insert_gestion->coment = 'Se agenda una cita el dia '. $request->fecha.', En el Horario '.$request->hora.'. Cita agendada por el usuario '. $usuario->name;
+        $insert_gestion->user_id = $request->user_id;
+        $insert_gestion->status_id = 2;
+        $insert_gestion->save();
+
+        $updateticket = Ticket::find($request->ticket_id);
+        $updateticket->status_id = 7; 
+        $updateticket->due_date = $request->fecha .' '. $request->hora;
+        $updateticket->update();
+
+    return response()->json(['success' => true, 'message' => 'Cita agendada correctamente']);
     }
 
     public function reasigticket(Request $request)
